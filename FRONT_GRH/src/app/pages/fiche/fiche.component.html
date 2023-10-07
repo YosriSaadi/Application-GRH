@@ -1,0 +1,758 @@
+
+    <!-- start page title -->
+    <app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+    <!-- end page title -->
+  
+   
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Fiche</h4>          
+            <div class="col-lg-20">
+                <div class="card">
+                  <div class="card-body">
+                    <ul ngbNav #customNav="ngbNav" [activeId]="1" class="nav-tabs nav-tabs-custom nav-justified">
+                      <li [ngbNavItem]="1">
+                        <a ngbNavLink>
+                          <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                          <span class="d-none d-sm-block">Identification</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                          <ng-template [ngTemplateOutlet]="fiche"></ng-template>
+                        </ng-template>
+                      </li>
+                      <li [ngbNavItem]="2">
+                        <a ngbNavLink>
+                          <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                          <span class="d-none d-sm-block">Paramètres De La Paie</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                          <ng-template [ngTemplateOutlet]="parametre_paie"></ng-template>
+                        </ng-template>
+                      </li>
+                 
+                     
+                    </ul>
+                    <div [ngbNavOutlet]="customNav"></div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Tab Content -->
+
+  <ng-template #fiche>
+      
+    <div class="card">
+        <div class="card-body">
+    <form class="needs-validation" (ngSubmit)="validSubmit()" [formGroup]="validationform">
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="validationCustom01">Raison sociale</label>
+              <input type="text" class="form-control" id="nom" formControlName="nom"
+                placeholder="Raison sociale" [ngClass]="{'is-invalid': submit && form.nom.errors}">
+              <div *ngIf="submit && form.nom.errors" class="invalid-feedback">
+                <span *ngIf="form.nom.errors.required">Raison sociale est obligatoire.</span>
+                <span *ngIf="form.nom.errors.pattern">Raison sociale est invalide.</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="validationCustom02">Adresse</label>
+              <input type="text" class="form-control" id="adresse" formControlName="adresse"
+                placeholder="adresse" [ngClass]="{'is-invalid': submit && form.adresse.errors}">
+              <div *ngIf="submit && form.adresse.errors" class="invalid-feedback">
+                <span *ngIf="form.adresse.errors.required">Adresse est obligatoire.</span>
+              </div>
+            </div>
+          </div>
+          
+  
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="validationCustom03">Ville</label>
+              <input type="text" class="form-control" id="ville" formControlName="ville"
+                placeholder="Ville" [ngClass]="{'is-invalid': submit && form.ville.errors}">
+              <div *ngIf="submit && form.ville.errors" class="invalid-feedback">
+                <span *ngIf="form.ville.errors.required">Ville est obligatoire.</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="validationCustom04">Rue</label>
+              <input type="text" class="form-control" id="rue" formControlName="rue"
+                placeholder="rue" [ngClass]="{'is-invalid': submit && form.rue.errors}">
+              <div *ngIf="submit && form.rue.errors" class="invalid-feedback">
+                <span *ngIf="form.rue.errors.required">Rue est obligatoire.</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+          <div class="form-group">
+              <label for="validationCustom05">Code Postal</label>
+              <input type="text" class="form-control" id="code_postal" formControlName="code_postal"
+              placeholder="Code Postal" [ngClass]="{'is-invalid': submit && form.code_postal.errors}">
+            <div *ngIf="submit && form.code_postal.errors" class="invalid-feedback">
+              <span *ngIf="form.code_postal.errors.required">Code postal est obligatoire.</span>
+            </div>
+           </div>  
+          </div>
+
+          <div class="col-md-3">
+            <div class="form-group">
+                <label for="validationCustom05">Matricule fiscal</label>
+                <input type="text" class="form-control" id="matricule_fiscal" formControlName="matricule_fiscal"
+                placeholder="" [ngClass]="{'is-invalid': submit && form.matricule_fiscal.errors}" >
+
+              <div *ngIf="submit && form.matricule_fiscal.errors" class="invalid-feedback">
+                <span *ngIf="form.matricule_fiscal.errors.required">Matricule fiscal est obligatoire.</span>
+              </div>
+             </div>  
+            </div>
+       
+         
+            <div class="col-md-6">
+            <div class="form-group">
+              <label for="validationCustom07">E-mail</label>
+              <input class="form-control" id="email" placeholder="Enter email" formControlName="email"
+               [ngClass]="{'is-invalid': submit && form.email.errors}">
+              <div *ngIf="submit && form.email.errors" class="invalid-feedback">
+            <span *ngIf="form.email.errors.required">Ce champs est obligatoire.</span>
+            <span *ngIf="form.email.errors.pattern">Email invalide!!.</span>
+          </div>
+            </div>
+            </div>
+            
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="validationCustom08">Tel</label>
+                <input type="text" class="form-control" id="tel" formControlName="tel"
+                      placeholder="Numero de telephone" [ngClass]="{'is-invalid': submit && form.tel.errors}" mask="00-000-000">
+                     
+                    <div *ngIf="submit && form.tel.errors" class="invalid-feedback">
+                      <span *ngIf="form.tel.errors.required">Numero de telephone est obligatoire.</span>
+                    </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="validationCustom09">Fax</label>
+                <input type="text" class="form-control" id="fax" formControlName="fax"
+                  placeholder="Fax" [ngClass]="{'is-invalid': submit && form.fax.errors}" mask="00-000-000">
+                <div *ngIf="submit && form.fax.errors" class="invalid-feedback" >
+                  <span *ngIf="form.fax.errors.required">Fax est obligatoire.</span>
+                </div>
+              </div>
+              </div>
+
+              <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="validationCustom10">Activités</label>
+                    <input type="text" class="form-control" id="Activite" formControlName="Activite"
+                      placeholder="Activite" [ngClass]="{'is-invalid': submit && form.Activite.errors}">
+                    <div *ngIf="submit && form.Activite.errors" class="invalid-feedback">
+                      <span *ngIf="form.Activite.errors.required">Activite est obligatoire.</span>
+                    </div>
+                  </div>
+              </div>
+
+                  <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="validationCustom11">Matricule C.N.S.S</label>
+                        <input type="text" class="form-control" id="matricule_cnss" formControlName="matricule_cnss"
+                          placeholder="" [ngClass]="{'is-invalid': submit && form.matricule_cnss.errors}">
+                        <div *ngIf="submit && form.matricule_cnss.errors" class="invalid-feedback">
+                          <span *ngIf="form.matricule_cnss.errors.required">Matricule C.N.S.S est obligatoire</span>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-3">
+                      <div class="form-group">
+                          <label for="validationCustom11">Date d'ouverture</label>
+                          <input type="date" class="form-control" id="date_ouverture" formControlName="date_ouverture"
+                          placeholder="" [ngClass]="{'is-invalid': submit && form.date_ouverture.errors}">
+                        <div *ngIf="submit && form.date_ouverture.errors" class="invalid-feedback">
+                        </div>
+                       </div>  
+                      </div>
+
+                          
+                          
+                      </div>              
+                      <div class="text-md-right">
+                        <button type="submit" class="btn btn-success">Modifier</button>
+                      </div>
+      </form>
+      </div>
+        </div>
+  </ng-template>
+
+  <ng-template #parametre_paie>
+    
+    <div class="row">
+      <div class="col-lg-12">
+       
+          <div class="card-body">
+            <form (ngSubmit)="validSubmitpaie()" [formGroup]="validationformpaie" >
+
+              
+              <div class="row" >
+                <div class="col-md-6">
+                  <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">CNSS</legend>
+                    <div>
+                  
+              <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-4">
+                    <label for="inputPassword6" class="col-form-label">Cotisation Patronale :</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="patronaleoui"  formControlName="checkcotpatronale" value="true" (click)="eventpatronaletrue()">
+                    <label class="form-check-label" for="checkcotpatronale">Oui</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio" id="patronalenon" formControlName="checkcotpatronale" value="false" (click)="eventpatronalefalse()">
+                    <label class="form-check-label" for="checkcotpatronale">Non</label>
+                  </div> 
+                  <div class="col-auto" [hidden]="tauxpatronale">
+                    <label for="inputPassword6" class="col-form-label">Taux :</label>
+                  </div>
+                  <div  class="col-4" [hidden]="tauxpatronale">
+
+                    <div class="input-group-prepend" >
+                    <input type="text"  class="form-control" id="cnss_cot_patronal" formControlName="cnss_cot_patronal"  >
+                    <span class="input-group-text" >%</span>
+                  </div>
+                  </div>
+                
+                  
+                 
+                </div>
+              </div>
+              <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-4">
+                    <label for="inputPassword6" class="col-form-label">Cotisation Employé :</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"  id="cotemployeoui" value="true" formControlName="checkcotemploye"(click)="eventemployetauxtrue()">
+                    <label class="form-check-label" for="checkcotemploye">Oui</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"  id="cotemployenon" value="false" formControlName="checkcotemploye" (click)=" eventemployetauxfalse()" >
+                    <label class="form-check-label" for="checkcotemploye">Non</label>
+                  </div> 
+                  <div class="col-auto" [hidden]="tauxemploye">
+                    <label for="inputPassword6" class="col-form-label">Taux :</label>
+                  </div>
+
+                  <div  class="col-4" [hidden]="tauxemploye">
+                    <div class="input-group-prepend" >
+                    <input type="text" id="cnss_cot_employe" class="form-control"  formControlName="cnss_cot_employe">
+                    <span class="input-group-text" >%</span>
+                  </div>
+                  </div>
+                 
+               
+                
+                </div>
+              </div>
+
+
+              <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-4">
+                    <label for="inputPassword6" class="col-form-label">Accident de travail :</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"  id="accidentoui" value="true" formControlName="checkaccident" (click)="eventaccidenttrue()">
+                    <label class="form-check-label" for="checkaccidenttravail">Oui</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"  id="accidentnon" value="false" formControlName="checkaccident"  (click)="eventaccidentfalse()">
+                    <label class="form-check-label" for="checkaccidenttravail">Non</label>
+                  </div> 
+                  <div class="col-auto" [hidden]="accidenttravail">
+                    <label for="inputPassword6" class="col-form-label">Taux :</label>
+                  </div>
+                  <div  class="col-4" [hidden]="accidenttravail">
+                    <div class="input-group-prepend" >
+                    <input type="text" id="cnss_acc_travail" class="form-control"  formControlName="cnss_acc_travail" >
+                    <span class="input-group-text" >%</span>
+                  </div>
+                  </div>
+                 
+                </div>
+              </div>
+              <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-4">
+                    <label for="inputPassword6" class="col-form-label">Medecin de taravil :</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"  id="medecinoui" value="true" formControlName="checkmedecin" (click)="eventmedecintrue()">
+                    <label class="form-check-label" for="checkmedecintaravail">Oui</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="radio"  id="medecinnon" value="false"  formControlName="checkmedecin" (click)="eventmedecinfalse()">
+                    <label class="form-check-label" for="checkmedecintaravail">Non</label>
+                  </div> 
+                  <div class="col-auto" [hidden]="medecintaravail">
+                    <label for="inputPassword6" class="col-form-label">Taux :</label>
+                  </div>
+                  <div  class="col-4" [hidden]="medecintaravail">
+                    <div class="input-group-prepend" >
+                    <input type="text" id="cnss_medecin_travail" class="form-control"  formControlName="cnss_medecin_travail">
+                   <span class="input-group-text" >%</span>
+                  </div>
+                  </div>
+                  <div class="form-group mb-4">
+                    <div class="row g-3 align-items-center">
+                      <div class="col-3">
+                        <label for="inputPassword6" class="col-form-label">Régime complémentaire :</label>
+                      </div>
+                      <div class="col-2">
+                        <label for="inputPassword6" class="col-form-label">Cot Employé :</label>
+                      </div>
+                    
+                      
+                      <div  class="col-3">
+                        <div class="input-group-prepend" >
+                        <input type="text"  id="cnss_regimec_employe" class="form-control"  formControlName="cnss_regimec_employe" >
+                        <span class="input-group-text" >%</span>
+                      </div>
+                      </div>
+                     
+    
+                        
+    
+                      <div class="col-1">
+                        <label for="inputPassword6" class="col-form-label">Cot Patron:</label>
+                      </div>
+                      <div  class="col-3">
+                        <div class="input-group-prepend" >
+                        <input type="text" id="cnss_regimec_patron" class="form-control"  formControlName="cnss_regimec_patron">
+                        <span class="input-group-text" >%</span>
+                      </div>
+                      </div>
+                      
+                
+                     
+    
+                    </div>
+                  </div>
+                
+                  
+                </div>
+              </div>
+              </div>
+              </fieldset>
+              <fieldset class="scheduler-border">
+                <legend class="scheduler-border">Impôt & taxes sur salariés</legend>
+                <div>
+              
+              <div class="form-group mb-4">
+               <div class="row g-3 align-items-center">
+                 <div class="col-4">
+                   <label for="inputPassword6" class="col-form-label">I.R.P.P</label>
+                 </div>
+                 <div class="form-check form-check-inline">
+                   <input class="form-check-input" type="radio" id="irppoui"  formControlName="checkirpp" value="true" (click)="eventirpptrue()">
+                   <label class="form-check-label" for="checkirpp">Oui</label>
+                 </div>
+                 <div class="form-check form-check-inline">
+                   <input class="form-check-input" type="radio" id="irppnon"  formControlName="checkirpp" value="false" (click)="eventirppfalse()">
+                   <label class="form-check-label" for="checkirpp">Non</label>
+                 </div> 
+                 <div class="col-auto" [hidden]="irpp">
+                
+                   <label for="inputPassword6" class="col-form-label">Taux :</label>
+                  
+                 </div>
+                 <div  class="col-4" [hidden]="irpp">
+                  <div class="input-group-prepend" >
+                   <input type="text" id="irpp" class="form-control"  formControlName="irpp" [hidden]="irpp" >
+                   <span class="input-group-text" >%</span>
+                  </div>
+                 </div>
+               
+                
+                   
+                
+               </div>
+             </div>
+             <div class="form-group mb-4">
+              <div class="row g-3 align-items-center">
+                <div class="col-4">
+                  <label for="inputPassword6" class="col-form-label">FO.PRO.LOS</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="foprolosoui"  formControlName="checkfoprolos" value="true" (click)="eventfoprolostrue()">
+                  <label class="form-check-label" for="checkfoprolos">Oui</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="foprolosnon"  formControlName="checkfoprolos" value="false" (click)="eventfoprolosfalse()">
+                  <label class="form-check-label" for="checkfoprolos">Non</label>
+                </div> 
+                <div class="col-auto" [hidden]="foprolos">
+                  <label for="inputPassword6" class="col-form-label">Taux :</label>
+                </div>
+                <div  class="col-4"  [hidden]="foprolos">
+                  <div class="input-group-prepend" >
+                  <input type="text" id="foprolos" class="form-control"  formControlName="foprolos" [hidden]="foprolos" >
+                  <span class="input-group-text" >%</span>
+                </div>
+                </div>
+              
+             
+                   
+               
+              </div>
+            </div>
+             
+
+             <div class="form-group mb-4">
+               <div class="row g-3 align-items-center">
+                 <div class="col-4">
+                   <label for="inputPassword6" class="col-form-label">T.F.P</label>
+                 </div>
+                 <div class="form-check form-check-inline">
+                   <input class="form-check-input" type="radio" id="tfpoui"  formControlName="checktfp" value="true" (click)="eventtfptrue()">
+                   <label class="form-check-label" for="checktfp">Oui</label>
+                 </div>
+                 <div class="form-check form-check-inline">
+                   <input class="form-check-input" type="radio" id="tfpnon"  formControlName="checktfp" value="false" (click)="eventtfpfalse()">
+                   <label class="form-check-label" for="checktfp">Non</label>
+                 </div> 
+                 <div class="col-auto" [hidden]="tfp">
+                   <label for="inputPassword6" class="col-form-label">Taux :</label>
+                 </div>
+                 <div  class="col-4">
+                  <div class="input-group-prepend" [hidden]="tfp">
+                   <input type="text" id="tfp" class="form-control"  formControlName="tfp" [hidden]="tfp"  >
+                   <span class="input-group-text" id="validationTooltipUsernamePrepend">%</span>
+                  </div>
+                 </div>
+               
+                
+                    
+                
+               </div>
+             </div>
+            
+
+             
+
+            </div>
+          </fieldset>
+
+              
+          <br/>
+          <fieldset class="scheduler-border">
+            <div>
+                <div class="form-group mb-4">
+                  <div class="row g-3 align-items-center">
+                  <div class="col-sm-6">
+                  <label >
+                   <h4> Gestion de la présence</h4>
+                  </label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio"  id="gestion_presence" formControlName="gestion_presence" value="absence">
+                    <label class="form-check-label" for="absence">
+                      Par Absence
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio"  id="presence" formControlName="gestion_presence" value="presence">
+                    <label class="form-check-label" for="gestion_presence">
+                      Par Présnece
+                    </label>
+                  </div>
+                </div>
+
+              
+                <div class="col-sm-6">
+                  <label >
+                   <h4> Paie selon le Calendrier </h4>
+                  </label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio"  id="oui" formControlName="paie_calendrier" value="true">
+                    <label class="form-check-label" for="paie_calendrierr">
+                      Oui
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="radio"  id="non" formControlName="paie_calendrier" value="false" >
+                    <label class="form-check-label" for="paie_calendrierrr">
+                      Non
+                    </label>
+                  </div>
+                </div>
+
+
+                 </div>
+                </div>
+                <div class="form-group mb-4">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox"  id="liquidation_impot"   formControlName="liquidation_impot">
+                    <label class="form-check-label" for="liquidation_impot">
+                     <h5> Appliquer la Formule de liquidation d'impot dans la paie de Décembre </h5> 
+                    </label>
+                  </div>
+                  </div>
+           </div>
+        </fieldset>
+
+
+                <br/>
+             
+              
+
+
+            
+                
+                 </div> <!-- end col -->
+
+
+                <div class="col-md-6">
+                  <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Assurance</legend>
+                    <div>
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                      <label>Type:</label>
+                      <input type="text" class="form-control" formControlName="assurance_type">
+                      </div>
+                    </div>
+
+                    <div class="col-6">
+                      <div class="form-group">
+                      <label>Contrat N°</label>
+                      <input type="text" class="form-control" formControlName="assurance_numcontrat">
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">                 
+                    <div class="col-6">
+                 <div class="form-group">
+                   <label>Taux charge de l'employeur :</label>
+                   <div class="input-group-prepend" >
+                     <input type="text" class="form-control" id="assurance_tauxemployeur" formControlName="assurance_tauxemployeur" >
+                       <span class="input-group-text" >%</span>
+                     </div>
+                   </div>
+                   </div>
+                   <div class="col-6">
+                     <div class="form-group">
+                       <label>A la charge de l'employé </label>
+                       <div class="input-group-prepend" >
+                         <input type="text" class="form-control" id="assurance_tauxemploye" formControlName="assurance_tauxemploye" >
+                         <span class="input-group-text" >%</span>
+                       </div>
+
+                       </div>
+                       </div>
+               </div>
+                    <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                      <label>Base d'imposition:</label>
+                         <div class="form-check">
+                           <input class="form-check-input" type="radio"  id="salairebase" formControlName="assurance_imposition" value="salairebase">
+                           <label class="form-check-label" for="assurance_imposition">
+                            Salaire de Base 
+                           </label>
+                         </div>
+                         <div class="form-check">
+                           <input class="form-check-input" type="radio"  id="salairebrut" formControlName="assurance_imposition" value="salairebrut">
+                           <label class="form-check-label" for="assurance_imposition">
+                             Salaire Brut
+                           </label>
+                         </div>
+                         </div>
+                        </div>
+                        
+                        <div class="col-6">
+                          <div class="form-group">
+                          <label>Compagnie</label>
+                          <input type="text" class="form-control" formControlName="assurance_compagnie">
+                        </div>
+                        </div>
+
+                        </div>
+
+
+                         <div class="row g-3 align-items-center">
+                         <div class="col-6">
+                        <label>
+                          Période du :
+                        </label>
+                        <input type="date" class="form-control" id="date_ouverture"  placeholder="" formControlName="assurance_datedebut"  >
+                        </div>
+                        <div class="col-6">
+                        <label>
+                          Au :
+                        </label>
+                        <input type="date" class="form-control" id="date_fin"  placeholder="" formControlName="assurance_datefin">
+                      </div>
+                       </div>
+
+                    </div>
+                   
+
+                     
+                 
+                
+                  </fieldset>
+                  <br/>
+                 
+                  <fieldset class="scheduler-border">
+                   
+                    <div>
+                    <div class="form-group mb-4">
+                      <label>Reg de Commerce</label>
+                      <input type="text" class="form-control" formControlName="reg_commerce">
+                    </div>
+
+                    <div class="form-group mb-4">
+                      <label> Convention collective nationale</label>
+                    <select class="form-control"  >
+                      <option value="c1">C1</option>
+                      <option value="c2">C2</option>
+                      <option value="c3">C3</option>
+                    </select>
+                  </div>
+                  <div class="form-group mb-4">
+                    <div class="row g-3 align-items-center">
+                      <div  class="col">
+                    <label>Taux H. de nuit</label>
+                    <input type="text" class="form-control" formControlName="taux_hs" >
+                     </div>
+                     <div  class="col">
+                    <label>Autre taux H(1)</label>
+                    <input type="text" class="form-control" formControlName="taux_hs1" >
+                  </div>
+                  <div  class="col">
+                    <label>Autre taux H(2)</label>
+                    <input type="text" class="form-control" formControlName="taux_hs2" >
+                    </div>
+                  </div>
+                  </div>
+                  </div>
+                  </fieldset>
+                  <br/>
+                  <fieldset class="scheduler-border">
+                    <div>
+  
+                  <div class="form-group mb-4">
+                    <div class="row g-3 align-items-center">
+                    <div class="col-sm-6">
+                      <label >
+                       <h4> Arrondissement IRPP </h4>
+                      </label>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio"  id="arrond_irppoui" formControlName="arrond_irpp" value="true">
+                        <label class="form-check-label" for="arrond_irppoui">
+                          Oui
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio"  id="arrond_irppnon" formControlName="arrond_irpp" value="false" >
+                        <label class="form-check-label" for="arrond_irppnon">
+                          Non
+                        </label>
+                      </div>
+                    </div>
+  
+                    <div class="col-sm-6">
+                      <label >
+                       <h4> Droit Prime de Rendement </h4>
+                      </label>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio"  id="prime_rendoui" formControlName="prime_rend" value="true" (click)="eventprimetrue()">
+                        <label class="form-check-label" for="prime_rend">
+                          Oui
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="radio"  id="prime_rendnon" formControlName="prime_rend" value="false" (click)="eventprimefalse()">
+                        <label class="form-check-label" for="prime_rend">
+                          Non
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  </div>
+  
+                  <div class="form-group mb-4" [hidden]="champsprime_rend">
+                    <div class="row g-3 align-items-center">
+  
+                      <div class="col-sm-6">
+                       <h4><label> Nombre de mois :12+ </label></h4> 
+                       
+                      </div>
+                      <div class="col-sm-6">
+                      <input type="text" class="form-control"  formControlName="mois_prime_rend" >
+                    </div>
+  
+                       <div class="col-sm-6" >
+                        
+                        <h4>    <label>Périodicité de la prime de rendement </label></h4>
+                           
+                           
+                           <div class="form-check">
+                             <input class="form-check-input" type="radio"  id="an" formControlName="periode_prime_rend" value="an">
+                             <label class="form-check-label" for="periode_prime_rend">
+                               Par An
+                             </label>
+                           </div>
+                           <div class="form-check">
+                             <input class="form-check-input" type="radio"  id="semestre" formControlName="periode_prime_rend" value="semestre" >
+                             <label class="form-check-label" for="periode_prime_rend">
+                              Par Semestre
+                             </label>
+                           </div>
+                        
+                         <div class="form-check">
+                           <input class="form-check-input" type="radio"  id="trimestre" formControlName="periode_prime_rend" value="trimestre">
+                           <label class="form-check-label" for="periode_prime_rend">
+                             Par Trimestre
+                           </label>
+                         </div>
+                        
+                        
+                      </div>
+                            
+                    </div>
+  
+                  </div>
+  
+                  </div>
+                  </fieldset>
+                  <br/>
+                    
+                </div> <!-- end col -->
+  
+              </div>
+              <div class="text-md-right">
+                <button type="submit" class="btn btn-success">Modifier</button>
+              </div>
+            </form>
+          </div>
+        
+      </div>
+    </div>
+  
+   
+  </ng-template>
+        
+     

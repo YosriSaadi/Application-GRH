@@ -1,0 +1,897 @@
+<app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+
+<div class="card">
+    <div class="card-body">   
+      <div class="col-lg-20">
+          <div class="card">
+            <div class="card-body">
+              <ul ngbNav #customNav="ngbNav" [(activeId)]="this.active" class="nav-tabs nav-tabs-custom nav-justified">
+              
+                <li [ngbNavItem]="1" >
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-none d-sm-block">Liste</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="liste"></ng-template>
+                  </ng-template>
+                </li>
+        
+                <li [ngbNavItem]="2">
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                    <span class="d-none d-sm-block">Saisie</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="Saisie"></ng-template>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="3" [hidden]=true>
+                    <a ngbNavLink>
+                      <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                      <span class="d-none d-sm-block">Duplication</span>
+                    </a>
+                    <ng-template ngbNavContent>
+                      <ng-template [ngTemplateOutlet]="duplication"></ng-template>
+                    </ng-template>
+                  </li>
+                  <li [ngbNavItem]="4" [hidden]="this.modifhide">
+                    <a ngbNavLink>
+                      <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                      <span class="d-none d-sm-block">Modification</span>
+                    </a>
+                    <ng-template ngbNavContent>
+                      <ng-template [ngTemplateOutlet]="modification"></ng-template>
+                    </ng-template>
+                  </li>
+           
+               
+              </ul>
+              <div [ngbNavOutlet]="customNav"></div>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #Saisie>
+          <br/>
+            <div class="card">
+                <div class="card-body">
+            <form class="needs-validation"  [formGroup]="validationform" (ngSubmit)="saveData()" >
+             
+                <div class="row">
+                  
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="validationCustom01">Nom & prenom:*</label>
+                      <select class="custom-select" id="nom" formControlName="nom" (change)="search_employe()"  [ngClass]="{'is-invalid': submitted && form.nom.errors}">  
+                        <option *ngFor="let item of this.liste_employes let i= index" [value]="item.matricule"  >{{item.nom}} {{item.prenom}}</option>
+                      </select>
+                      <div *ngIf="submitted && form.nom.errors" class="invalid-feedback">
+                        <span *ngIf="submitted && form.nom.errors.required" >Cette valeur est obligatoire!</span>
+  
+                      </div>
+                        
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="validationCustom01">Matricule de l'employé: </label>
+                      <input type="text" class="form-control"  
+                        placeholder=""  id="matricule" formControlName="matricule" disabled>
+                      
+                  </div>
+                  </div>
+                  
+          
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="validationCustom01">Salaire de base:</label>
+                      <input type="text" class="form-control"  
+                        placeholder=""  id="nom" formControlName="salaire_base" disabled>
+                      
+                  </div>
+                  </div>
+               
+           <div class="col-md-3">
+            <label for="validationCustom01">Mois :*</label>
+            <select class="custom-select" id="mois" formControlName="mois" [ngClass]="{'is-invalid': submitted && form.mois.errors}">  
+              <option *ngFor="let item of mois; let i= index" [value]="item.ordre" selected >{{item.designation}}</option>
+            </select>
+            <div *ngIf="submitted && form.mois.errors" class="invalid-feedback">
+              <span *ngIf="submitted && form.mois.errors.required" >Cette valeur est obligatoire!</span>
+            </div>
+             </div>     
+             <div class="col-md-3">
+                <label for="validationCustom01">Prime :*</label>
+                <select class="custom-select" id="rubrique" formControlName="rubrique" [ngClass]="{'is-invalid': submitted && form.rubrique.errors}">  
+                  <option *ngFor="let prime of Type_primes" [value]="prime.designation" selected>{{prime.designation}}</option>
+                </select>
+                <div *ngIf="submitted && form.rubrique.errors" class="invalid-feedback">
+                  <span *ngIf="submitted && form.rubrique.errors.required" >Cette valeur est obligatoire!</span>
+                </div>
+                 </div>        
+                 <div class="col-md-3">
+                    <label for="validationCustom01">Paramétrage :*</label>
+                 
+
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox"  id="cotisable"   formControlName="cotisable" >
+                        <label class="form-check-label" for="liquidation_impot">
+                         <h6>Cotisable</h6> 
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox"  id="imposable"   formControlName="imposable" >
+                        <label class="form-check-label" for="liquidation_impot">
+                         <h6>Imposable </h6> 
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox"  id="medecine_travail"   formControlName="medecine_travail" >
+                        <label class="form-check-label" for="medecine_travail">
+                         <h6>Medecine de travail </h6> 
+                        </label>
+                      </div>
+
+
+                 </div>
+                 <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="validationCustom01"> </label>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox"  id="foprolos"   formControlName="foprolos" >
+                      <label class="form-check-label" for="foprolos">
+                       <h6>foprolos</h6> 
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox"  id="tfp"   formControlName="tfp" >
+                      <label class="form-check-label" for="tfp">
+                       <h6>tfp </h6> 
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox"  id="assurance_groupe"   formControlName="assurance_groupe" >
+                      <label class="form-check-label" for="assurance_groupe">
+                       <h6>Assurance</h6> 
+                      </label>
+                    </div>
+                 
+
+                    </div>
+                    </div>
+
+           
+                 <div class="col-md-3">
+                    <div class="form-group">
+                        <label for="validationCustom01">Montant Calculé:</label>
+                      
+                        <div class="input-group-prepend" [ngClass]="{'is-invalid': submitted && form.montant_calcule.errors}" >
+                        <input type="text" class="form-control"  [ngClass]="{'is-invalid': submitted && form.montant_calcule.errors}"
+                          placeholder=""  id="nom" formControlName="montant_calcule" disabled>
+                        <span class="input-group-text">DT</span>
+                      </div>
+                      <div *ngIf="submitted && form.montant_calcule.errors" class="invalid-feedback">
+                        <span *ngIf="submitted && form.montant_calcule.errors.required" >Cette valeur est obligatoire!</span>
+                      </div>     
+                     
+                        </div>
+               
+
+             </div>
+
+           
+  
+
+                  
+                  <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Montant Prime</legend>
+                    <div class="row">
+                 
+                        <div  class="col-md-12">
+                            <div class="row g-3 align-items-center">
+                            <div class="col-md-3">
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio"  id="type"  value="fixe" name="type"formControlName="type" (click)="eventtype($event)">
+                                <label class="form-check-label" for="type">
+                                  Montant fixe 
+                                </label>
+                              </div>
+                              <div class="form-check">
+                                <input class="form-check-input" type="radio"  id="type"  value="variable" name="type" formControlName="type" (click)="eventtype($event)">
+                                <label class="form-check-label" for="type">
+                                Montant Variable
+                                </label>
+                              </div>
+                            </div>
+                        
+                            <div class="col-md-3"[hidden]="this.hide_inputs">
+                              <div class="form-group">
+                                <label for="validationCustom01">Montant :*</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control"  (change)="calcule_montant()" [ngClass]="{'is-invalid': submitted && form.montant_fixe.errors}"
+                                  placeholder="Saisissez le montant"  id="montant_fixe" formControlName="montant_fixe">         
+                                  <div class="input-group-prepend"><span class="input-group-text">DT</span></div>  
+                                          <div *ngIf="submitted && form.montant_fixe.errors" class="invalid-feedback">
+                                      <span *ngIf="submitted && form.montant_fixe.errors.pattern" >Cette valeur est invalide!</span>
+                                    </div>                  
+                            </div>
+                          </div>
+                            </div>
+                            <div class="col-md-3"[hidden]="this.hide_inputs">
+                              <div class="form-group">
+                                <label >Plafond :</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control"  [ngClass]="{'is-invalid': submitted && form.plafond.errors}"
+                                placeholder="Saisissez le montant"  id="plafond" formControlName="plafond">      
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text">DT</span>
+                                  </div>  
+                                  <div *ngIf="submitted && form.plafond.errors" class="invalid-feedback">
+                                    <span *ngIf="submitted && form.plafond.errors.pattern" >Cette valeur est invalide!</span>
+                                  </div>                       
+                            </div>
+                            </div>
+                            </div>
+
+                        
+                            <div class="col-md-3" [hidden]="!this.hide_inputs">
+                              <div class="form-group">
+                                  <label for="validationCustom01">Taux :</label>
+                                  <div class="input-group">
+                                  <input type="text" class="form-control"  (change)="calcule_montant()"  [ngClass]="{'is-invalid': submitted && form.taux.errors}"
+                                    placeholder="Saisissez le taux"  id="taux"  formControlName="taux" >
+                                    <div class="input-group-prepend">
+                                      <span class="input-group-text">%</span>
+                                    </div>
+                                    <div *ngIf="submitted && form.taux.errors" class="invalid-feedback">
+                                      <span *ngIf="submitted && form.taux.errors.pattern" >Cette valeur est invalide!</span>
+                                    </div>      
+                                  </div>
+                              </div>
+                          </div>
+                        
+                          <div class="col-md-3" [hidden]="!this.hide_inputs">
+                            <div class="form-group">
+                            <label for="validationCustom01">Montant Min:</label>
+                              <div class="input-group">
+                                  <input type="text" class="form-control"  [ngClass]="{'is-invalid': submitted && form.montant_min.errors}"
+                                  placeholder="Saisissez le montant"  id="montant_min" formControlName="montant_min" ><div class="input-group-prepend"><span class="input-group-text">DT</span></div>
+                                    <div *ngIf="submitted && form.montant_min.errors" class="invalid-feedback">
+                                      <span *ngIf="submitted && form.montant_min.errors.pattern" >Cette valeur est invalide!</span>
+                
+                                    </div>
+                              </div>
+                              </div>
+                          </div>
+
+                          <div class="col-md-3" [hidden]="!this.hide_inputs">
+                            <div class="form-group">
+                              <label for="validationCustom01">Montant Max :</label>
+                              <div class="input-group">                        
+                                  <input type="text" class="form-control"   [ngClass]="{'is-invalid': submitted && form.montant_max.errors}"
+                                  placeholder="Saisissez le montant"  id="montant_max" formControlName="montant_max" ><span class="input-group-text">DT</span>
+                                    <div *ngIf="submitted && form.montant_max.errors" class="invalid-feedback">
+                                      <span *ngIf="submitted && form.montant_max.errors.pattern" >Cette valeur est invalide!</span>
+                
+                                    </div>
+                                  
+                              </div>
+                          </div>
+                         </div>
+
+
+                        </div>
+                      
+                        
+                      
+
+
+
+                    </div>
+          
+                </div>
+                </fieldset>
+
+
+                 
+                
+                 
+                 
+                  
+                  
+        
+        
+                                  
+                                  
+                </div>  
+                <div class="form-group mb-0">            
+                <div class="text-md-right">
+                <button type="submit" class="btn btn-success">Ajouter</button>
+                <button type="button" class="btn btn-warning ml-1" (click)="annuler()">Annuler</button>
+                 </div>
+                   </div>
+              </form>
+              </div>
+                </div>
+
+
+
+
+          </ng-template>
+          
+        <ng-template #liste>
+          <br/>
+            <div class="container-fluid">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="card">
+                      <div class="card-body">
+              
+                        <div class="row mb-md-2">
+                          <div class="col-sm-12 col-md-6">
+                            <div class="dataTables_length" id="tickets-table_length"><label
+                                class="d-inline-flex align-items-center">Afficher
+                                <select name="tickets-table_length" aria-controls="tickets-table" name="pageSize"
+                                  [(ngModel)]="service.pageSize"
+                                  class="custom-select custom-select-sm form-control form-control-sm mx-2">
+                                  <option [ngValue]="10">10</option>
+                                  <option [ngValue]="25">25</option>
+                                  <option [ngValue]="50">50</option>
+                                  <option [ngValue]="100">100</option>
+                                </select> entrées</label></div>
+                          </div>
+                     
+                          <div class="col-sm-12 col-md-6">
+                            <div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+                                class="d-inline-flex align-items-center">Rechercher:
+                                <input type="text" placeholder="" name="searchTerm" class="form-control form-control-sm ml-2"
+                                  aria-controls="tickets-table" [(ngModel)]="service.searchTerm"></label></div>
+                          </div>
+                         
+                        </div>
+                      
+                        <div class="table-responsive">
+                          <table id="basic-datatable"
+                          class="table table-bordered dt-responsive nowrap datatables no-footer dtr-inline">
+                            <thead class="thead-light">
+                              <tr>
+                                <th sortable="matricule_employe" (sort)="onSort($event)">Matricule </th>
+                                <th sortable="nom" (sort)="onSort($event)">Nom & prénom </th>
+                                <th sortable="rubrique" (sort)="onSort($event)">Prime</th>
+                                <th sortable="montant" (sort)="onSort($event)">Montant</th>
+                                <th sortable="mois" (sort)="onSort($event)">Mois</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+              
+                              <tr *ngFor="let table of tables$ | async">
+                                <td>
+                                  <a class="text-dark font-weight-bold">
+                                    <ngb-highlight [result]="table.matricule_employe" [term]="service.searchTerm"></ngb-highlight>
+                                  </a>
+                                </td>
+                                <td>
+                                  <ngb-highlight [result]="table.nom" [term]="service.searchTerm"></ngb-highlight>
+                                </td>
+                                <td>
+                                  <ngb-highlight [result]="table.rubrique" [term]="service.searchTerm"></ngb-highlight>
+                                </td>
+                                <td>
+                                    <ngb-highlight [result]="table.montant+' DT'" [term]="service.searchTerm"></ngb-highlight>
+                                  </td>
+                                <td>
+                                  <ngb-highlight [result]="table.mois" [term]="service.searchTerm"></ngb-highlight>
+                                </td>
+                               
+
+                              
+                                <td>
+                                  <div ngbDropdown placement="bottom-left">
+                                    
+                                     <!-- <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Ajouter avance pour cet employé" ><i
+                                        class="mdi mdi-bookmark-plus-outline font-size-20" ></i></a>-->
+                                      <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" (click)="openedit(table)" ngbTooltip="Modifier"  ><i
+                                        class="mdi mdi-pencil font-size-20"></i></a>
+                                      <a href="javascript:void(0);" class="text-danger" placement="top" (click)="deleteprime(this.table.id,table.mois)" ngbTooltip="Supprimer" ><i
+                                          class="mdi mdi-trash-can font-size-20"></i></a>
+                                    
+                                  </div>
+                                </td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                     
+                        <div class="row justify-content-md-between align-items-md-center mt-2">
+                          <div class="col-sm-12 col-md-5">
+                            <div class="dataTables_info mb-2" id="tickets-table_info" role="status" aria-live="polite">Afficher
+                              {{service.startIndex}} à
+                              {{service.endIndex}} sur {{service.totalRecords}}
+                              entrées
+                            </div>
+                          </div>
+                      
+                          <div class="col-sm-12 col-md-5">
+                            <div class="text-md-right float-md-right pagination-rounded">
+                              <ngb-pagination [collectionSize]="total$ | async" [(page)]="service.page" [pageSize]="service.pageSize">
+                              </ngb-pagination>
+                            </div>
+                          </div>
+                     
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            
+            
+           
+            
+
+
+
+            
+          </ng-template>
+                 
+        <ng-template #duplication [hidden]=true>
+          <br/>
+
+          <div class="container-fluid">
+            
+                  <fieldset class="scheduler-border">
+                    <legend class="scheduler-border">Sélection</legend>
+                   
+                    <div class="form-group mb-4">                   
+                   
+                      <div class="row">
+                        <div class="col-md-10">
+                          <h3>Etats des prêts</h3>
+                          <div class="form-check form-check-inline" >
+                            <input class="form-check-input" type="radio" name="etat" id="inlineRadio1"  value="Tous" checked>
+                            <label class="form-check-label" for="inlineRadio1"  checked>Tous</label>
+                          </div>
+                           <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="etat" id="inlineRadio2"  value="soldé">
+                            <label class="form-check-label" for="inlineRadio2">soldé</label>
+                           </div>
+                           <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="etat" id="inlineRadio3"  value="non soldé" >
+                            <label class="form-check-label" for="inlineRadio3">Non soldé </label>
+                           </div>
+                            <div class="form-check form-check-inline">
+                              <input class="form-check-input" type="radio" name="etat" id="inlineRadio4"  value="en cour" >
+                              <label class="form-check-label" for="inlineRadio3">En cour </label>
+                             </div>
+
+                        </div>
+                        <div class="col-md-2">
+                          <h3>Type des prêts</h3>
+                          <div class="form-check form-check-inline" >
+                          <input class="form-check-input" type="radio" name="Type" id="inlineRadio5"  value="Tous" checked>
+                          <label class="form-check-label" for="inlineRadio1" >Tous </label>
+                        </div>
+                         <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="Type" id="inlineRadio6" value="pretste">
+                          <label class="form-check-label" for="inlineRadio2">Préts société</label>
+                         </div>
+
+                         <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="Type" id="inlineRadio2"  value="autrepret">
+                          <label class="form-check-label" for="inlineRadio2">Autre Préts</label>
+                         </div>
+
+                        </div>
+                      </div>
+      
+                   </div>
+                
+               
+               
+            
+
+                  
+                </fieldset>
+               
+               
+
+
+
+<!-- Begin tables-->
+                <div class="row">
+
+          <div class="col-lg-4">
+            <div class="card">
+              <div class="card-body">
+                <div class="col-md-8">
+                  <div class="form-group">
+                    <label for="validationCustom01">Exerice :*</label>
+                    <select class="custom-select" id="libelle_pret" formControlName="libelle" >  
+                      <option value="2019" selected>2019</option>
+                      <option value="2020">2020</option>
+                      <option value="2021">2021</option>
+                    </select>
+                    
+                </div>
+                </div>
+                <h4 class="card-title">Mois de Destination</h4>
+      
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+      
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Mois</th>
+                        
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let number of mois_primes; let i = index" >
+                        <td >  <input type="checkbox" class="custom-control-input" :id="soldecheck{{i}}"> </td>
+                      
+                        <th scope="row">{{number.id}}</th>
+                        <th scope="row">{{number.mois}}</th>
+                      
+                         
+                       
+                      </tr>
+                     
+                    </tbody>
+                  </table>
+                </div>
+      
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Primes à Duppliquer</h4>
+               
+      
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+      
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Id</th>
+                        <th>Désignation</th>
+                        
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">1</th>
+                        <td>Mark</td>
+                        <td>Otto</td>
+                      
+                      </tr>
+                      <tr>
+                        <th scope="row">2</th>
+                        <td>Jacob</td>
+                        <td>Thornton</td>
+                       
+                      </tr>
+                    
+                    </tbody>
+                  </table>
+                </div>
+      
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Employés concernés</h4>
+                
+      
+                <div class="table-responsive">
+                  <table class="table table-hover mb-0">
+      
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>employe</th>
+                        <th>Nom prénom</th>
+                        
+                       
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr *ngFor="let employe of employes; let i = index">
+                        <th scope="row">{{employe.nom}}</th>
+                        <td>{{employe.matricule}}</td>
+                        <td><input type="checkbox" class="custom-control-input"   ></td>
+                       
+                      </tr>
+                   
+                    </tbody>
+                  </table>
+                </div>
+      
+              </div>
+            </div>
+          </div>
+</div>
+<!-- end tables-->
+        </div>
+      
+
+   
+           
+          </ng-template>
+
+
+
+          <ng-template #modification>
+       <br/>
+            <div class="card">
+                <div class="card-body">
+            <form class="needs-validation"  [formGroup]="validationeditform" (ngSubmit)="editData()" >
+             
+              <div class="row">
+                  
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="validationCustom01">Nom & prenom:*</label>
+                    <input type="text" class="form-control"  
+                    placeholder=""  id="matricule" formControlName="nom" disabled>
+                   
+                      
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="validationCustom01">Matricule de l'employé: </label>
+                    <input type="text" class="form-control"  
+                      placeholder=""  id="matricule" formControlName="matricule" disabled>
+                    
+                </div>
+                </div>
+                
+        
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="validationCustom01">Salaire de base:</label>
+                    <input type="text" class="form-control"  
+                      placeholder=""  id="nom" formControlName="salaire_base" disabled>
+                    
+                </div>
+                </div>
+             
+         <div class="col-md-3">
+          <label for="validationCustom01">Mois :*</label>
+          <select class="custom-select" id="mois" formControlName="mois" [ngClass]="{'is-invalid': submitted && editform.mois.errors}">  
+            <option *ngFor="let item of mois; let i= index" [value]="item.ordre" selected >{{item.designation}}</option>
+          </select>
+          <div *ngIf="submitted && editform.mois.errors" class="invalid-feedback">
+            <span *ngIf="submitted && editform.mois.errors.required" >Cette valeur est obligatoire!</span>
+          </div>
+           </div>     
+           <div class="col-md-3">
+              <label for="validationCustom01">Prime :*</label>
+              <select class="custom-select" id="rubrique" formControlName="rubrique" [ngClass]="{'is-invalid': submitted && editform.rubrique.errors}">  
+                <option *ngFor="let prime of Type_primes" [value]="prime.designation" selected>{{prime.designation}}</option>
+              </select>
+              <div *ngIf="submitted && editform.rubrique.errors" class="invalid-feedback">
+                <span *ngIf="submitted && editform.rubrique.errors.required" >Cette valeur est obligatoire!</span>
+              </div>
+               </div>        
+               <div class="col-md-3">
+                  <label for="validationCustom01">Paramétrage :*</label>
+               
+
+                  <div class="form-check">
+                      <input class="form-check-input" type="checkbox"  id="cotisable"   formControlName="cotisable" >
+                      <label class="form-check-label" for="liquidation_impot">
+                       <h6>Cotisable</h6> 
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox"  id="imposable"   formControlName="imposable" >
+                      <label class="form-check-label" for="liquidation_impot">
+                       <h6>Imposable </h6> 
+                      </label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox"  id="medecine_travail"   formControlName="medecine_travail" >
+                      <label class="form-check-label" for="medecine_travail">
+                       <h6>Medecine de travail </h6> 
+                      </label>
+                    </div>
+
+
+               </div>
+               <div class="col-md-3">
+                <div class="form-group">
+                  <label for="validationCustom01"> </label>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox"  id="foprolos"   formControlName="foprolos" >
+                    <label class="form-check-label" for="foprolos">
+                     <h6>foprolos</h6> 
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox"  id="tfp"   formControlName="tfp" >
+                    <label class="form-check-label" for="tfp">
+                     <h6>tfp </h6> 
+                    </label>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox"  id="assurance_groupe"   formControlName="assurance_groupe" >
+                    <label class="form-check-label" for="assurance_groupe">
+                     <h6>Assurance</h6> 
+                    </label>
+                  </div>
+               
+
+                  </div>
+                  </div>
+
+         
+               <div class="col-md-3">
+                  <div class="form-group">
+                      <label for="validationCustom01">Montant Calculé:</label>
+                    
+                      <div class="input-group-prepend" [ngClass]="{'is-invalid': submitted && editform.montant_calcule.errors}" >
+                      <input type="text" class="form-control"  [ngClass]="{'is-invalid': submitted && editform.montant_calcule.errors}"
+                        placeholder=""  id="nom" formControlName="montant_calcule" disabled>
+                      <span class="input-group-text">DT</span>
+                    </div>
+                    <div *ngIf="submitted && editform.montant_calcule.errors" class="invalid-feedback">
+                      <span *ngIf="submitted && editform.montant_calcule.errors.required" >Cette valeur est obligatoire!</span>
+                    </div>     
+                   
+                      </div>
+             
+
+           </div>
+
+         
+
+
+                
+                <fieldset class="scheduler-border">
+                  <legend class="scheduler-border">Montant Prime</legend>
+                  <div class="row">
+               
+                      <div  class="col-md-12">
+                          <div class="row g-3 align-items-center">
+                          <div class="col-md-3">
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio"  id="type"  value="fixe" name="type"formControlName="type" (click)="eventtype($event)">
+                              <label class="form-check-label" for="type">
+                                Montant fixe 
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio"  id="type"  value="variable" name="type" formControlName="type" (click)="eventtype($event)">
+                              <label class="form-check-label" for="type">
+                              Montant Variable
+                              </label>
+                            </div>
+                          </div>
+                      
+                          <div class="col-md-3"[hidden]="this.hide_inputs">
+                            <div class="form-group">
+                              <label for="validationCustom01">Montant :*</label>
+                              <div class="input-group">
+                              <input type="text" class="form-control"  (change)="calcule_montant_edit()" [ngClass]="{'is-invalid': submitted && editform.montant_fixe.errors}"
+                                placeholder=""  id="montant_fixe" formControlName="montant_fixe">         
+                                <div class="input-group-prepend"><span class="input-group-text">DT</span></div>  
+                                        <div *ngIf="submitted && editform.montant_fixe.errors" class="invalid-feedback">
+                                    <span *ngIf="submitted && editform.montant_fixe.errors.pattern" >Cette valeur est invalide!</span>
+                                  </div>                  
+                          </div>
+                        </div>
+                          </div>
+                          <div class="col-md-3"[hidden]="this.hide_inputs">
+                            <div class="form-group">
+                              <label >Plafond :</label>
+                              <div class="input-group">
+                              <input type="text" class="form-control"  [ngClass]="{'is-invalid': submitted && editform.plafond.errors}"
+                                placeholder=""  id="plafond" formControlName="plafond">      
+                                <div class="input-group-prepend">
+                                  <span class="input-group-text">DT</span>
+                                </div>  
+                                <div *ngIf="submitted && editform.plafond.errors" class="invalid-feedback">
+                                  <span *ngIf="submitted && editform.plafond.errors.pattern" >Cette valeur est invalide!</span>
+                                </div>                       
+                          </div>
+                          </div>
+                          </div>
+
+                      
+                          <div class="col-md-3" [hidden]="!this.hide_inputs">
+                            <div class="form-group">
+                                <label for="validationCustom01">Taux :</label>
+                                <div class="input-group">
+                                <input type="text" class="form-control"  (change)="calcule_montant_edit()"  [ngClass]="{'is-invalid': submitted && editform.taux.errors}"
+                                  placeholder=""  id="taux"  formControlName="taux" >
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text">%</span>
+                                  </div>
+                                  <div *ngIf="submitted && editform.taux.errors" class="invalid-feedback">
+                                    <span *ngIf="submitted && editform.taux.errors.pattern" >Cette valeur est invalide!</span>
+                                  </div>      
+                                </div>
+                            </div>
+                        </div>
+                      
+                        <div class="col-md-3" [hidden]="!this.hide_inputs">
+                          <div class="form-group">
+                          <label for="validationCustom01">Montant Min:</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control"  [ngClass]="{'is-invalid': submitted && editform.montant_min.errors}"
+                                  placeholder=""  id="montant_min" formControlName="montant_min" ><div class="input-group-prepend"><span class="input-group-text">DT</span></div>
+                                  <div *ngIf="submitted && editform.montant_min.errors" class="invalid-feedback">
+                                    <span *ngIf="submitted && editform.montant_min.errors.pattern" >Cette valeur est invalide!</span>
+              
+                                  </div>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3" [hidden]="!this.hide_inputs">
+                          <div class="form-group">
+                            <label for="validationCustom01">Montant Max :</label>
+                            <div class="input-group">                        
+                                <input type="text" class="form-control"   [ngClass]="{'is-invalid': submitted && editform.montant_max.errors}"
+                                  placeholder=""  id="montant_max" formControlName="montant_max" ><span class="input-group-text">DT</span>
+                                  <div *ngIf="submitted && editform.montant_max.errors" class="invalid-feedback">
+                                    <span *ngIf="submitted && editform.montant_max.errors.pattern" >Cette valeur est invalide!</span>
+              
+                                  </div>
+                                
+                            </div>
+                        </div>
+                       </div>
+
+
+                      </div>
+                    
+                      
+                    
+
+
+
+                  </div>
+        
+              </div>
+              </fieldset>
+
+
+               
+              
+               
+               
+                
+                
+      
+      
+                                
+                                
+              </div>   
+                <div class="form-group mb-0">            
+                <div class="text-md-right">
+                <button type="submit" class="btn btn-success">Modifier</button>
+                <button type="button" class="btn btn-warning ml-1" (click)="canceledit()">Annuler</button>
+                 </div>
+                   </div>
+              </form>
+              </div>
+                </div>
+
+
+
+
+          </ng-template>

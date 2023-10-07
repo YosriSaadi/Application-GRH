@@ -1,0 +1,864 @@
+<app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+        <div>
+            <div >  
+              <div class="col-lg-20">
+                  <div class="card">
+                    <div class="card-body">
+                      <ul ngbNav #customNav="ngbNav" [(activeId)]="this.active" class="nav-tabs nav-tabs-custom nav-justified">
+                        <li [ngbNavItem]="1">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                            <span class="d-none d-sm-block">Saisie prêt</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="saisiepret"></ng-template>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="2">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                            <span class="d-none d-sm-block">Consultation des prêts</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="Concultationprets"></ng-template>
+                          </ng-template>
+                        </li>
+                     
+                        <li [ngbNavItem]="3" [hidden]="this.modifhide">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                            <span class="d-none d-sm-block">Modification</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="modificationpret"></ng-template>
+                          </ng-template>
+                        </li>
+                   
+                                  
+                      </ul>
+                      <div [ngbNavOutlet]="customNav"></div>
+                    </div>
+                  </div>
+                </div>
+                
+                <ng-template #saisiepret> 
+                  <br/>
+                    <div class="card">
+                        <div class="card-body">
+                    <form class="needs-validation"  [formGroup]="validationform"  >
+                     
+                        <div class="row">
+                          
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label for="validationCustom01">Nom & prenom de l'employé :</label>
+                              <select class="custom-select" id="nom" formControlName="nom" (change)="search_employe()"  [ngClass]="{'is-invalid': submitted && form.nom.errors}">  
+                                <option *ngFor="let item of this.liste_employes let i= index" [value]="item.matricule"  >{{item.nom}} {{item.prenom}}</option>
+                              </select>
+                              <div *ngIf="submitted && form.nom.errors" class="invalid-feedback">
+                                <span *ngIf="submitted && form.nom.errors.required" >Cette valeur est obligatoire</span>
+                              </div>
+                               
+                            </div>
+                          </div>
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label for="validationCustom01">Matricule de l'employé :</label>
+                              <input type="text" class="form-control"  disabled
+                                placeholder=""  id="matricule_employe" formControlName="matricule_employe" >
+                               
+                          </div>
+                          </div>
+                          
+                  
+                          <div class="col-md-3">
+                            <div class="form-group">
+                            <label for="example-date-input">Date :*</label>
+                            <input class="form-control" type="date" value="07-04-2021" id="date" formControlName="date" [ngClass]="{'is-invalid': submitted && form.date.errors}"  >
+                            <div *ngIf="submitted && form.date.errors" class="invalid-feedback" >
+                              <span *ngIf="submitted && form.date.errors.required" >Cette valeur est obligatoire</span>
+                            </div>
+                            </div>
+                          </div>
+                         
+                          <div class="col-md-3">
+                           
+                            <div class="form-group">
+                              <label for="validationCustom01">Libellé prêt :*</label>
+                              <select class="custom-select" id="libelle_pret" formControlName="libelle" [ngClass]="{'is-invalid': submitted && form.libelle.errors}">  
+                                <option *ngFor="let lieblle of libelles" [value]="lieblle.designation" >{{lieblle.designation}}</option>
+                              </select>
+                              <div *ngIf="submitted && form.libelle.errors" class="invalid-feedback" >
+                                <span *ngIf="submitted && form.libelle.errors.required" >Cette valeur est obligatoire</span>
+                              </div>
+                              
+                          </div>
+                          </div>
+                         
+                      
+                          <div class="col-md-3">
+    
+                            <div class="form-group">
+                              <label for="validationCustom01">Montant :*</label>
+                              <div class="input-group-prepend" [ngClass]="{'is-invalid': submitted && form.montant_pret.errors}">
+                              <input type="text" class="form-control" id="montant" 
+                                placeholder="" formControlName="montant_pret" [ngClass]="{'is-invalid': submitted && form.montant_pret.errors}" >
+                                <span class="input-group-text">DT</span></div>     
+                                <div *ngIf="submitted && form.montant_pret.errors" class="invalid-feedback" >
+                                  <span *ngIf="submitted && form.montant_pret.errors.required" >Cette valeur est obligatoire!</span>
+                                  <span *ngIf="submitted && form.montant_pret.errors.pattern">Cette valeur est invalide!</span>
+                                </div>
+                          </div>
+                          </div>
+                          
+                          <div class="col-md-3">
+    
+                            <div class="form-group">
+                              <label for="validationCustom01">Montant echéance :</label>
+                              <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && form.montant_echeance.errors}">
+                              <input type="text" class="form-control" id="montant_echeance" 
+                                placeholder="" formControlName="montant_echeance" [ngClass]="{'is-invalid': submitted && form.montant_echeance.errors}" >
+                                <span class="input-group-text">DT</span></div>     
+                                <div *ngIf="submitted && form.montant_echeance.errors" class="invalid-feedback">
+                                <span *ngIf="submitted && form.montant_echeance.errors.pattern">Cette valeur est invalide!</span>
+                              </div>
+                          </div>
+                          </div>
+                        
+                          <div class="col-md-3">
+                            <div class="form-group">
+                              <label for="example-date-input">Date 1° Echéance:</label>
+                              <input class="form-control" type="date" value="07-04-2021" id="date_1echeance" formControlName="date_1echeance"  >
+                            
+                              </div>
+                          </div>
+                          <div class="col-md-3">
+
+                            <label for="example-date-input">Type prêt:</label>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="type" id="pretste" value="pretste" (click)="chnageprettrue()" formControlName="type" >
+                              <label class="form-check-label" for="exampleRadios1" >
+                                Prêt société
+                              </label>
+                            </div>
+                            <div class="form-check">
+                              <input class="form-check-input" type="radio" name="type" id="autrepret" (click)="changepretfalse()" formControlName="type" value="autrepret">
+                              <label class="form-check-label" for="exampleRadios2">
+                                Autre prêt
+                              </label>
+                            </div>
+                           
+                          </div>
+                        
+                        
+                                          
+                        </div>  
+                        <div class="form-group mb-0">            
+                        <div class="text-md-right">
+                        <button type="submit" class="btn btn-success" [hidden]="!typepret" (click)="genererpret()">Générer Echéances</button>
+                       
+                        <button type="submit" class="btn btn-success" [hidden]="typepret" (click)="confirmerpret()">Confirmer</button>
+                        <button type="button" class="btn btn-warning ml-1" (click)="resetgenration()" >Annuler</button>
+                         </div>
+                           </div>
+                      </form>
+                      </div>
+                        </div>
+
+                        <div class="row" [hidden]="tableecheance" >
+                          <div class="col-lg-12">
+                            <div class="card">
+                              <div class="card-body">
+                                <h4 class="card-title">Echéancier</h4>
+                                
+                      
+                                <div class="table-responsive">
+                                  <table  class="table table-striped mb-0">
+                      
+                                    <thead>
+                                      <tr>          
+                                        <th>Date Echeance </th>
+                                        <th>Mois</th>
+                                        <th>Année</th>
+                                        <th>Montant</th>
+                                        <th>Changer etat</th>
+                                        <th>Etat</th>
+                                        <th>Observation </th>
+                                        
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let number of pret; let i = index" >
+                                        <td><div class="col-9">
+                                         <input class="form-control" (change)="decalage(i,$event)" type="date" value="{{number.date_echeance}}" id="example-date-input">
+                                  
+                                        </div></td>
+                                        <td>{{number.mois}}</td>
+                                        <td>{{number.anne}}</td>
+                                        <td>{{number.montant_echeance}} DT</td>
+                                        <td>
+                                         
+
+                                          <div class="badge font-size-12" [ngClass]="{'badge-soft-danger': number.solde === 'Non soldé',
+                                          'badge-soft-success':number.solde === 'Soldé'}">
+                                          {{number.solde}}
+                                          </div>
+ 
+                                         </td>
+                                        <td>
+                                          <div class="custom-control custom-checkbox">
+                                            <input type="checkbox" class="custom-control-input" :id="soldecheck{{i}}" (click)="Changeretatsolde(number)" >
+                                            <label class="custom-control-label" :for="soldecheck{{i}}">&nbsp;</label>
+                                          </div>
+                                        </td>
+                                     
+                                        <td>
+                                          <input class="form-control"  type="text" value=""  (change)="Observation(i,$event)">
+                                        </td>
+                                      
+                                      </tr>
+                                    
+                                    
+                                    </tbody>
+                                  </table>
+                                
+
+
+                                </div>
+                              
+                                <div class="form-group">            
+                                  <div class="text-md-right">
+                                  <button type="submit" class="btn btn-success" (click)="confirmerpret()" >Confirmer</button>
+                                  <button type="submit" class="btn btn-info btn-rounded ml-1"(click)="print('component2')">Imprimer l'engagement</button>
+                                 </div>
+                                </div>
+                             
+                              </div>
+                             
+                            </div>
+                          </div>
+                      
+                     
+                        </div>
+
+                  </ng-template>
+    
+                  
+                <ng-template #Concultationprets> 
+                  <br/>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card">
+                  
+
+                        <div class="card-body">
+                          <fieldset class="scheduler-border">
+                            <legend class="scheduler-border">Sélection</legend>
+                           
+                            <div class="form-group mb-4">                   
+                           
+                              <div class="row">
+                                <div class="col-md-9">
+                                  <h3>Etats des prêts</h3>
+                                  <div class="form-check form-check-inline" >
+                                    <input class="form-check-input" type="radio" name="etat" id="inlineRadio1" (change)="Etatpret($event)" value="Tous" checked>
+                                    <label class="form-check-label" for="inlineRadio1" (change)="Etatpret($event)" checked>Tous</label>
+                                  </div>
+                                   <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="etat" id="inlineRadio2" (change)="Etatpret($event)" value="soldé">
+                                    <label class="form-check-label" for="inlineRadio2">soldé</label>
+                                   </div>
+                                   <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="etat" id="inlineRadio3" (change)="Etatpret($event)" value="non soldé" >
+                                    <label class="form-check-label" for="inlineRadio3">Non soldé </label>
+                                   </div>
+                                    <div class="form-check form-check-inline">
+                                      <input class="form-check-input" type="radio" name="etat" id="inlineRadio4" (change)="Etatpret($event)" value="en cour" >
+                                      <label class="form-check-label" for="inlineRadio3">En cour </label>
+                                     </div>
+
+                                </div>
+                                <div class="col-md-3">
+                                  <h3>Type des prêts</h3>
+                                  <div class="form-check form-check-inline" >
+                                  <input class="form-check-input" type="radio" name="Type" id="inlineRadio5" (change)="Typepret($event)" value="Tous" checked>
+                                  <label class="form-check-label" for="inlineRadio1" (change)="Typepret($event)">Tous</label>
+                                </div>
+                                 <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="Type" id="inlineRadio6" (change)="Typepret($event)" value="pretste">
+                                  <label class="form-check-label" for="inlineRadio2">Prét sté </label>
+                                 </div>
+
+                                 <div class="form-check form-check-inline">
+                                  <input class="form-check-input" type="radio" name="Type" id="inlineRadio2" (change)="Typepret($event)" value="autrepret">
+                                  <label class="form-check-label" for="inlineRadio2">Autre Prét</label>
+                                 </div>
+
+                                </div>
+                              </div>
+              
+                           </div>
+                        
+                       
+                       
+                    
+
+                            <div class="row mb-md-2">
+                              <div class="col-sm-12 col-md-6">
+                                <div class="dataTables_length" id="tickets-table_length"><label
+                                    class="d-inline-flex align-items-center">Afficher
+                                    <select name="tickets-table_length" aria-controls="tickets-table" name="pageSize"
+                                      [(ngModel)]="service.pageSize"
+                                      class="custom-select custom-select-sm form-control form-control-sm mx-2">
+                                      <option [ngValue]="10">10</option>
+                                      <option [ngValue]="25">25</option>
+                                      <option [ngValue]="50">50</option>
+                                      <option [ngValue]="100">100</option>
+                                    </select>prêts</label>
+                                  </div>
+                              </div>
+                              <!-- Search -->
+                              <div class="col-sm-12 col-md-6">
+                
+                                <div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+                                    class="d-inline-flex align-items-center">Rechercher:
+                                    <input placeholder="Par matricule,date,nom..." type="text" name="searchTerm" class="form-control form-control-sm ml-2"
+                                      aria-controls="tickets-table" [(ngModel)]="service.searchTerm"></label>
+                                    </div>
+                              </div>
+                              <!-- End search -->
+                            </div>
+                        </fieldset>
+                       
+                       
+                          <!-- Table -->
+                          <div class="table-responsive">
+                            <table id="basic-datatable"
+                            class="table table-bordered dt-responsive nowrap datatables no-footer dtr-inline">
+                              <thead class="thead-light">
+                                <tr>
+                                  <th sortable="matricule_employe" (sort)="onSort($event)">Matricule</th>
+                                  <th sortable="nom" (sort)="onSort($event)">Nom & Prénom</th>
+                                  <th sortable="id" (sort)="onSort($event)">N° Prêt</th>
+                                  <th sortable="libelle" (sort)="onSort($event)">Libellé du Prêt</th>
+                                  <th sortable="date" (sort)="onSort($event)">Date Prêt</th>
+                                  <th sortable="montant_pret" (sort)="onSort($event)">Montant</th>
+                                  <th sortable="montant_solde" (sort)="onSort($event)">Montant Soldé</th>
+                                  <th sortable="reste" (sort)="onSort($event)">Reste</th>
+                                  <th>Action</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                
+                                <tr *ngFor="let table of tables$ | async">
+                                  <td>
+                                    <a class="text-dark font-weight-bold">
+                                      <ngb-highlight [result]="table.matricule_employe" [term]="service.searchTerm"></ngb-highlight>
+                                    </a>
+                                  </td>
+                                  <td>
+                                    <ngb-highlight [result]="table.nom" [term]="service.searchTerm"></ngb-highlight>
+                                  </td>
+                                  <td>
+                                    <ngb-highlight [result]="table.id" [term]="service.searchTerm"></ngb-highlight>
+                                  </td>
+                                  <td>
+                                    <ngb-highlight [result]="table.libelle" [term]="service.searchTerm"></ngb-highlight>
+                                  </td>
+                                  <td>
+                                    <ngb-highlight [result]="table.date" [term]="service.searchTerm"></ngb-highlight>
+                                  </td>
+                                  <td>
+                                    <ngb-highlight [result]="table.montant_pret+' DT'" [term]="service.searchTerm" ></ngb-highlight>
+                                  </td>
+                                  <td>
+                                   
+                                    <ngb-highlight class="text-warning mt-10" [result]="table.montant_solde+' DT'" [term]="service.searchTerm" ></ngb-highlight>
+                                
+                                  </td>
+                                  <td>
+                                    <ngb-highlight class="text-danger mt-10" [result]="table.reste+' DT'" [term]="service.searchTerm"></ngb-highlight>
+                                  </td>
+                                  <td>
+                                    <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" (click)="editpret(table)"ngbTooltip="Modifier"><i
+                                        class="mdi mdi-pencil font-size-20"></i></a>
+                                    <a href="javascript:void(0);" class="text-danger" placement="top" (click)="deletepret(table.id,table)" ngbTooltip="Supprimer"><i
+                                        class="mdi mdi-trash-can font-size-20"></i></a>
+                                  </td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <!-- End table -->
+                          <div class="row justify-content-md-between align-items-md-center mt-2">
+                            <div class="col-sm-12 col-md-5">
+                              <div class="dataTables_info mb-2" id="tickets-table_info" role="status" aria-live="polite">Afficher
+                                {{service.startIndex}} à
+                                {{service.endIndex}} sur {{service.totalRecords}}
+                                entrées
+                              </div>
+                            </div>
+                            <!-- Pagination -->
+                            <div class="col-sm-12 col-md-5">
+                              <div class="text-md-right float-md-right pagination-rounded">
+                                <ngb-pagination [collectionSize]="total$ | async" [(page)]="service.page" [pageSize]="service.pageSize">
+                                </ngb-pagination>
+                              </div>
+                            </div>
+                            <!-- End Pagination -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                </ng-template>
+
+                <ng-template #modificationpret> 
+                  <br/>
+                  <div class="card">
+                    <div class="card-body">
+                <form class="needs-validation"  [formGroup]="validationeditform" (ngSubmit)="modifier_pret()" >
+                 
+                    <div class="row">
+                      
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="validationCustom01">Matricule de l'employé:*</label>
+                          <input type="text" class="form-control" 
+                            placeholder="" id="matricule_employe" formControlName="matricule_employe" [ngClass]="{'is-invalid': submitted && formm.matricule_employe.errors}">
+                           
+                           
+                        </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="validationCustom01">Nom & prenom de l'employé :*</label>
+                          <input type="text" class="form-control"  
+                            placeholder=""  id="nom" formControlName="nom" >
+                           
+                      </div>
+                      </div>
+
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="validationCustom01">N° prêt</label>
+                          <input type="text" class="form-control"  
+                            placeholder=""  id="num_pret" formControlName="num_pret" >
+                           
+                      </div>
+                      </div>
+                      
+                      
+              
+                      <div class="col-md-3">
+                        <div class="form-group">
+                        <label for="example-date-input">Date :*</label>
+                        <input class="form-control" type="date" value="07-04-2021" id="date" formControlName="date" [ngClass]="{'is-invalid': submitted && form.date.errors}"  >
+                        <div *ngIf="submitted && form.date.errors" class="invalid-feedback" >
+                          <span *ngIf="submitted && form.date.errors.required" >Ce champs est obligatoire!</span>
+                        </div>
+                        </div>
+                      </div>
+                     
+                      <div class="col-md-3">
+                       
+                         
+                        <div class="form-group">
+                          <label for="validationCustom01">Libellé prêt :*</label>
+                          <select class="custom-select" id="libelle_pret" formControlName="libelle" [ngClass]="{'is-invalid': submitted && form.libelle.errors}">  
+                            <option *ngFor="let lieblle of libelles" [value]="lieblle.designation" >{{lieblle.designation}}</option>
+                          </select>
+                          <div *ngIf="submitted && form.libelle.errors" class="invalid-feedback" >
+                            <span *ngIf="submitted && form.libelle.errors.required" >Cette valeur est obligatoire</span>
+                          </div>
+                          
+                      </div>
+                    </div>
+                     
+                  
+                      <div class="col-md-3">
+
+                        <div class="form-group">
+                          <label for="validationCustom01">Montant :*</label>
+                          <input type="text" class="form-control" id="montant" 
+                          placeholder="Saisissez le montant" formControlName="montant_pret"  disabled>
+                            
+                      </div>
+                      </div>
+                      
+                      <div class="col-md-3">
+
+                        <div class="form-group">
+                          <label for="validationCustom01">Montant echéance :*</label>
+                          <input type="text" class="form-control" id="montant_echeance" 
+                          placeholder="Saisissez le montant" formControlName="montant_echeance"  disabled>
+                           
+                      </div>
+                      </div>
+                      <div class="col-md-3" >
+                        <label for="example-date-input">Type prêt:</label>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="type" id="pretste" value="pretste" (click)="changer_pret_type_modif_false()" disabled formControlName="type" >
+                          <label class="form-check-label" for="exampleRadios1" >
+                            Prêt Sté
+                          </label>
+                        </div>
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="type" id="autrepret" (click)="changer_pret_type_modif_true()" disabled  formControlName="type" value="autrepret">
+                          <label class="form-check-label" for="exampleRadios2">
+                            Autre prêt
+                          </label>
+                        </div>
+                       
+                      </div>
+                    
+                    
+                                      
+                    </div>  
+                    <div class="form-group mb-0">            
+                    <div class="text-md-right">
+                    <button type="submit" class="btn btn-success ml-1"  >Modifier</button>
+                    <button type="button" class="btn btn-warning ml-1" (click)="resetmodification()" >Annuler</button>
+                     </div>
+                       </div>
+                  </form>
+                  </div>
+                    </div>
+
+                    <div class="row"  id="component1" [hidden]="this.typepret_modif">
+                      <div class="col-lg-12">
+                        <div class="card">
+                          <div class="card-body">
+                            <h4 class="card-title">Echéancier</h4>
+                            
+                  
+                            <div class="table-responsive">
+                              <table  class="table table-striped mb-0">
+                  
+                                <thead>
+                                  <tr>
+                              
+                                    <th class="right">Date Echeance</th>
+                                    <th>Montant</th>
+                                    <th>Etat</th>
+                                    <th>Changer Etat</th>
+                                    <th>Observation </th>
+                                    
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr *ngFor="let number of pret; let i = index" >
+                                    <td><div class="col-7">
+                                      <input class="form-control" (change)="decalage(i,$event)" type="date" value="{{number.date_echeance}}" id="example-date-input">
+                                    </div></td>
+                                    <td>{{number.montant_echeance}} </td>
+                                    <td>
+                                      <div class="badge font-size-12" [ngClass]="{'badge-soft-danger': number.solde ==='Non soldé',
+                                      'badge-soft-success':number.solde === 'Soldé'}">
+                                      {{number.solde}}
+                                      </div>
+                                     </td>
+                                    <td>
+                                      <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" :id="soldecheck{{i}}" (click)="Changeretatsolde(number)" [checked]="number.solde === 'Soldé'" >
+                                        <label class="custom-control-label" :for="soldecheck{{i}}">&nbsp;</label>
+                                      </div>
+                                    </td>                               
+                                    <td>
+                                      <input class="form-control"  type="text" value="{{number.observation}}"  (change)="Observation(i,$event)">
+                                    </td>
+                                  
+                                  </tr>
+                                
+                                
+                                </tbody>
+                              </table>
+                            
+                            </div>
+                          
+                            <div class="form-group">            
+                              <div class="text-md-right">
+                              <button type="submit" class="btn btn-success" (click)="Modifier_echeance()" >Modifier</button>
+                              
+                             </div>
+                            </div>
+                         
+                          </div>
+                         
+                        </div>
+                      </div>
+                      </div>
+                </ng-template>
+<!--PRITN -->
+    
+<div id="component2" [hidden]="true">
+      <div height="100px">
+        <div class="card border-0">
+            <div class="card-header p-4">
+              <div class="row mb-4">
+                <div class="float-left">
+                  <span class="font-weight-bold text-uppercase"> <h2 class="mb-0">{{this.info_societe.nom}}</h2></span> 
+                 
+                </div>
+                </div>
+                <div class="row mb-4">
+
+                <div class="float-left">
+               <b><h5 class="mb-0">{{this.info_societe.adresse}} {{this.info_societe.ville}}</h5></b>
+              </div>
+             </div>
+            <div class="row mb-4 float-right">
+              <div >
+                <h5 class="mb-0">{{this.info_societe.ville}} le:{{this.date}}</h5>
+            </div>
+
+             </div>
+
+            
+            </div>
+            <div class="card-body">
+             <div class="row">
+              <div class="col-md-12 text-center">
+                <h1> <span class="font-weight-bold text-uppercase"> Engaement du prêt N° {{this.nombre_pret}}</span> </h1>
+                  
+              </div>
+          </div> <br/>
+          <div class="row mb-4">
+            <div class="col-sm-6">
+              <div class="billed"><span class="font-weight-bold text-uppercase"><b>Employé:</b></span><span class="ml-1">{{this.validationform.get('nom').value}}</span></div>
+              <div class="billed"><span class="font-weight-bold text-uppercase"><b>Matricule:</b></span><span class="ml-1">{{this.validationform.get('matricule_employe').value}}</span></div>            
+            </div>
+            <div class="col-sm-6 ">
+               
+              <span class="font-weight-bold text-uppercase">  <b>Date de Débloquage:</b></span> {{this.impression_date}}
+              
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="row mb-4">
+                    <div class="col-sm-12">
+                        
+                       
+                        <div>Par le présent le sus nommé,reconnais avoir reçu la somme de :</div>
+                       <b><h5><div class="text-dark mb-1">  {{this.validationform.get('montant_pret').value}} DT</div></h5></b> 
+                        <div>Sous forme de prêt personnel et s'engage à le rembourser conformément au présent èchéancier ,et autorise mon employeur d'effectuer ces prélévements sur mon salaire jusqu'à la dérnière échéance.</div>
+                       
+                    </div>
+                <br/>
+                <br/>
+                </div>
+                <div class="table-responsive-sm" style="max-width: 1000px" >
+                    <table  class="table table-bordered dt-responsive nowrap datatables no-footer dtr-inline" height="100px">
+                        <thead>
+                            <tr class="table-info">
+                              <th class="center">Echéance</th>
+                              <th class="center">Montant</th>
+                              <th class="right">Anné</th>
+                              <th class="right">Mois</th>
+                               <th class="right">observation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let number of pret; let i = index">
+                                <td class="center">{{number.date_echeance}}</td>
+                                <td class="left strong">{{number.montant_echeance}} DT</td>
+                                <td class="right">{{number.anne}}</td>
+                                <td class="right">{{number.mois}}</td>
+                                <td class="right">{{number.observation}}</td>
+                            
+                            </tr>
+                          
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-5">
+                    </div>
+                    <div class="col-lg-4 col-sm-5 ml-auto">
+                       
+                    </div>
+                </div>
+            </div>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+            <br/>
+        
+
+            <div class="card-footer bg-white">
+              <div class="row">
+              <div class="col-md-12">
+                <br />
+                <h5 class="text-dark">  <p><b><u class="text-dark">Accord de la direction</u></b></p></h5>
+               
+            </div>
+            <div class="col-md-12 text-right">
+              <h5 class="text-dark"><p><b><u >{{this.validationform.get('nom').value}}</u></b></p></h5>
+              <h5> Lu et approuvé</h5>
+          </div>
+         
+          </div>
+            </div>
+
+            <div class="d-flex justify-content-between total font-weight-bold mt-4"><span></span><span></span></div>
+        </div>
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+  <!--
+
+
+    <div id="component2">
+      <div class="offset-xl-2 col-xl-8 col-lg-20 col-md-20 col-sm-12 col-12 padding" >
+        <div class="card">
+            <div class="card-header p-4">
+              <div class="row mb-4">
+                <div class="float-left">
+                    <h1 class="mb-0">societe name</h1>
+                 
+                </div>
+                </div>
+                <div class="row mb-4">
+
+                <div class="float-left">
+                  <h3 class="mb-0">societe adresse</h3>
+              </div>
+</div>
+            <div class="row mb-4 float-right">
+              <div >
+                <h3 class="mb-0">date : Date: 12 Jun,2019</h3>
+            </div>
+
+             </div>
+
+            
+            </div>
+            <div class="card-body">
+             <div class="row">
+              <div class="col-md-12 text-center">
+                  <h2>Engaement du pret N°</h2>
+                  <h5>04854654101</h5>
+              </div>
+          </div> <br/>
+          <div class="row mb-4">
+            <div class="col-sm-6">
+              
+                <h3 class="text-dark mb-1">Employé : varibale</h3>
+                <h3 class="text-dark mb-1">Matricule: varibale</h3>
+                
+            </div>
+            <div class="col-sm-6 ">
+               
+                <h3 class="text-dark mb-1">Date de Débloquage: {{this.date}}</h3>
+              
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                <div class="row mb-4">
+                    <div class="col-sm-12">
+                        
+                       
+                        <div>Par le présent le sus nommé,reconnais avoir reçula somme de :</div>
+                        <div class="text-dark mb-1">varibale (montant)</div>
+                        <div>Sous forme de prêt personnel et s'engage à le rembourser conformément au présent èchéancier ,et autorise mon employeur d'effectuer ces prélévements sur mon salaire jusqu'à la dérnière échéance.</div>
+                       
+                    </div>
+                
+                </div>
+                <div class="table-responsive-sm">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr class="table-info">
+                              <th class="center">Echéance</th>
+                              <th class="center">Montant</th>
+                              <th class="right">Anné</th>
+                              <th class="right">Mois</th>
+                               <th class="right">observation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let number of pret; let i = index">
+                                <td class="center">{{number.date_echeance}}</td>
+                                <td class="left strong">{{number.montant_echeance}}</td>
+                                <td class="right">{{number.anne}}</td>
+                                <td class="right">{{number.mois}}</td>
+                                <td class="right">{{number.observation}}</td>
+                            
+                            </tr>
+                          
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-4 col-sm-5">
+                    </div>
+                    <div class="col-lg-4 col-sm-5 ml-auto">
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-white">
+              <div class="row">
+              <div class="col-md-12">
+                <br />
+                <h5 class="text-dark">  <p><b><u class="text-dark">Accord de la direction</u></b></p></h5>
+               
+            </div>
+            <div class="col-md-12 text-right">
+              <h5 class="text-dark"><p><b><u >Nom employé</u></b></p></h5>
+              <h5> Lu et approuvé</h5>
+          </div>
+         
+          </div>
+            </div>
+
+            <div class="d-flex justify-content-between total font-weight-bold mt-4"><span></span><span></span></div>
+        </div>
+    </div>
+  </div>
+  -->
+

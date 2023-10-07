@@ -1,0 +1,7 @@
+/**
+ * Generated bundle index. Do not edit.
+ */
+export * from './public-api';
+export { NGX_ECHARTS_CONFIG as ɵa } from './lib/ngx-echarts.directive';
+
+//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoibmd4LWVjaGFydHMuanMiLCJzb3VyY2VzIjpbIm5nOi9uZ3gtZWNoYXJ0cy9uZ3gtZWNoYXJ0cy50cyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0EsR0FBRztBQUVILGNBQWMsY0FBYyxDQUFDO0FBRTdCLE9BQU8sRUFBQyxrQkFBa0IsSUFBSSxFQUFFLEVBQUMsTUFBTSw2QkFBNkIsQ0FBQztBQUFDIiwic291cmNlc0NvbnRlbnQiOlsiLyoqXG4gKiBHZW5lcmF0ZWQgYnVuZGxlIGluZGV4LiBEbyBub3QgZWRpdC5cbiAqL1xuXG5leHBvcnQgKiBmcm9tICcuL3B1YmxpYy1hcGknO1xuXG5leHBvcnQge05HWF9FQ0hBUlRTX0NPTkZJRyBhcyDJtWF9IGZyb20gJy4vbGliL25neC1lY2hhcnRzLmRpcmVjdGl2ZSc7Il19

@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="GRHModelStoreContainer" CdmEntityContainer="GRHEntities3">
+    <EntitySetMapping Name="GRH_heures_supp">
+      <EntityTypeMapping TypeName="GRHModel.GRH_heures_supp">
+        <MappingFragment StoreEntitySet="GRH_heures_supp">
+          <ScalarProperty Name="id_hs" ColumnName="id_hs" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="mois" ColumnName="mois" />
+          <ScalarProperty Name="hs1_25" ColumnName="hs1_25" />
+          <ScalarProperty Name="hs1_5" ColumnName="hs1_5" />
+          <ScalarProperty Name="hs1_75" ColumnName="hs1_75" />
+          <ScalarProperty Name="hs1_40" ColumnName="hs1_40" />
+          <ScalarProperty Name="hs2" ColumnName="hs2" />
+          <ScalarProperty Name="hs_nuit" ColumnName="hs_nuit" />
+          <ScalarProperty Name="employe_id" ColumnName="employe_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="Hs_selectAll" FunctionName="GRHModel.Store.Hs_selectAll">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="GRHModel.Hs_selectAll_Result">
+          <ScalarProperty Name="id_hs" ColumnName="id_hs" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="mois" ColumnName="mois" />
+          <ScalarProperty Name="hs1_25" ColumnName="hs1_25" />
+          <ScalarProperty Name="hs1_5" ColumnName="hs1_5" />
+          <ScalarProperty Name="hs1_75" ColumnName="hs1_75" />
+          <ScalarProperty Name="hs1_40" ColumnName="hs1_40" />
+          <ScalarProperty Name="hs2" ColumnName="hs2" />
+          <ScalarProperty Name="hs_nuit" ColumnName="hs_nuit" />
+          <ScalarProperty Name="employe_id" ColumnName="employe_id" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+  </EntityContainerMapping>
+</Mapping>

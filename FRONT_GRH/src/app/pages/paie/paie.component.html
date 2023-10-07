@@ -1,0 +1,1522 @@
+<app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+        <div>
+            <div >  
+              <div class="col-lg-20">
+                  <div class="card">
+                    <div class="card-body">
+                      <ul ngbNav #customNav="ngbNav" [(activeId)]="this.active" class="nav-tabs nav-tabs-custom nav-justified">
+                        <li [ngbNavItem]="1">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                            <span class="d-none d-sm-block">Consultation bulletin de paie</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="bulletin"></ng-template>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="2">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                            <span class="d-none d-sm-block">Génerer paie des employés</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="paie"></ng-template>
+                          </ng-template>
+                        </li>
+                   
+                       
+                      </ul>
+                      <div [ngbNavOutlet]="customNav"></div>
+                    </div>
+                  </div>
+                </div>
+
+				<ng-template #paie>
+                    <br/>
+
+					<div class="container-fluid">				
+				<fieldset class="scheduler-border">			
+				       <legend class="scheduler-border">Sélection & Génération</legend>
+				   <div class="row">
+					<div class="col-md-3">
+						<div class="form-group">
+							<label for="validationCustom01">Matricule de l'employé:</label>
+							<input type="text" class="form-control" (input)="employe_matricule($event)"
+							placeholder="Saisissez le matricule de l'employé" id="matricule_employe"  >												 
+						</div>
+					</div>
+					<div class="col-md-3">
+						<label>Mois :*</label>             
+						<select class="custom-select" id="mois_paie" >  
+						  <option *ngFor="let item of mois; let i= index" [value]="item.ordre" selected >{{item.designation}}</option>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<div class="form-group">
+							<label for="example-date-input"></label>
+							<label for="example-date-input"></label>
+							<label for="example-date-input"></label>
+							<label for="example-date-input"></label>
+							<label for="example-date-input"></label>
+							<label for="example-date-input"></label>
+							<div class="custom-control custom-checkbox">
+						<input type="checkbox" class="custom-control-input" id="invalidCheck" (click)="all_employes($event)" >
+						<label class="custom-control-label" for="invalidCheck">Générer la paie pour tous les employés de la société (pour ce mois selectionné)</label>
+					 </div>   
+					</div>
+					</div>
+					
+				</div>
+
+
+							<div class="row">						 
+						 						 					
+						  <div class="col-md-3">
+							<label for="validationCustom01">Département:</label>
+							<select class="custom-select" id="mois_imputation"(click)="employe_departement($event)" >  
+								<option *ngFor="let item of departements; let i= index" [value]="item.designation" selected >{{item.designation}}</option>
+							  </select>
+							
+						
+						  </div>
+						  <div class="col-md-3">
+							<label for="validationCustom01">Service:</label>
+							<select class="custom-select" id="mois_imputation" (click)="employe_service($event)">  
+								<option *ngFor="let item of services; let i= index" [value]="item.designation" selected >{{item.designation}}</option>
+							  </select>
+						
+						  </div>
+						  <div class="col-md-3">
+							<label for="validationCustom01">Section:</label>
+							<select class="custom-select" id="mois_imputation" (click)="employe_section($event)">  
+								<option *ngFor="let item of section; let i= index" [value]="item.designation" selected >{{item.designation}}</option>
+							  </select>					
+						  </div>
+						  <div class="col-md-3">
+							<label for="validationCustom01">Collège:</label>
+							<select class="custom-select" id="mois_imputation" >  
+								<option *ngFor="let item of college; let i= index" [value]="item.designation" selected >{{item.designation}}</option>
+							  </select>						
+						  </div>
+					
+						
+						</div>
+                       <br/>
+						<div class="form-group mb-0">            
+							<div class="text-md-right">
+							  <button type="submit" class="btn btn-success"(click)="generationpaie()">Générer</button>	
+							  <button type="button" class="btn btn-danger ml-1"  (click)="annuler()">Annuler</button>					
+							 </div>
+						</div>
+
+						</fieldset>
+						<div class="row">
+						  <div class="col-12">
+							<div class="card">
+								<div class="table-responsive mt-3">
+									<table  class="table table-bordered mb-0"
+									  style="border-collapse: collapse; border-spacing: 0; width: 100%;">
+									  <thead class="thead-light">
+										<tr>
+										 
+										  <th>Matricule</th>
+										  <th>Nom & prénom</th>
+										  <th>Date embauche</th>
+										  <th>Département</th>
+										  <th>Service</th>
+										  <th>Section</th>
+										  <th>Collège</th>
+										  <th style="width: 20px;">
+											<div class="custom-control custom-checkbox">
+											  <input type="checkbox" class="custom-control-input" id="customercheck" (click)="checkuncheckall($event)" >
+											  <label class="custom-control-label" for="customercheck">Sélection</label>
+											</div>
+										  </th>
+									
+										</tr>
+									  </thead>
+									  <tbody>
+										<tr *ngFor="let item of employes; let i= index">
+										  
+										  <td>{{item.matricule}}</td>
+										  <td>{{item.nom}}</td>
+										  <td>{{item.dateEmb}}</td>
+										  <td>{{item.departement}}</td>
+										  <td>{{item.service}}</td>
+										  <td>{{item.section}}</td>
+										  <td>{{item.college}}</td>
+										  <td>
+											<div class="custom-control custom-checkbox">
+											  <input type="checkbox" class="custom-control-input" :id="customercheck{{i}}" (click)="ajouter_employe(item,$event)" [checked]="isChecked" />
+											  <label class="custom-control-label" :for="customercheck{{i}}" >&nbsp;</label>
+											</div>
+										  </td>
+										</tr>
+									  </tbody>
+									</table>
+								  </div>
+							</div>
+						  </div>
+						</div>
+					  </div>
+
+					</ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+					<ng-template #bulletin>
+						<br/>
+						<br/>
+
+
+
+						<div class="container-fluid">
+							<div class="row">
+							  <div class="col-12">
+								<div class="card">
+								  <div class="card-body">
+						  
+									<div class="row mb-md-2">
+									  <div class="col-sm-12 col-md-6">
+										<div class="dataTables_length" id="tickets-table_length"><label
+											class="d-inline-flex align-items-center">Afficher
+											<select name="tickets-table_length" aria-controls="tickets-table" name="pageSize"
+											  [(ngModel)]="service.pageSize"
+											  class="custom-select custom-select-sm form-control form-control-sm mx-2">
+											  <option [ngValue]="10">10</option>
+											  <option [ngValue]="25">25</option>
+											  <option [ngValue]="50">50</option>
+											  <option [ngValue]="100">100</option>
+											</select> entrées</label></div>
+									  </div>
+								 
+									  <div class="col-sm-12 col-md-6">
+										<div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+											class="d-inline-flex align-items-center">Rechercher:
+											<input type="text" name="searchTerm" class="form-control form-control-sm ml-2"
+											  aria-controls="tickets-table" [(ngModel)]="service.searchTerm"></label></div>
+									  </div>
+									 
+									</div>
+								  
+									<div class="table-responsive">
+									  <table id="basic-datatable"
+									  class="table table-bordered dt-responsive nowrap datatables no-footer dtr-inline">
+										<thead class="thead-light">
+										  <tr>
+											<th sortable="id" (sort)="onSort($event)">Matricule </th>
+											<th sortable="nom" (sort)="onSort($event)">Nom & prénom </th>
+											<th sortable="mois" (sort)="onSort($event)">Mois</th>
+											<th sortable="salaire_base" (sort)="onSort($event)">Salaire de base</th>
+											<th sortable="departement" (sort)="onSort($event)">Département</th>
+											<th sortable="service" (sort)="onSort($event)">Service</th>
+											<th sortable="section" (sort)="onSort($event)">Section</th>
+											<th>Action</th>
+										  </tr>
+										</thead>
+										<tbody>
+						  
+										  <tr *ngFor="let table of tables$ | async">
+											<td>
+											  <a class="text-dark font-weight-bold">
+												<ngb-highlight [result]="table.matricule" [term]="service.searchTerm"></ngb-highlight>
+											  </a>
+											</td>
+											<td>
+											  <ngb-highlight [result]="table.nom" [term]="service.searchTerm"></ngb-highlight>
+											</td>
+											<td>
+												<ngb-highlight [result]="table.mois" [term]="service.searchTerm"></ngb-highlight>
+											  </td>
+											<td>
+											  <ngb-highlight [result]="table.salaire_base" [term]="service.searchTerm"></ngb-highlight>
+											</td>
+											<td>
+												<ngb-highlight [result]="table.departement" [term]="service.searchTerm"></ngb-highlight>
+											  </td>
+											<td>
+											  <ngb-highlight [result]="table.service" [term]="service.searchTerm"></ngb-highlight>
+											</td>
+											<td>
+												<ngb-highlight [result]="table.section" [term]="service.searchTerm"></ngb-highlight>
+											  </td>
+										   
+			
+										  
+											<td>
+											  <div ngbDropdown placement="bottom-right">
+										
+							
+												  <a href="javascript:void(0);" class="mr-3 text-primary" placement="top"  ngbTooltip="Imprimer bulletin de paie" (click)="print('component',table)" ><i
+													  class="ri-printer-fill font-size-20"></i></a>
+													  <a href="javascript:void(0);" class="text-danger" (click)="supprimer_bull_employe(table.id)"placement="top"  ngbTooltip="Supprimer">
+														<i class="mdi mdi-trash-can font-size-20"></i>
+													  </a>
+												
+											  </div>
+											</td>
+										  </tr>
+										</tbody>
+									  </table>
+									</div>
+								 
+									<div class="row justify-content-md-between align-items-md-center mt-2">
+									  <div class="col-sm-12 col-md-5">
+										<div class="dataTables_info mb-2" id="tickets-table_info" role="status" aria-live="polite">Afficher
+										  {{service.startIndex}} à
+										  {{service.endIndex}} sur {{service.totalRecords}}
+										  entrées
+										</div>
+									  </div>
+								  
+									  <div class="col-sm-12 col-md-5">
+										<div class="text-md-right float-md-right pagination-rounded">
+										  <ngb-pagination [collectionSize]="total$ | async" [(page)]="service.page" [pageSize]="service.pageSize">
+										  </ngb-pagination>
+										</div>
+									  </div>
+								 
+									</div>
+								  </div>
+								</div>
+							  </div>
+							</div>
+						  </div>
+						
+
+
+
+
+
+
+
+
+						<div id="component" [hidden]="true" >
+							<table cellspacing="0" border="0">
+								<colgroup width="86"></colgroup>
+								<colgroup width="97"></colgroup>
+								<colgroup width="85"></colgroup>
+								<colgroup span="2" width="35"></colgroup>
+								<colgroup width="94"></colgroup>
+								<colgroup span="3" width="29"></colgroup>
+								<colgroup width="107"></colgroup>
+								<colgroup span="2" width="56"></colgroup>
+								<colgroup span="3" width="40"></colgroup>
+								<colgroup span="2" width="68"></colgroup>
+								<colgroup span="2" width="52"></colgroup>
+								<colgroup width="27"></colgroup>
+								<colgroup width="29"></colgroup>
+								<colgroup span="3" width="85"></colgroup>
+								<colgroup span="2" width="35"></colgroup>
+								<colgroup width="94"></colgroup>
+								<colgroup span="3" width="29"></colgroup>
+								<colgroup width="111"></colgroup>
+								<colgroup span="2" width="56"></colgroup>
+								<colgroup span="3" width="40"></colgroup>
+								<colgroup span="2" width="68"></colgroup>
+								<colgroup span="2" width="52"></colgroup>
+								<tbody><tr>
+									<td colspan="19" height="48" align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777">BULLETIN DE PAIE</font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td colspan="19" align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777">BULLETIN DE PAIE</font></b></td>
+									</tr>
+								<tr>
+									<td height="48" align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+									<td align="center" valign="middle"><b><font face="Montserrat" size="6" color="#777777"><br></font></b></td>
+								</tr>
+								<tr>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" colspan="3" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="6" height="20" align="left" valign="middle"><b><font face="Montserrat" color="#000000"><b>Société:</b>{{this.info_societe.nom}} </font></b></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Année :</font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle" sdval="2015" sdnum="1033;"><font face="Open Sans" color="#000000">{{this.annee}}</font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="6" align="left" valign="middle"><b><font face="Montserrat" color="#000000">SOCIETE DIAMOND</font></b></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Année :</font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle" sdval="2015" sdnum="1033;"><font face="Open Sans" color="#000000">{{this.annee}}</font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="6" height="20" align="left" valign="middle"><b><font face="Montserrat" color="#000000">07 RUE DE JASMIN 1002 TUNIS</font></b></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Mois de paie :</font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.mois_paie}}</font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="6" align="left" valign="middle"><b><font face="Montserrat" color="#000000">07 RUE DE JASMIN 1002 TUNIS</font></b></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Mois de paie :</font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.mois_paie}}</font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="6" height="20" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Affiliation CNSS:</font></b>{{this.info_societe.matricule_cnss}}</td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Date de paiement :</font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td colspan="2" align="left" valign="middle" sdval="42094" sdnum="1033;1033;M/D/YYYY"><font face="Open Sans" color="#000000">{{this.current_date}}</font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="6" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Affiliation CNSS:</font></b>{{this.info_societe.matricule_cnss}}</td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Date de paiement :</font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td colspan="2" align="left" valign="middle" sdval="42094" sdnum="1033;1033;M/D/YYYY"><font face="Open Sans" color="#000000">{{this.current_date}}</font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-bottom: 2px solid #000000" height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="4" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="4" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" height="20" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Matricule :</font></b></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="middle" sdval="1" sdnum="1033;"><font face="Open Sans" color="#000000">{{this.employe.matricule}}</font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Emploi :</font></b></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="4" align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.emploi}}</font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="8" align="left" valign="middle"><font face="Montserrat" color="#000000"><b>Nom &amp; Prénom:&nbsp;</b></font>{{this.employe.nom}}</td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Matricule :</font></b></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="middle" sdval="1" sdnum="1033;"><font face="Open Sans" color="#000000">{{this.employe.matricule}}</font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Emploi :</font></b></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="4" align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.emploi}}</font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="8" align="left" valign="middle"><font face="Montserrat" color="#000000"><b>Nom &amp; Prénom:&nbsp;</b></font>{{this.employe.nom}}</td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" colspan="2" height="20" align="left" valign="middle"><b><font face="Montserrat" color="#000000">CIN :</font></b></td>
+									<td colspan="2" align="left" valign="middle" sdval="94571014" sdnum="1033;"><font face="Open Sans" color="#000000">{{this.employe.cin}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Catégorie :</font></b></td>
+									<td style="border-right: 2px solid #000000" colspan="3" align="left" valign="middle" sdval="5" sdnum="1033;"><font face="Open Sans" color="#000000"></font></td>
+									<td style="border-left: 2px solid #000000" colspan="5" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">CIN :</font></b></td>
+									<td colspan="2" align="left" valign="middle" sdval="94571014" sdnum="1033;"><font face="Open Sans" color="#000000">{{this.employe.cin}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Catégorie :</font></b></td>
+									<td style="border-right: 2px solid #000000" colspan="3" align="left" valign="middle" sdval="5" sdnum="1033;"><font face="Open Sans" color="#000000"></font></td>
+									<td style="border-left: 2px solid #000000" colspan="5" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+								</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" colspan="2" height="20" align="left" valign="middle"><b><font face="Montserrat" color="#000000">N° CNSS :</font></b></td>
+									<td colspan="2" align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.matCNSS}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Echelon :</font></b></td>
+									<td style="border-right: 2px solid #000000" colspan="3" align="left" valign="middle" sdval="3" sdnum="1033;"><font face="Open Sans" color="#000000"></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="8" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Adresse:&nbsp;</font></b>{{this.employe.adresse}}</td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">N° CNSS :</font></b></td>
+									<td colspan="2" align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.matCNSS}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Echelon :</font></b></td>
+									<td style="border-right: 2px solid #000000" colspan="3" align="left" valign="middle" sdval="3" sdnum="1033;"><font face="Open Sans" color="#000000"></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="8" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Adresse:&nbsp;</font></b>{{this.employe.adresse}}</td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" colspan="2" height="20" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Situation familiale :</font></b></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.etat}}</font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#FFFFFF"></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Salaire de base :</font></b></td>
+									<td style="border-right: 2px solid #000000" colspan="3" align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.sal_base}}</font></td>
+									<td style="border-left: 2px solid #000000" colspan="5" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Situation familiale :</font></b></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.etat}}</font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#FFFFFF"></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Salaire de base :</font></b></td>
+									<td style="border-right: 2px solid #000000" colspan="3" align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.sal_base}}</font></td>
+									<td style="border-left: 2px solid #000000" colspan="5" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+								</tr>
+								<tr>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="2" height="21" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Enfant à charge :</font></b></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="middle" sdval="0" sdnum="1033;"><font face="Open Sans" color="#000000">{{this.nombre_enfant}}</font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Taux horaire :</font></b></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.taux_h}}</font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="8" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Enfant à charge :</font></b></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="middle" sdval="0" sdnum="1033;"><font face="Open Sans" color="#000000">{{this.nombre_enfant}}</font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Taux horaire :</font></b></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="middle"><font face="Open Sans" color="#000000">{{this.taux_h }}</font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="8" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									</tr>
+								<tr>
+									<td height="20" align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle" bgcolor="#FFFFFF"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle" bgcolor="#FFFFFF"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+								</tr>
+								<tr>
+									<td style="border-bottom: 2px solid #000000" height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" rowspan="2" height="42" align="center" valign="middle"><font face="Open Sans" color="#000000">Désignation</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" rowspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Nombre</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" rowspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Base</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="6" align="center" valign="middle"><font face="Open Sans" color="#000000">Part salariale</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="7" align="center" valign="middle"><font face="Open Sans" color="#000000">Part patronale</font></td>
+									<td align="center" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" rowspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Désignation</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" rowspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Nombre</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" rowspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Base</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="6" align="center" valign="middle"><font face="Open Sans" color="#000000">Part salariale</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="7" align="center" valign="middle"><font face="Open Sans" color="#000000">Part patronale</font></td>
+									</tr>
+								<tr>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="center" valign="middle"><font face="Open Sans" color="#000000">Taux en %</font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="center" valign="middle"><font face="Open Sans" color="#000000">Gain</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Retenue</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="center" valign="middle"><font face="Open Sans" color="#000000">Taux</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Gain</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Retenue</font></td>
+									<td align="center" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="center" valign="middle"><font face="Open Sans" color="#000000">Taux en %</font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="center" valign="middle"><font face="Open Sans" color="#000000">Gain</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Retenue</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="center" valign="middle"><font face="Open Sans" color="#000000">Taux</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Gain</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">Retenue</font></td>
+									</tr>
+								<!--les elemntes de brute -->
+								<tr *ngFor="let brute of this.brute; let i = index">
+									<td style="border-left: 2px solid #000000" colspan="2" height="20" align="left" valign="middle"><font face="Open Sans" color="#000000">{{brute.designation}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="1" sdnum="1033;"><font face="Open Sans" color="#000000">{{brute.nombre}}</font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{brute.base}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="right" valign="middle" sdval="9.18" sdnum="1033;"><font face="Open Sans" color="#000000">{{brute.taux}}</font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="52.5" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{brute.gain}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000"  colspan="2" align="right" valign="bottom"><font face="Open Sans" color="#000000">{{brute.retenue}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><font face="Open Sans" color="#000000">{{brute.designation}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="1" sdnum="1033;"><font face="Open Sans" color="#000000">{{brute.nombre}}</font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="52.5" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{brute.base}}</font>{{brute.taux}}</td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="52.5" sdnum="1033;"><font face="Open Sans" color="#000000">{{brute.gain}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="right"><font face="Open Sans" color="#000000">{{brute.retenue}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+							
+								<tr>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Total Brut</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" sdnum="1033;0;0.000"><b><font face="Montserrat" color="#000000">{{this.total_brute}}</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Total Brut</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" sdnum="1033;0;0.000"><b><font face="Montserrat" color="#000000">{{this.total_brute}}</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+									<!--Cotisation-->
+								<tr *ngFor="let cot of this.cotisation; let i = index"  >
+									<td style="border-left: 2px solid #000000" colspan="2" height="20" align="left" valign="middle"><font face="Open Sans" color="#000000">{{cot.designation}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.base}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="right" valign="middle" sdval="9.18" sdnum="1033;"><font face="Open Sans" color="#000000">{{cot.taux}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="151.3201824" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.retenue}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><font face="Open Sans" color="#000000">{{cot.designation}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.base}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="right" valign="middle" sdval="9.18" sdnum="1033;"><font face="Open Sans" color="#000000">{{cot.taux}}</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="151.3201824" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.retenue}} </font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+							
+							
+							<tr>
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+
+
+									<tr *ngFor="let cot of this.contri_patronale; let i = index"  >
+										<td style="border-left: 2px solid #000000" colspan="2" height="20" align="left" valign="middle"><font face="Open Sans" color="#000000">{{cot.designation}}</font></td>
+										<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.base}}</font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="right" valign="middle" sdval="9.18" sdnum="1033;"><font face="Open Sans" color="#000000"></font></td>
+										<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="151.3201824" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000"></font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" colspan="3" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.taux}}</font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" colspan="2" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.retenue}}</font></td>
+										<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+										<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><font face="Open Sans" color="#000000">{{cot.designation}}</font></td>
+										<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.base}}</font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="right" valign="middle" sdval="9.18" sdnum="1033;"><font face="Open Sans" color="#000000"></font></td>
+										<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="151.3201824" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000"> </font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" colspan="3" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.taux}}</font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1648.368" colspan="2" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{cot.retenue}}</font></td>
+										</tr>
+
+
+
+
+								<tr>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Total cotisation</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="151.3201824" sdnum="1033;0;0.000"><b><font face="Montserrat" color="#000000">{{this.total_cotisation}}</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="307.7503056" sdnum="1033;0;0.000"><b><font face="Montserrat" color="#000000">{{this.cot_patronale}}</font></b></td>
+									<td align="right" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Total cotisation</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="151.3201824" sdnum="1033;0;0.000"><b><font face="Montserrat" color="#000000">{{this.total_cotisation}}</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="307.7503056" sdnum="1033;0;0.000"><b><font face="Montserrat" color="#000000">{{this.cot_patronale}}</font></b></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" colspan="2" height="20" align="left" valign="middle"><font face="Open Sans" color="#000000">Salaire Brut Imposable</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="1497.0478176" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{this.salaire_imposable}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="middle"><font face="Open Sans" color="#000000">Salaire Brut Imposable</font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="1497.0478176" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{this.salaire_imposable}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<!--<tr>
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="right" valign="middle" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="right" valign="middle" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+								</tr>	-->					
+								<tr *ngFor="let item of this.impot; let i = index">
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="middle"><font face="Open Sans" color="#000000">{{item.designation}}</font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="241.975855985067" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{item.retenue}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="middle"><font face="Open Sans" color="#000000">{{item.designation}}</font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="241.975855985067" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{item.retenue}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<!--Contrubution sociale-->
+								<tr>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="13.4734303584" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000"></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+								    <td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="13.4734303584" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000"></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+						<!--Retenue-->
+									<tr *ngFor="let retenue of this.indemnit_retenue; let i = index" >
+										<td style="border-left: 2px solid #000000" height="20" align="left" valign="middle"><font face="Open Sans" color="#000000">{{retenue.designation}}</font></td>
+										<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000">{{retenue.nombre}}</font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="bottom"><font face="Open Sans" color="#000000">{{retenue.base}}</font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="right" valign="bottom"><font face="Open Sans" color="#000000">{{retenue.taux}}</font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="bottom"><font face="Open Sans" color="#000000">{{retenue.gain}}</font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="bottom"><font face="Open Sans" color="#000000"></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+										<td style="border-left: 2px solid #000000" align="left" valign="middle"><font face="Open Sans" color="#000000">{{retenue.designation}}</font></td>
+										<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="bottom"><font face="Open Sans" color="#000000">{{retenue.nombre}}</font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="bottom"><font face="Open Sans" color="#000000">{{retenue.base}}</font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="right" valign="bottom"><font face="Open Sans" color="#000000">{{retenue.taux}}</font></td>
+										<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1241.59853125653" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{retenue.gain}}</font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="right"><font face="Open Sans" color="#000000"></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+										</tr>
+
+
+							
+								<tr *ngFor="let retenue of this.retenue; let i = index" >
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="middle"><font face="Open Sans" color="#000000">{{retenue.designation}}</font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1241.59853125653" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{retenue.gain}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="bottom"><font face="Open Sans" color="#000000">{{retenue.retenue}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="middle"><font face="Open Sans" color="#000000">{{retenue.designation}}</font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="right" valign="middle" sdval="1241.59853125653" sdnum="1033;0;0.000"><font face="Open Sans" color="#000000">{{retenue.gain}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="right"><font face="Open Sans" color="#000000">{{retenue.retenue}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+							
+							
+								<tr>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="4" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Net à payer en dinars</font></b></td>
+									<td align="left" valign="middle"><b><font face="Montserrat" color="#000000"><br></font></b></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="4" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Net à payer en dinars</font></b></td>
+									</tr>
+								<tr>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="941.598531256533" sdnum="1033;0;0.000"><b><font face="Montserrat" color="#000000">{{this.net_payer}}</font></b></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="right" valign="middle" sdval="941.598531256533" sdnum="1033;0;0.000"><b><font face="Montserrat" color="#000000">{{this.net_payer}}</font></b></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-bottom: 2px solid #000000" height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" height="21" align="center" valign="middle"><b><font face="Montserrat" color="#000000">Mode de paiement</font></b></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="center" valign="middle"><b><font face="Montserrat" color="#000000">Intitulé banque</font></b></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="5" align="center" valign="middle"><b><font face="Montserrat" color="#000000">N° de compte</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" colspan="5" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Congés pris mois en cours:</font></b></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle"><font face="Open Sans" color="#000000">{{this.conges_pris}}</font></td>
+									<td align="right" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="center" valign="middle"><b><font face="Montserrat" color="#000000">Mode de paiement</font></b></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="3" align="center" valign="middle"><b><font face="Montserrat" color="#000000">Intitulé banque</font></b></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="5" align="center" valign="middle"><b><font face="Montserrat" color="#000000">N° de compte</font></b></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" colspan="5" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Congés pris mois en cours:</font></b></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle"><font face="Open Sans" color="#000000">{{this.conges_pris}}</font></td>
+									</tr>
+								<tr>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="2" height="21" align="center" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.mode}}</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="3" align="center" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.Banque}}</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="5" align="center" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.Nrib}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="5" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Congés acquis mois en cours:</font></b></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="right" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.droitM}}</font></td>
+									<td align="right" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="2" align="center" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.mode}}</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="3" align="center" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.Banque}}</font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="5" align="center" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.Nrib}}</font></td>
+									<td style="border-left: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="5" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Congés acquis mois en cours:</font></b></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="right" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.droitM}}</font></td>
+									</tr>
+								<tr>
+									<td height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Solde congé:</font></b></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="right" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.solde_conge}}</font></td>
+									<td align="right" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Solde congé:</font></b></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="right" valign="middle"><font face="Open Sans" color="#000000">{{this.employe.solde_conge}}</font></td>
+									</tr>
+								<tr>
+									<td height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="5" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Nb jours d’absence:</font></b></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle"><font face="Open Sans" color="#000000">{{this.nb_jours_absences}}</font></td>
+									<td align="right" valign="middle"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="5" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Nb jours d’absence:</font></b></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="right" valign="middle"><font face="Open Sans" color="#000000">{{this.nb_jours_absences}}</font></td>
+									</tr>
+								<tr>
+									<td style="border-bottom: 2px solid #000000" colspan="3" height="21" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Signature et cachet employeur</font></b></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="5" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Signature employé</font></b></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000" colspan="3" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Signature et cachet employeur</font></b></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="5" align="left" valign="middle"><b><font face="Montserrat" color="#000000">Signature employé</font></b></td>
+									<td style="border-top: 2px solid #000000; border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font color="#FFFFFF">Célibataire</font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font color="#FFFFFF">Célibataire</font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-top: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font color="#FFFFFF">Marié</font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font color="#FFFFFF">Marié</font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+								</tr>
+								<tr>
+									<td style="border-left: 2px solid #000000" height="20" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+								</tr>
+								<tr>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" height="21" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 1px solid #000000" align="left" valign="bottom"><br></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-left: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-left: 2px solid #000000" colspan="3" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									<td style="border-bottom: 2px solid #000000; border-right: 2px solid #000000" colspan="2" align="left" valign="bottom"><font face="Open Sans" color="#000000"><br></font></td>
+									</tr>
+							</tbody></table>
+							</div>
+						</ng-template>
+
+
+
+
+
+

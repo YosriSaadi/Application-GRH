@@ -1,0 +1,1299 @@
+<div class="container-fluid">
+  <app-pagetitle title="L'Impôt sur le Revenu des Personnes Physiques" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+
+   
+        <div class="card">
+          <div class="card-body">
+            <div>
+          
+             <!-- <a href="javascript:void(0);" class="btn btn-success mb-2" (click)="openModal(Ajouterform)">
+                <i class="mdi mdi-plus mr-2"></i>Ajouter IRPP
+              </a>-->
+            </div> 
+          </div>  
+          <!-- Table -->
+          <div class="table-responsive">
+            <table id="basic-datatable"
+            class="table table-bordered mb-1">
+              <thead class="thead-light">
+                <tr>
+                <th >Code</th>
+                <th >Désignation</th>
+                <th >Défaut</th>
+                <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+    
+                <tr *ngFor="let table of tabledata; let i = index">
+                  <td>
+                {{table.id}}
+    
+                  </td>
+                  <td>
+                    {{table.designation}}
+                </td>
+                <td>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" :id="soldecheck{{i}}"  [checked]="table.defaut" disabled>
+                    <label class="custom-control-label" :for="soldecheck{{i}}">&nbsp;</label>
+                  </div>
+                </td>  
+                  <td>
+                    <!--<a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Modifier" (click)="openModif(Modifier,table)"><i
+                        class="mdi mdi-pencil font-size-18"></i></a>-->
+                          <a href="javascript:void(0);" class="btn btn-success mb-1" (click)="openModif(Modifier,table)">
+               Modifier IRPP
+              </a>
+                  <!-- <a href="javascript:void(0);" class="text-danger" placement="top" ngbTooltip="Supprimer" (click)="deleteirpp(table.id)"><i
+                        class="mdi mdi-trash-can font-size-18"></i></a>--> 
+                  </td>
+    
+    
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- End table -->
+
+              <!-- Tab Content -->
+  <ng-template #Ajouterform let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="composemodalTitle">Ajout</h5>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="card">    
+      <div class="card-body">
+        <form class="needs-validation" (ngSubmit)="Ajouter()" [formGroup]="ajouterform">
+          <div class="card">
+            <div class="card-body">
+            <div class="row">
+          <div  class="col-3">
+            <div class="form-group">
+            <label for="code">Code</label>
+            <input type="text"  class="form-control" id="id" formControlName="id" placeholder="Exemple:  3"
+            [ngClass]="{'is-invalid': submitted && form.id.errors}">
+            <div *ngIf="submitted && form.id.errors" class="invalid-feedback">
+              <span *ngIf="form.id.errors.required">Cette valeur est obligatoire!!</span>    
+              <span *ngIf="form.id.errors.pattern">Code invalide!!</span>          
+             </div>
+            </div>
+          </div>  
+        
+
+          <div  class="col-6">
+            <label for="code">Désignation</label>
+            <input type="text"  class="form-control" id="designation" formControlName="designation" placeholder="Exemple:  IRPP"
+            [ngClass]="{'is-invalid': submitted && form.designation.errors}">
+        <div *ngIf="submitted && form.designation.errors" class="invalid-feedback">
+          <span *ngIf="form.designation.errors.required">Cette valeur est obligatoire.</span>  
+          <span *ngIf="form.designation.errors.pattern">Désignation invalide!</span>                  
+         </div>
+          </div> 
+         
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="invalidCheck" formControlName="defaut">
+            <label class="custom-control-label" for="invalidCheck"> Par défaut</label>
+            
+          </div>
+        </div>
+      </div>
+   
+
+        </div>  
+        </div></div>
+         <div class="table-bordered">
+          <table id="basic-datatable"
+            class="table table-centered dt-responsive nowrap datatables no-footer dtr-inline">
+            <thead>
+              <tr>
+                <th >Tranches</th>
+              <th >Taux</th>
+              </tr>
+            </thead>
+            <tbody>
+  
+              <tr>
+              <td>
+
+
+                
+                  <div class="form-group mb-4">
+                    <div class="row g-3 align-items-center">
+                      <div class="col-6">
+                        <label for="inputPassword6" class="col-form-label">Jusqu'à :</label>
+                      </div>
+                      <div  class="col-6">
+                        <div class="input-group-prepend">
+                        <input type="text"  class="form-control" id="t1" formControlName="t1" (change)="chargement()"
+                        [ngClass]="{'is-invalid': submitted && form.t1.errors}">
+                  
+                     <span class="input-group-text" >DT.</span>
+                    </div>
+                        </div>
+                        <div *ngIf="submitted && form.t1.errors" class="invalid-feedback">
+                          <span *ngIf="form.t1.errors.required">Cette valeur est obligatoire.</span>   
+                          <span *ngIf="form.t1.errors.pattern">Tranche 1 invalide!</span>                 
+                         </div>
+                      </div> 
+                      
+                      
+                  </div>
+
+              </td>
+              <td>
+
+                <div class="form-group mb-4">
+                  <div class="row g-3 align-items-center">
+                    <div  class="col-10">
+                      <div class="input-group-prepend">
+                      <input type="text"  class="form-control" id="ta1" formControlName="ta1" disabled placeholder="0.00"  [ngClass]="{'is-invalid': submitted && form.ta1.errors}">   
+                   <span class="input-group-text" >%</span>
+                   <div *ngIf="submitted && form.ta1.errors" class="invalid-feedback">
+                    <span *ngIf="form.ta1.errors.required">Cette valeur est obligatoire.</span>   
+                    <span *ngIf="form.ta1.errors.pattern">Taux invalide!</span>                 
+                   </div>
+                  </div>
+                    </div> 
+                  
+                      
+                  </div>
+                </div>
+                
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="form-group mb-4">
+                    <div class="row g-3 align-items-center">
+                      <div class="col-2">
+                        <label for="inputPassword6" class="col-form-label">De :</label>
+                      </div>
+                      <div  class="col-4">
+                        <div class="input-group-prepend">
+                        <input type="text"  class="form-control" id="t1_2" formControlName="t1_2" disabled>
+                    
+                     <span class="input-group-text" >DT.</span>
+                    </div>
+                      </div> 
+                      <div class="col-2">
+                        <label for="inputPassword6" class="col-form-label">à :</label>
+                      </div>
+
+                      <div  class="col-4">
+                        <div class="input-group-prepend">
+                        <input type="text"  class="form-control" id="t3" formControlName="t2" (change)="chargement()"
+                        [ngClass]="{'is-invalid': submitted && form.t2.errors}">        
+                     <span class="input-group-text" >DT.</span>
+                     
+                    </div>
+                    <div *ngIf="submitted && form.t2.errors" class="invalid-feedback">
+                      <span *ngIf="form.t2.errors.required">Cette valeur est obligatoire!.</span>      
+                      <span *ngIf="form.t2.errors.pattern">Tranche 2 invalide!.</span>           
+                     </div>
+                      </div> 
+                        
+                    </div>
+                  </div>
+                   
+                      
+                </td>
+                <td>
+  
+  
+                  <div class="form-group mb-4">
+                    <div class="row g-3 align-items-center">
+                      <div  class="col-10">
+                        <div class="input-group-prepend">
+                        <input type="text"  class="form-control" id="ta2" formControlName="ta2" 
+                        [ngClass]="{'is-invalid': submitted && form.ta2.errors}">             
+                   <span class="input-group-text" >%</span>
+                   
+                  </div>
+                  <div *ngIf="submitted && form.ta2.errors" class="invalid-feedback">
+                    <span *ngIf="form.ta2.errors.required">Cette valeur est obligatoire!</span>   
+                    <span *ngIf="form.ta2.errors.pattern">Taux Invalide!</span>              
+                   </div>
+                      </div> 
+                    
+                       
+                    </div>
+                  </div>
+                  
+                  </td>
+                </tr> 
+                <tr>
+                  <td>
+
+                 <div class="form-group mb-4">
+                          <div class="row g-3 align-items-center">
+                            <div class="col-2">
+                              <label for="inputPassword6" class="col-form-label">De :</label>
+                            </div>
+                            <div  class="col-4">
+                              <div class="input-group-prepend">
+                              <input type="text"  class="form-control" id="t2_3" formControlName="t2_3" disabled
+                             >
+                        
+                           <span class="input-group-text" >%</span>
+                          </div>
+                            </div> 
+                            <div class="col-2">
+                              <label for="inputPassword6" class="col-form-label">à :</label>
+                            </div>
+                             
+
+                            <div  class="col-4">
+                              <div class="input-group-prepend">
+                              <input type="text"  class="form-control" id="t3" formControlName="t3" (change)="chargement()"
+                              [ngClass]="{'is-invalid': submitted && form.t3.errors}">                   
+                           <span class="input-group-text" >DT.</span>                    
+                          </div>
+                          <div *ngIf="submitted && form.t3.errors" class="invalid-feedback">
+                            <span *ngIf="form.t3.errors.required">Cette valeur est obligatoire!</span> 
+                            <span *ngIf="form.t3.errors.pattern">Tranche 3 invalide!</span>                
+                           </div>
+                            </div>  
+                            </div>
+                        </div>
+                     
+                  </td>
+                  <td>
+    
+    
+                    <div class="form-group mb-4">
+                      <div class="row g-3 align-items-center">
+                        <div  class="col-10">
+                          <div class="input-group-prepend">
+                          <input type="text"  class="form-control" id="ta3" formControlName="ta3" 
+                          [ngClass]="{'is-invalid': submitted && form.ta3.errors}">
+                 
+                   <span class="input-group-text" >%</span>
+                  </div>
+                        </div> 
+                         
+                       
+                      </div>
+                      <div *ngIf="submitted && form.ta3.errors" class="invalid-feedback">
+                        <span *ngIf="form.ta3.errors.required">Cette valeur est obligatoire!</span>   
+                        <span *ngIf="form.ta3.errors.pattern">Taux invalide!</span>               
+                       </div>
+                    </div>
+                    
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="form-group mb-4">
+                        <div class="row g-3 align-items-center">
+                          <div class="col-2">
+                            <label for="inputPassword6" class="col-form-label">De :</label>
+                          </div>
+                          <div  class="col-4">
+                            <div class="input-group-prepend">
+                            <input type="text"  class="form-control" id="t3_4" formControlName="t3_4" disabled
+                            >
+                       
+                         <span class="input-group-text" >DT.</span>
+                        </div>
+                          </div> 
+                          <div class="col-2">
+                            <label for="inputPassword6" class="col-form-label">à :</label>
+                          </div>
+
+                          <div  class="col-4">
+                            <div class="input-group-prepend">
+                            <input type="text"  class="form-control" id="t7" formControlName="t4" (change)="chargement()"
+                            [ngClass]="{'is-invalid': submitted && form.t4.errors}">                    
+                            <span class="input-group-text" >DT.</span>
+                        
+                           </div>
+                        <div *ngIf="submitted && form.t4.errors" class="invalid-feedback">
+                          <span *ngIf="form.t4.errors.required">Cette valeur est obligatoire!</span>  
+                          <span *ngIf="form.t4.errors.pattern">Tranche4 invalide!</span>               
+                         </div>
+                          </div> 
+                             
+                        </div>
+                      </div>
+
+                  
+                    </td>
+                    <td>
+      
+      
+                      <div class="form-group mb-4">
+                        <div class="row g-3 align-items-center">
+                          <div  class="col-10">
+                            <div class="input-group-prepend">
+                            <input type="text"  class="form-control" id="ta4" formControlName="ta4" 
+                            [ngClass]="{'is-invalid': submitted && form.ta4.errors}">               
+                            <span class="input-group-text" >%</span>                  
+                          </div>
+                  <div *ngIf="submitted && form.ta4.errors" class="invalid-feedback">
+                    <span *ngIf="form.ta4.errors.required">Cette valeur est obligatoire.</span>   
+                    <span *ngIf="form.ta4.errors.pattern">Taux invalide!</span>               
+                  </div>
+                          </div> 
+                          
+                            
+                        </div>
+                      </div>
+                      
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-group mb-4">
+                          <div class="row g-3 align-items-center">
+                            <div class="col-2">
+                              <label for="inputPassword6" class="col-form-label">De :</label>
+                            </div>
+                            <div  class="col-4">
+                              <div class="input-group-prepend">
+                              <input type="text"  class="form-control" id="t4_5" formControlName="t4_5" disabled
+                              >
+                        
+                           <span class="input-group-text" >DT.</span>
+                          </div>
+                            </div> 
+                            <div class="col-2">
+                              <label for="inputPassword6" class="col-form-label">à :</label>
+                            </div>
+
+                            <div  class="col-4">
+                              <div class="input-group-prepend">
+                              <input type="text"  class="form-control" id="t5" formControlName="t5" (change)="chargement()"
+                              [ngClass]="{'is-invalid': submitted && form.t5.errors}">
+                        
+                           <span class="input-group-text" >DT.</span>
+                          </div>
+                          <div *ngIf="submitted && form.t5.errors" class="invalid-feedback">
+                            <span *ngIf="form.t5.errors.required">Cette valeur est obligatoire.</span>  
+                            <span *ngIf="form.t5.errors.pattern">Tranche 5 invalide!</span>              
+                           </div>
+                            </div> 
+                           
+                              
+                          </div>
+                        </div>
+                 
+                   
+                      </td>
+                      <td>
+        
+        
+                        <div class="form-group mb-4">
+                          <div class="row g-3 align-items-center">
+                            <div  class="col-10">
+                              <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && form.ta5.errors}">
+                              <input type="text"  class="form-control" id="ta5" formControlName="ta5" 
+                             >               
+                   <span class="input-group-text" >%</span>
+                
+                  </div>
+                  <div *ngIf="submitted && form.ta5.errors" class="invalid-feedback">
+                    <span *ngIf="form.ta5.errors.required">Cette valeur est obligatoire.</span>    
+                    <span *ngIf="form.ta5.errors.pattern">Taux invalide!</span>              
+                   </div>
+                            </div> 
+                        
+                             
+                          </div>
+                        </div>
+                        
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+          
+          
+                        <div class="form-group mb-4">
+                          <div class="row g-3 align-items-center">
+                          <div class="col-6">
+                              <label for="inputPassword6" class="col-form-label">Au delà de :</label>
+                            </div>
+
+                            <div  class="col-6">
+                              <div class="input-group-prepend">
+                              <input type="text"  class="form-control" id="t6" disabled formControlName="t6" 
+                             >
+                  
+                   <span class="input-group-text" >Dt.</span>
+                 
+                  </div>
+                            </div> 
+                          
+                              
+
+
+                          </div>
+                        </div>
+          
+                        </td>
+                        <td>
+          
+          
+                          <div class="form-group mb-4">
+                            <div class="row g-3 align-items-center">
+                              <div  class="col-10">
+                                <div class="input-group-prepend">
+                                <input type="text"  class="form-control" id="ta6" formControlName="ta6" 
+                                [ngClass]="{'is-invalid': submitted && form.ta6.errors}">                
+                   <span class="input-group-text" >%</span>
+                  </div>
+                  <div *ngIf="submitted && form.ta6.errors" class="invalid-feedback">
+                    <span *ngIf="form.ta6.errors.required">Cette valeur est obligatoire.</span>              
+                   </div>
+                              </div> 
+                             
+                                
+                            </div>
+                          </div>
+                          
+                          </td>
+                        </tr>
+              
+            </tbody>
+          </table>
+        </div>
+     
+       <br/>
+
+     
+         <div class="card">
+
+           <div class="card-body">
+             <div class="row">
+               <div class="form-group mb-4">
+               <div class="row g-3 align-items-center">
+                <div class="col-2">
+                  <label for="frais_prof" class="col-form-label">Frais Professionnel :</label>
+                </div>
+                <div  class="col-4" >
+                  <div class="input-group-prepend">
+                  <input type="text"  class="form-control" id="frais_prof" formControlName="frais_prof" [ngClass]="{'is-invalid': submitted && form.frais_prof.errors}"
+                 >         
+               <span class="input-group-text" >DT.</span>
+               
+                 </div>
+
+               <div *ngIf="submitted && form.frais_prof.errors" class="invalid-feedback">
+                <span *ngIf="form.frais_prof.errors.required">Cette valeur est obligatoire.</span>              
+               </div>
+
+                </div> 
+                <div class="col-2">
+                  <label for="frais_prof" class="col-form-label">Chef De Famille :</label>
+                </div>
+                <div  class="col-4">
+                  <div class="input-group-prepend">
+                  <input type="text"  class="form-control" id="cheffam" formControlName="cheffam" 
+                  [ngClass]="{'is-invalid': submitted && form.cheffam.errors}">         
+               <span class="input-group-text" >%</span>
+                </div>
+              <div *ngIf="submitted && form.cheffam.errors" class="invalid-feedback">
+                <span *ngIf="form.cheffam.errors.required">Cette valeur est obligatoire.</span>              
+               </div>
+                </div> 
+  
+
+              </div>
+             
+            
+
+            </div>
+
+
+          
+               <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-2">
+                    <label for="enfant1" class="col-form-label">1° Enfant</label>
+                  </div>
+
+                  <div  class="col-4">
+                    <div class="input-group-prepend">
+                    <input type="text"  class="form-control" id="enfant1" formControlName="enfant1" 
+                    [ngClass]="{'is-invalid': submitted && form.enfant1.errors}">          
+                 <span class="input-group-text" >DT.</span>
+                  </div>
+                <div *ngIf="submitted && form.enfant1.errors" class="invalid-feedback">
+                  <span *ngIf="form.enfant1.errors.required">Cette valeur est obligatoire.</span>              
+                 </div>
+                  </div> 
+                  <div class="col-2">
+                    <label for="frais_prof" class="col-form-label">2° Enfant</label>
+                  </div>
+
+                  <div  class="col-4">
+                    <div class="input-group-prepend">
+                    <input type="text"  class="form-control" id="enfant2" formControlName="enfant2" 
+                    [ngClass]="{'is-invalid': submitted && form.enfant2.errors}">
+               
+                 <span class="input-group-text" >DT.</span>
+                   </div>
+                <div *ngIf="submitted && form.enfant2.errors" class="invalid-feedback">
+                  <span *ngIf="form.enfant2.errors.required">Cette valeur est obligatoire.</span>              
+                 </div>
+                  </div> 
+                 
+                     
+                </div>
+              </div> 
+
+
+              <div class="form-group mb-4">
+               
+              </div> <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-2">
+                    <label for="enfant3" class="col-form-label">3° Enfant</label>
+                  </div>
+                  <div  class="col-4">
+                    <div class="input-group-prepend">
+                    <input type="text"  class="form-control" id="frais_prof" formControlName="enfant3" 
+                    [ngClass]="{'is-invalid': submitted && form.enfant3.errors}">
+                 <span class="input-group-text" >DT.</span>
+                   </div>
+                 <div *ngIf="submitted && form.enfant3.errors" class="invalid-feedback">
+                  <span *ngIf="form.enfant3.errors.required">Cette valeur est obligatoire.</span>              
+                 </div>
+                  </div> 
+
+                  <div class="col-2">
+                    <label for="enfant4" class="col-form-label">4° Enfant</label>
+                  </div>
+
+                  <div  class="col-4">
+                    <div class="input-group-prepend">
+                    <input type="text"  class="form-control" id="frais_prof" formControlName="enfant4" 
+                    [ngClass]="{'is-invalid': submitted && form.enfant4.errors}">
+                 <span class="input-group-text" >DT.</span>
+                
+                </div>
+                <div *ngIf="submitted && form.enfant4.errors" class="invalid-feedback">
+                  <span *ngIf="form.enfant4.errors.required">Cette valeur est obligatoire.</span>              
+                 </div>
+                  </div> 
+                    
+                </div>
+              </div> 
+
+            </div>
+             </div>
+           </div>
+   
+
+
+         <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-2">
+                    <label for="frais_prof" class="col-form-label">Enfant Infimre</label>
+                  </div>
+                  <div  class="col-4">
+                    <div class="input-group-prepend">
+                    <input type="text"  class="form-control" id="frais_prof" formControlName="enfant_infirme" 
+                    [ngClass]="{'is-invalid': submitted && form.enfant_infirme.errors}">   
+                 <span class="input-group-text" >DT.</span>
+                </div>
+                <div *ngIf="submitted && form.enfant_infirme.errors" class="invalid-feedback">
+                  <span *ngIf="form.enfant_infirme.errors.required">Cette valeur est obligatoire.</span>              
+                 </div>
+                  </div> 
+                  <div class="col-2">
+                    <label for="enfant_etu" class="col-form-label">Enfant étudiant(e)</label>
+                  </div>
+
+  
+                  <div  class="col-4">
+                    <div class="input-group-prepend">
+                    <input type="text"  class="form-control" id="enfant_etu" formControlName="enfant_etu" 
+                    [ngClass]="{'is-invalid': submitted && form.enfant_etu.errors}">  
+                 <span class="input-group-text" >DT.</span>
+                
+                   </div>
+                   <div *ngIf="submitted && form.enfant_etu.errors" class="invalid-feedback">
+                    <span *ngIf="form.enfant_etu.errors.required">Cette valeur est obligatoire.</span>              
+                   </div>
+                  </div> 
+                     
+                </div>
+              </div>
+            
+              <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-4">
+                    <label for="frais_prof" class="col-form-label">Parent :</label>
+                  </div>
+                  <div  class="col-8">
+                    <div class="input-group-prepend">
+                    <input type="text"  class="form-control" id="frais_prof" formControlName="parent" 
+                    [ngClass]="{'is-invalid': submitted && form.parent.errors}">       
+                 <span class="input-group-text" >%</span>             
+                </div>
+                <div *ngIf="submitted && form.parent.errors" class="invalid-feedback">
+                  <span *ngIf="form.parent.errors.required">Cette valeur est obligatoire.</span>              
+                 </div>
+                  </div> 
+                </div>
+                  
+                     
+               
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End table --> 
+        <div class="form-group mb-0">            
+          <div class="text-md-right">
+          <button type="submit" class="btn btn-success">Enregistrer</button>
+          <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+           </div>
+             </div>
+        </form>
+      </div>
+    </div>
+  
+  </ng-template>
+  <ng-template #Modifier let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title" id="composemodalTitle">Modification</h5>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="card">    
+      <div class="card-body">
+        <form class="needs-validation" (ngSubmit)="modifier()" [formGroup]="Modifierform">
+          <div class="card">
+            <div class="card-body">
+            <div class="row">
+          <div  class="col-3">
+            <div class="form-group">
+            <label for="code">Code :*</label>
+            <input type="text"  class="form-control" id="id" formControlName="id" placeholder="Exemple:  3" disabled
+            [ngClass]="{'is-invalid': submitted && f.id.errors}">
+            <div *ngIf="submitted && f.id.errors" class="invalid-feedback">
+              <span *ngIf="f.id.errors.required">Cette valeur est obligatoire!!</span>    
+              <span *ngIf="f.id.errors.pattern">Code invalide!!</span>          
+             </div>
+            </div>
+          </div>  
+        
+
+          <div  class="col-6">
+            <label for="code">Désignation :*</label>
+            <input type="text"  class="form-control" id="designation" formControlName="designation" placeholder="Exemple:  IRPP"
+            [ngClass]="{'is-invalid': submitted && f.designation.errors}">
+        <div *ngIf="submitted && f.designation.errors" class="invalid-feedback">
+          <span *ngIf="f.designation.errors.required">Cette valeur est obligatoire.</span>  
+          <span *ngIf="f.designation.errors.pattern">Désignation invalide!</span>                  
+         </div>
+          </div> 
+         
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="invalidCheck" formControlName="defaut">
+            <label class="custom-control-label" for="invalidCheck"> Par défaut </label>
+            
+          </div>
+        </div>
+      </div>
+   
+
+        </div>  
+        </div></div>
+         <div class="table-bordered">
+          <table id="basic-datatable"
+            class="table table-centered dt-responsive nowrap datatables no-footer dtr-inline">
+            <thead>
+              <tr>
+                <th >Tranches</th>
+              <th >Taux</th>
+              </tr>
+            </thead>
+            <tbody>
+  
+              <tr>
+              <td>
+
+
+                
+                  <div class="form-group mb-4">
+                    <div class="row g-3 align-items-center">
+                      <div class="col-6">
+                        <label for="inputPassword6" class="col-form-label">Jusqu'à :</label>
+                      </div>
+                      <div  class="col-6"  >
+                        <div class="form-group" >
+                        <div class="input-group-prepend" [ngClass]="{'is-invalid': submitted && f.t1.errors}">
+                        <input type="text"  class="form-control" id="t1" formControlName="t1" 
+                        [ngClass]="{'is-invalid': submitted && f.t1.errors}">
+                         <span class="input-group-text" >DT.</span>
+                          </div>
+                    <div *ngIf="submitted && form.t1.errors" class="invalid-feedback">
+                      <span *ngIf="f.t1.errors.required">Cette valeur est obligatoire.</span>   
+                      <span *ngIf="f.t1.errors.pattern">Tranche 1 invalide!</span>                 
+                     </div>
+                     </div>
+                  </div>
+                      
+                      </div> 
+                      
+                      
+                  </div>
+
+              </td>
+              <td>
+
+                <div class="form-group mb-4">
+                  <div class="row g-3 align-items-center">
+                    <div  class="col-10">
+                      <div class="input-group-prepend">
+                      <input type="text"  class="form-control" id="ta1" formControlName="ta1" disabled placeholder="0.00"  [ngClass]="{'is-invalid': submitted && f.ta1.errors}">   
+                   <span class="input-group-text" >%</span>
+                   <div *ngIf="submitted && f.ta1.errors" class="invalid-feedback">
+                    <span *ngIf="f.ta1.errors.required">Cette valeur est obligatoire.</span>   
+                    <span *ngIf="f.ta1.errors.pattern">Taux invalide!</span>                 
+                   </div>
+                  </div>
+                    </div> 
+                  
+                      
+                  </div>
+                </div>
+                
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="form-group mb-4">
+                    <div class="row g-3 align-items-center">
+                      <div class="col-2">
+                        <label for="inputPassword6" class="col-form-label">De :</label>
+                      </div>
+                      <div  class="col-4">
+                        <div class="input-group-prepend">
+                        <input type="text"  class="form-control" id="t1_2" formControlName="t1_2" disabled>
+                    
+                     <span class="input-group-text" >DT.</span>
+                    </div>
+                      </div> 
+                      <div class="col-2">
+                        <label for="inputPassword6" class="col-form-label">à :</label>
+                      </div>
+
+                      <div  class="col-4">
+                        <div class="input-group-prepend" [ngClass]="{'is-invalid': submitted && f.t2.errors}">
+                        <input type="text"  class="form-control" id="t3" formControlName="t2" 
+                        [ngClass]="{'is-invalid': submitted && f.t2.errors}">        
+                     <span class="input-group-text" >DT.</span>
+                     
+                    </div>
+                    <div *ngIf="submitted && f.t2.errors" class="invalid-feedback">
+                      <span *ngIf="f.t2.errors.required">Cette valeur est obligatoire!.</span>      
+                      <span *ngIf="f.t2.errors.pattern">Tranche 2 invalide!.</span>           
+                     </div>
+                      </div> 
+                        
+                    </div>
+                  </div>
+                   
+                      
+                </td>
+                <td>
+  
+  
+                  <div class="form-group mb-4">
+                    <div class="row g-3 align-items-center">
+                      <div  class="col-10">
+                        <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.ta2.errors}">
+                        <input type="text"  class="form-control" id="ta2" formControlName="ta2" 
+                        [ngClass]="{'is-invalid': submitted && f.ta2.errors}">             
+                   <span class="input-group-text" >%</span>
+                   
+                  </div>
+                  <div *ngIf="submitted && form.ta2.errors" class="invalid-feedback">
+                    <span *ngIf="f.ta2.errors.required">Cette valeur est obligatoire!</span>   
+                    <span *ngIf="f.ta2.errors.pattern">Taux Invalide!</span>              
+                   </div>
+                      </div> 
+                    
+                       
+                    </div>
+                  </div>
+                  
+                  </td>
+                </tr> 
+                <tr>
+                  <td>
+
+                 <div class="form-group mb-4">
+                          <div class="row g-3 align-items-center">
+                            <div class="col-2">
+                              <label for="inputPassword6" class="col-form-label">De :</label>
+                            </div>
+                            <div  class="col-4">
+                              <div class="input-group-prepend">
+                              <input type="text"  class="form-control" id="t2_3" formControlName="t2_3" disabled
+                             >
+                        
+                           <span class="input-group-text" >%</span>
+                          </div>
+                            </div> 
+                            <div class="col-2">
+                              <label for="inputPassword6" class="col-form-label">à :</label>
+                            </div>
+                             
+
+                            <div  class="col-4">
+                              <div class="input-group-prepend" [ngClass]="{'is-invalid': submitted && f.t3.errors}">
+                              <input type="text"  class="form-control" id="t3" formControlName="t3" 
+                              [ngClass]="{'is-invalid': submitted && f.t3.errors}">                   
+                           <span class="input-group-text" >DT.</span>                    
+                          </div>
+                          <div *ngIf="submitted && f.t3.errors" class="invalid-feedback">
+                            <span *ngIf="f.t3.errors.required">Cette valeur est obligatoire!</span> 
+                            <span *ngIf="f.t3.errors.pattern">Tranche 3 invalide!</span>                
+                           </div>
+                            </div>  
+                            </div>
+                        </div>
+                     
+                  </td>
+                  <td>
+    
+    
+                    <div class="form-group mb-4" >
+                      <div class="row g-3 align-items-center">
+                        <div  class="col-10">
+                          <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.ta3.errors}">
+                          <input type="text"  class="form-control" id="ta3" formControlName="ta3" 
+                          [ngClass]="{'is-invalid': submitted && f.ta3.errors}">
+                         <span class="input-group-text" >%</span>
+                  </div>
+                  <div *ngIf="submitted && f.ta3.errors" class="invalid-feedback">
+                    <span *ngIf="f.ta3.errors.required">Cette valeur est obligatoire!</span>   
+                    <span *ngIf="f.ta3.errors.pattern">Taux invalide!</span>               
+                   </div>
+                        </div> 
+                         
+                       
+                      </div>
+                   
+                    </div>
+                    
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="form-group mb-4">
+                        <div class="row g-3 align-items-center">
+                          <div class="col-2">
+                            <label for="inputPassword6" class="col-form-label">De :</label>
+                          </div>
+                          <div  class="col-4">
+                            <div class="input-group-prepend">
+                            <input type="text"  class="form-control" id="t3_4" formControlName="t3_4" disabled
+                            >
+                       
+                         <span class="input-group-text" >DT.</span>
+                        </div>
+                          </div> 
+                          <div class="col-2">
+                            <label for="inputPassword6" class="col-form-label">à :</label>
+                          </div>
+
+                          <div  class="col-4">
+                            <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.t4.errors}">
+                            <input type="text"  class="form-control" id="t7" formControlName="t4" 
+                            [ngClass]="{'is-invalid': submitted && f.t4.errors}">                    
+                            <span class="input-group-text" >DT.</span>
+                        
+                           </div>
+                        <div *ngIf="submitted && f.t4.errors" class="invalid-feedback">
+                          <span *ngIf="f.t4.errors.required">Cette valeur est obligatoire!</span>  
+                          <span *ngIf="f.t4.errors.pattern">Tranche4 invalide!</span>               
+                         </div>
+                          </div> 
+                             
+                        </div>
+                      </div>
+
+                  
+                    </td>
+                    <td>
+      
+      
+                      <div class="form-group mb-4">
+                        <div class="row g-3 align-items-center">
+                          <div  class="col-10">
+                            <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.ta4.errors}">
+                            <input type="text"  class="form-control" id="ta4" formControlName="ta4" 
+                            [ngClass]="{'is-invalid': submitted && f.ta4.errors}">               
+                            <span class="input-group-text" >%</span>                  
+                          </div>
+                  <div *ngIf="submitted && form.ta4.errors" class="invalid-feedback">
+                    <span *ngIf="f.ta4.errors.required">Cette valeur est obligatoire.</span>   
+                    <span *ngIf="f.ta4.errors.pattern">Taux invalide!</span>               
+                  </div>
+                          </div> 
+                          
+                            
+                        </div>
+                      </div>
+                      
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <div class="form-group mb-4">
+                          <div class="row g-3 align-items-center">
+                            <div class="col-2">
+                              <label for="inputPassword6" class="col-form-label">De :</label>
+                            </div>
+                            <div  class="col-4">
+                              <div class="input-group-prepend">
+                              <input type="text"  class="form-control" id="t4_5" formControlName="t4_5" disabled
+                              >
+                        
+                           <span class="input-group-text" >DT.</span>
+                          </div>
+                            </div> 
+                            <div class="col-2">
+                              <label for="inputPassword6" class="col-form-label">à :</label>
+                            </div>
+
+                            <div  class="col-4">
+                              <div class="input-group-prepend"   [ngClass]="{'is-invalid': submitted && f.t5.errors}">
+                              <input type="text"  class="form-control" id="t5" formControlName="t5" 
+                              [ngClass]="{'is-invalid': submitted && f.t5.errors}">
+                        
+                           <span class="input-group-text" >DT.</span>
+                          </div>
+                          <div *ngIf="submitted && f.t5.errors" class="invalid-feedback">
+                            <span *ngIf="f.t5.errors.required">Cette valeur est obligatoire.</span>  
+                            <span *ngIf="f.t5.errors.pattern">Tranche 5 invalide!</span>              
+                           </div>
+                            </div> 
+                           
+                              
+                          </div>
+                        </div>
+                 
+                   
+                      </td>
+                      <td>
+        
+        
+                        <div class="form-group mb-4">
+                          <div class="row g-3 align-items-center">
+                            <div  class="col-10">
+                              <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.ta5.errors}">
+                              <input type="text"  class="form-control" id="ta5" formControlName="ta5" >               
+                   <span class="input-group-text" >%</span>
+                
+                  </div>
+                  <div *ngIf="submitted && f.ta5.errors" class="invalid-feedback">
+                    <span *ngIf="f.ta5.errors.required">Cette valeur est obligatoire.</span>    
+                    <span *ngIf="f.ta5.errors.pattern">Taux invalide!</span>              
+                   </div>
+                            </div> 
+                        
+                             
+                          </div>
+                        </div>
+                        
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+          
+          
+                        <div class="form-group mb-4">
+                          <div class="row g-3 align-items-center">
+                          <div class="col-6">
+                              <label for="inputPassword6" class="col-form-label">Au delà de :</label>
+                            </div>
+
+                            <div  class="col-6">
+                              <div class="input-group-prepend">
+                              <input type="text"  class="form-control" id="t6" disabled formControlName="t6" 
+                             >
+                  
+                   <span class="input-group-text" >Dt.</span>
+                 
+                  </div>
+                            </div> 
+                          
+                              
+
+
+                          </div>
+                        </div>
+          
+                        </td>
+                        <td>
+          
+          
+                          <div class="form-group mb-4">
+                            <div class="row g-3 align-items-center">
+                              <div  class="col-10">
+                                <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.ta6.errors}">
+                                <input type="text"  class="form-control" id="ta6" formControlName="ta6" 
+                                [ngClass]="{'is-invalid': submitted && f.ta6.errors}">                
+                   <span class="input-group-text" >%</span>
+                  </div>
+                  <div *ngIf="submitted && f.ta6.errors" class="invalid-feedback">
+                    <span *ngIf="f.ta6.errors.required">Cette valeur est obligatoire.</span>     
+                    <span *ngIf="f.ta6.errors.pattern">Cette valeur est invalide.</span>             
+                   </div>
+                              </div> 
+                             
+                                
+                            </div>
+                          </div>
+                          
+                          </td>
+                        </tr>
+              
+            </tbody>
+          </table>
+        </div>
+     
+       <br/>
+
+     
+         <div class="card">
+
+           <div class="card-body">
+             <div class="row">
+               <div class="form-group mb-4">
+               <div class="row g-3 align-items-center">
+                <div class="col-2">
+                  <label for="frais_prof" class="col-form-label">Frais Professionnel :</label>
+                </div>
+                <div  class="col-4" >
+                  <div class="input-group-prepend" [ngClass]="{'is-invalid': submitted && f.frais_prof.errors}">
+                  <input type="text"  class="form-control" id="frais_prof" formControlName="frais_prof" [ngClass]="{'is-invalid': submitted && f.frais_prof.errors}"
+                 >         
+               <span class="input-group-text" >DT.</span>
+               
+                 </div>
+
+               <div *ngIf="submitted && f.frais_prof.errors" class="invalid-feedback">
+                <span *ngIf="f.frais_prof.errors.required">Cette valeur est obligatoire.</span>   
+                <span *ngIf="f.frais_prof.errors.pattern">Cette valeur est invalide.</span>               
+               </div>
+
+                </div> 
+                <div class="col-2">
+                  <label for="frais_prof" class="col-form-label">Chef De Famille :</label>
+                </div>
+                <div  class="col-4">
+                  <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.cheffam.errors}">
+                  <input type="text"  class="form-control" id="cheffam" formControlName="cheffam" 
+                  [ngClass]="{'is-invalid': submitted && f.cheffam.errors}">         
+               <span class="input-group-text" >%</span>
+                </div>
+              <div *ngIf="submitted && f.cheffam.errors" class="invalid-feedback">
+                <span *ngIf="f.cheffam.errors.required">Cette valeur est obligatoire.</span>   
+                <span *ngIf="f.cheffam.errors.pattern">Cette valeur est inavlide.</span>                
+               </div>
+                </div> 
+  
+
+              </div>
+             
+            
+
+            </div>
+
+
+          
+               <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-2">
+                    <label for="enfant1" class="col-form-label">1° Enfant</label>
+                  </div>
+
+                  <div  class="col-4">
+                    <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.enfant1.errors}">
+                    <input type="text"  class="form-control" id="enfant1" formControlName="enfant1" 
+                    [ngClass]="{'is-invalid': submitted && f.enfant1.errors}">          
+                 <span class="input-group-text" >DT.</span>
+                  </div>
+                <div *ngIf="submitted && f.enfant1.errors" class="invalid-feedback">
+                  <span *ngIf="f.enfant1.errors.required">Cette valeur est obligatoire.</span>     
+                  <span *ngIf="f.enfant1.errors.pattern">Cette valeur est invalide.</span>               
+                 </div>
+                  </div> 
+                  <div class="col-2">
+                    <label for="frais_prof" class="col-form-label">2° Enfant</label>
+                  </div>
+
+                  <div  class="col-4">
+                    <div class="input-group-prepend"   [ngClass]="{'is-invalid': submitted && f.enfant2.errors}">
+                    <input type="text"  class="form-control" id="enfant2" formControlName="enfant2" 
+                    [ngClass]="{'is-invalid': submitted && f.enfant2.errors}">
+               
+                 <span class="input-group-text" >DT.</span>
+                   </div>
+                <div *ngIf="submitted && f.enfant2.errors" class="invalid-feedback">
+                  <span *ngIf="f.enfant2.errors.required">Cette valeur est obligatoire.</span>     
+                  <span *ngIf="f.enfant2.errors.pattern">Cette valeur est invalide.</span>             
+                 </div>
+                  </div> 
+                 
+                     
+                </div>
+              </div> 
+
+
+              <div class="form-group mb-4">
+               
+              </div> <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-2">
+                    <label for="enfant3" class="col-form-label">3° Enfant</label>
+                  </div>
+                  <div  class="col-4">
+                    <div class="input-group-prepend"   [ngClass]="{'is-invalid': submitted && f.enfant3.errors}">
+                    <input type="text"  class="form-control" id="frais_prof" formControlName="enfant3" 
+                    [ngClass]="{'is-invalid': submitted && f.enfant3.errors}">
+                 <span class="input-group-text" >DT.</span>
+                   </div>
+                 <div *ngIf="submitted && f.enfant3.errors" class="invalid-feedback">
+                  <span *ngIf="f.enfant3.errors.required">Cette valeur est obligatoire.</span>   
+                  <span *ngIf="f.enfant3.errors.pattern">Cette valeur est invalide.</span>                  
+                 </div>
+                  </div> 
+
+                  <div class="col-2">
+                    <label for="enfant4" class="col-form-label">4° Enfant</label>
+                  </div>
+
+                  <div  class="col-4">
+                    <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.enfant4.errors}">
+                    <input type="text"  class="form-control" id="frais_prof" formControlName="enfant4" 
+                    [ngClass]="{'is-invalid': submitted && f.enfant4.errors}">
+                 <span class="input-group-text" >DT.</span>
+                
+                </div>
+                <div *ngIf="submitted && form.enfant4.errors" class="invalid-feedback">
+                  <span *ngIf="f.enfant4.errors.required">Cette valeur est obligatoire.</span>    
+                  <span *ngIf="f.enfant4.errors.pattern">Cette valeur est invalide.</span>                
+                 </div>
+                  </div> 
+                    
+                </div>
+              </div> 
+
+            </div>
+             </div>
+           </div>
+   
+
+
+         <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-2">
+                    <label for="frais_prof" class="col-form-label">Enfant Infimre</label>
+                  </div>
+                  <div  class="col-4">
+                    <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.enfant_infirme.errors}">
+                    <input type="text"  class="form-control" id="frais_prof" formControlName="enfant_infirme" 
+                    [ngClass]="{'is-invalid': submitted && f.enfant_infirme.errors}">   
+                 <span class="input-group-text" >DT.</span>
+                </div>
+                <div *ngIf="submitted && f.enfant_infirme.errors" class="invalid-feedback">
+                  <span *ngIf="f.enfant_infirme.errors.required">Cette valeur est obligatoire.</span>              
+                  <span *ngIf="f.enfant_infirme.errors.pattern">Cette valeur est invalide.</span>    
+                 </div>
+                  </div> 
+                  <div class="col-2">
+                    <label for="enfant_etu" class="col-form-label">Enfant étudiant(e)</label>
+                  </div>
+
+  
+                  <div  class="col-4">
+                    <div class="input-group-prepend" [ngClass]="{'is-invalid': submitted && f.enfant_etu.errors}">
+                    <input type="text"  class="form-control" id="enfant_etu" formControlName="enfant_etu" 
+                    [ngClass]="{'is-invalid': submitted && f.enfant_etu.errors}">  
+                 <span class="input-group-text" >DT.</span>
+                
+                   </div>
+                   <div *ngIf="submitted && f.enfant_etu.errors" class="invalid-feedback">
+                    <span *ngIf="f.enfant_etu.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="f.enfant_etu.errors.pattern">Cette valeur est invalide.</span>                
+                   </div>
+                  </div> 
+                     
+                </div>
+              </div>
+            
+              <div class="form-group mb-4">
+                <div class="row g-3 align-items-center">
+                  <div class="col-4">
+                    <label for="frais_prof" class="col-form-label">Parent :</label>
+                  </div>
+                  <div  class="col-8">
+                    <div class="input-group-prepend"  [ngClass]="{'is-invalid': submitted && f.parent.errors}">
+                    <input type="text"  class="form-control" id="frais_prof" formControlName="parent" 
+                    [ngClass]="{'is-invalid': submitted && f.parent.errors}">       
+                 <span class="input-group-text" >%</span>             
+                </div>
+                <div *ngIf="submitted && f.parent.errors" class="invalid-feedback">
+                  <span *ngIf="f.parent.errors.required">Cette valeur est obligatoire.</span>  
+                  <span *ngIf="f.parent.errors.pattern">Cette valeur est invalide.</span>                  
+                 </div>
+                  </div> 
+                </div>
+                  
+                     
+               
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End table --> 
+        <div class="form-group mb-0">            
+          <div class="text-md-right">
+          <button type="submit" class="btn btn-success">Modifier</button>
+          <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Annuler</button>
+           </div>
+             </div>
+        </form>
+      </div>
+    </div>
+  
+  
+  </ng-template>
+
+        </div>
+        
+     

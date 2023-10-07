@@ -1,0 +1,467 @@
+<app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+        <div>
+            <div >  
+              <div class="col-lg-20">
+                  <div class="card">
+                    <div class="card-body">
+                      <ul ngbNav #customNav="ngbNav" [(activeId)]="this.active" class="nav-tabs nav-tabs-custom nav-justified">
+                        <li [ngbNavItem]="1">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                            <span class="d-none d-sm-block">Saisie des Heures Supplémentaires</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="saiaiehs"></ng-template>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="2">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                            <span class="d-none d-sm-block">Consultation des Heures Supplémentaires</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="Concultationhs"></ng-template>
+                          </ng-template>
+                        </li>
+                   
+                       
+                      </ul>
+                      <div [ngbNavOutlet]="customNav"></div>
+                    </div>
+                  </div>
+                </div>
+
+               
+                  <ng-template #Concultationhs>
+                    <br/>
+                    <div class="row">
+                      <div class="col-12">
+                        <div class="card">
+                          <div class="card-body">
+                            <div class="row mb-md-2">
+                              <div class="col-sm-12 col-md-6">
+                                <div class="dataTables_length" id="tickets-table_length"><label
+                                    class="d-inline-flex align-items-center">Afficher
+                                    <select name="tickets-table_length" aria-controls="tickets-table" name="pageSize"
+                                      [(ngModel)]="service.pageSize"
+                                      class="custom-select custom-select-sm form-control form-control-sm mx-2">
+                                      <option [ngValue]="10">10</option>
+                                      <option [ngValue]="25">25</option>
+                                      <option [ngValue]="50">50</option>
+                                      <option [ngValue]="100">100</option>
+                                    </select> entrées</label></div>
+                              </div>
+                              <!-- Search -->
+                              <div class="col-sm-12 col-md-6">
+                                <div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+                                    class="d-inline-flex align-items-center">rechercher:
+                                    <input type="text" name="searchTerm" class="form-control form-control-sm ml-2"
+                                      aria-controls="tickets-table" [(ngModel)]="service.searchTerm"></label></div>
+                              </div>
+                              <!-- End search -->
+                            </div>
+                            <!-- Table -->
+                            <div class="table-responsive">
+                              <table id="basic-datatable"
+                                class="table table-bordered dt-responsive nowrap datatables no-footer dtr-inline">
+                                <thead class="thead-light">
+                                  <tr>
+                                    <th></th>
+                                    <th sortable="matricule_employe" (sort)="onSort($event)">Matricule</th>
+                                    <th sortable="nom" (sort)="onSort($event)">Nom & prénom </th>
+                                    <th sortable="date" (sort)="onSort($event)">Date</th>
+                                    <th sortable="taux_horaire" (sort)="onSort($event)">Taux horaire</th>
+                                    <th sortable="hs_nuit" (sort)="onSort($event)">Hs nuit</th>
+                                    <th>Actions</th>
+                                  </tr>
+                                </thead>
+                                <tbody *ngFor="let table of tables$ | async;let i=index">
+                                  <tr>
+                                    <td align="center">
+                                      <a class="expand-row" (click)="changeValue(i)">
+                                        +
+                                      </a>
+                                    </td>
+                                    <td>
+                                      <ngb-highlight [result]="table.matricule_employe" [term]="service.searchTerm"></ngb-highlight>
+                                    </td>
+                                    <td>
+                                      <ngb-highlight [result]="table.nom" [term]="service.searchTerm"></ngb-highlight>
+                                    </td>
+
+                                    <td>
+                                      <ngb-highlight [result]="table.date" [term]="service.searchTerm"></ngb-highlight>
+                                    </td>                                  
+                                    <td>
+                                      <ngb-highlight [result]="table.taux_horaire" [term]="service.searchTerm" ></ngb-highlight>
+                                    </td>
+                                    <td>
+                                      <ngb-highlight [result]="table.hs_nuit" [term]="service.searchTerm"></ngb-highlight>
+                                    </td>
+                                    <td>
+                                      <div ngbDropdown placement="bottom-left">
+                                        
+                                          <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Ajouter autre heure supp pour cet employé" ><i
+                                            class="mdi mdi-bookmark-plus-outline font-size-18" (click)="addform(table)"></i></a>
+                                          <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Modifier" (click)="openedit(contentedit,table)" ><i
+                                            class="mdi mdi-pencil font-size-18"></i></a>
+                                          <a href="javascript:void(0);" class="text-danger" placement="top" (click)="deletehs(this.table.id)" ngbTooltip="Supprimer" ><i
+                                              class="mdi mdi-trash-can font-size-18"></i></a>
+                                        
+                                      </div>
+                                    </td>
+                                  </tr>
+                                 
+                                  <tr *ngIf="hideme[i]" class="sub-table no-bg">
+                                    <td align="center"> </td>
+                                    <td colspan="15" class="p-0">
+                                      <table class="table mb-0 table-striped">
+                                        <thead>
+                                          <tr>
+                                            <th>Hs 1.25</th>
+                                            <th>Hs 1.40</th>
+                                            <th>Hs 1.50</th>
+                                            <th>Hs 1.75</th>
+                                            <th>Hs 2.00</th>
+                                         
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <tr>
+                                            <td>{{table.hs1_25}}</td>
+                                            <td>{{table.hs1_4}}</td>
+                                            <td>{{table.hs1_5}}</td>
+                                            <td>{{table.hs1_75}}</td>
+                                            <td>{{table.hs2}}</td>
+
+                                            
+                                          </tr>
+                                        </tbody>
+                                      </table>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+                            </div>
+                            <!-- End table -->
+                            <div class="row justify-content-md-between align-items-md-center mt-2">
+                              <div class="col-sm-12 col-md-5">
+                                <div class="dataTables_info mb-2" id="tickets-table_info" role="status" aria-live="polite">Affiche
+                                  {{service.startIndex}} à
+                                  {{service.endIndex}} sur {{service.totalRecords}}
+                                  entrées
+                                </div>
+                              </div>
+                              <!-- Pagination -->
+                              <div class="col-sm-12 col-md-5">
+                                <div class="text-md-right float-md-right pagination-rounded">
+                                  <ngb-pagination [collectionSize]="total$ | async" [(page)]="service.page" [pageSize]="service.pageSize">
+                                  </ngb-pagination>
+                                </div>
+                              </div>
+                              <!-- End Pagination -->
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+                  </ng-template>
+
+                <ng-template #saiaiehs>
+                  <br/>
+                  <div class="card">
+                    <div class="card-body">
+                <form class="needs-validation"  [formGroup]="validationform" (ngSubmit)="saveData()" >
+                 
+                    <div class="row">
+                      
+                      <div class="col-md-3">
+                        <label for="validationCustom0">Nom & Prénom de l'employé :*</label>
+                                  <select class="custom-select" id="nom" formControlName="nom" (change)="search_employe()"  [ngClass]="{'is-invalid': submitted && form.nom.errors}">  
+                                    <option *ngFor="let item of this.liste_employes let i= index" [value]="item.matricule"  >{{item.nom}} {{item.prenom}}</option>
+                                  </select>
+                                  <div *ngIf="submitted && form.nom.errors" class="invalid-feedback">
+                                    <span *ngIf="form.nom.errors.required">Cette valeur est obligatoire.</span>  
+                                  </div>
+                      </div>
+                      <div class="col-md-3">
+                        <div class="form-group">
+                          <label for="validationCustom01">Matricule :</label>
+                          <input type="text" class="form-control" id="matricule" placeholder=""  formControlName="matricule" disabled>
+                        
+                      </div>
+                      </div>
+
+                      <div class="col-md-3">
+                       
+                        <div class="form-group">
+                          <label for="validationCustom01">Taux horaire :*</label>
+                          <input type="text" class="form-control" id="tauxhs" 
+                            placeholder=""  formControlName="tauxhs" [ngClass]="{'is-invalid': submitted && form.tauxhs.errors}" disabled >
+                            <div *ngIf="submitted && form.tauxhs.errors" class="invalid-feedback">
+                              <span *ngIf="submitted && form.tauxhs.errors.required">Ce champs est obligatoire!</span>
+                              <span *ngIf="submitted && form.tauxhs.errors.pattern">Taux horaires incorrect!</span>
+                            </div>
+                      </div>
+                      </div>
+              
+                      <div class="col-md-3">
+                        <div class="form-group">
+                        <label for="example-date-input">Date :*</label>
+                        <input class="form-control" type="date" value="07-04-2021" id="date" formControlName="date" [ngClass]="{'is-invalid': submitted && form.date.errors}" >
+                        <div *ngIf="submitted && form.date.errors" class="invalid-feedback">
+                          <span *ngIf="submitted && form.date.errors.required">Ce champs est obligatoire!</span>
+                        </div>
+                        </div>
+                      </div>
+                     
+                     
+                      
+                      <fieldset class="scheduler-border">
+                        <legend class="scheduler-border">Nombre d'heures supplementaire</legend>
+                        <div class="row">
+                     
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="validationCustom01">Hs 1.25:</label>
+                          <input type="text" class="form-control" id="hs1_25" 
+                            placeholder="Nb d'heures" formControlName="hs1_25" [ngClass]="{'is-invalid': submitted && form.hs1_25.errors}" >
+                            <div *ngIf="submitted && form.hs1_25.errors" class="invalid-feedback">
+                              <span *ngIf="submitted && form.hs1_25.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                      </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="validationCustom01">Hs 1.50:</label>
+                          <input type="text" class="form-control" id="hs1_5" 
+                            placeholder="Nb d'heures"  formControlName="hs1_5" [ngClass]="{'is-invalid': submitted && form.hs1_5.errors}" >
+                            <div *ngIf="submitted && form.hs1_5.errors" class="invalid-feedback">
+                              <span *ngIf="submitted && form.hs1_5.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                      </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="validationCustom01">Hs 1.75:</label>
+                          <input type="text" class="form-control" id="hs1_75" 
+                            placeholder="Nb d'heures" formControlName="hs1_75" [ngClass]="{'is-invalid': submitted && form.hs1_75.errors}" >
+                            <div *ngIf="submitted && form.hs1_75.errors" class="invalid-feedback">
+                              <span *ngIf="submitted && form.hs1_75.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                      </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="validationCustom01">Hs 2.00:</label>
+                          <input type="text" class="form-control" id="hs2" 
+                            placeholder="Nb d'heures"  formControlName="hs2" [ngClass]="{'is-invalid': submitted && form.hs2.errors}" >
+                            <div *ngIf="submitted && form.hs2.errors" class="invalid-feedback">
+                              <span *ngIf="submitted && form.hs2.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                      </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="validationCustom01">Hs 1.4:</label>
+                          <input type="text" class="form-control" id="hs1_4" 
+                            placeholder="Nb d'heures" formControlName="hs1_4" [ngClass]="{'is-invalid': submitted && form.hs1_4.errors}" >
+                            <div *ngIf="submitted && form.hs1_4.errors" class="invalid-feedback">
+                              <span *ngIf="submitted && form.hs1_4.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                      </div>
+                      </div>
+                      <div class="col-md-2">
+                        <div class="form-group">
+                          <label for="validationCustom01">Hs Nuit:</label>
+                          <input type="text" class="form-control" id="hs_nuit" 
+                            placeholder="Nb d'heures"  formControlName="hs_nuit" [ngClass]="{'is-invalid': submitted && form.hs_nuit.errors}" >
+                            <div *ngIf="submitted && form.hs_nuit.errors" class="invalid-feedback">
+                              <span *ngIf="submitted && form.hs_nuit.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                          </div>
+                      
+                        </div>
+                    </div>
+                    </fieldset>
+
+
+                     
+                    
+                     
+                     
+                      
+                      
+            
+            
+                                      
+                                      
+                    </div>  
+                    <div class="form-group mb-0">            
+                    <div class="text-md-right">
+                    <button type="submit" class="btn btn-success">Ajouter</button>
+                    <button type="button" class="btn btn-warning ml-1"  (click)="resetformadd()">Annuler</button>
+                     </div>
+                       </div>
+                  </form>
+                  </div>
+                    </div>
+                </ng-template>
+
+                <ng-template #contentedit role="document" let-modal="close">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Modifier HS pour cet employé : </h5>
+                    <button type="button" class="close" aria-label="Close" (click)="modal('Cross click')">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body ">
+                 
+                    <form class="needs-validation" (ngSubmit)="ediths()" [formGroup]="validationeditform" >
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group position-relative">
+                            <label for="validationTooltip01">Matricule  :*</label>
+                            <input type="text" class="form-control" id="matricule"
+                              placeholder="" disabled formControlName="matricule">
+                             
+                          </div>
+                        </div>
+          
+                        <div class="col-md-6">
+                          <div class="form-group position-relative">
+                            <label for="validationTooltip02">Nom & Prénom  :*</label>
+                            <input type="text" class="form-control" id="nom" 
+                              placeholder="" disabled formControlName="nom">
+                             
+                              
+                          </div>
+                        </div>
+          
+                        
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group">
+                              <label for="example-date-input">Date :*</label>
+                              <input class="form-control" type="date" value="07-04-2021" id="date" formControlName="date" [ngClass]="{'is-invalid': submitted && editform.date.errors}"  >  
+                              <div *ngIf="submittededit && editform.date.errors" class="invalid-feedback">
+                                <span *ngIf="submittededit && editform.date.errors.required">Ce champs est obligatoire!</span>
+                              </div>                 
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group position-relative">
+                            <label for="validationTooltipUsername">Taux Hr :*</label>
+                            <div class="input-group" >
+                              <input type="text" class="form-control" id="tauxhs" 
+                                placeholder="" formControlName="tauxhs" [ngClass]="{'is-invalid': submittededit && editform.tauxhs.errors}"> 
+                                <div *ngIf="submittededit && editform.tauxhs.errors" class="invalid-feedback">
+                                  <span *ngIf="submittededit && editform.tauxhs.errors.required">Ce champs est obligatoire!</span>
+                                  <span *ngIf="submittededit && editform.tauxhs.errors.pattern">Taux horaires incorrect!</span>
+                                </div>                                                        
+                            </div>
+                          </div>
+                        </div>
+          
+          
+                     
+                        
+                      </div>
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group position-relative">
+                            <label for="validationTooltipUsername">Hs 1.25 :</label>
+                            <div class="input-group">
+                              <input type="text" class="form-control" id="hs1_25" 
+                                placeholder="" formControlName="hs1_25" [ngClass]="{'is-invalid': submittededit && editform.hs1_25.errors}" >
+                                <div *ngIf="submittededit && editform.hs1_25.errors" class="invalid-feedback">
+                                  <span *ngIf="submittededit && editform.hs1_25.errors.pattern">Nombre d'heures incorrectes!</span>
+                                </div>
+                               
+                            </div>
+                          </div>
+                        </div>
+          
+                        <div class="col-md-6">
+                          <div class="form-group position-relative">
+                            <label for="validationTooltipUsername">Hs1.5 :</label>
+                            <div class="input-group">                 
+                              <input type="text" class="form-control" id="hs1_5" 
+                                placeholder="" formControlName="hs1_5" [ngClass]="{'is-invalid': submittededit && editform.hs1_5.errors}" >
+                                <div *ngIf="submittededit && editform.hs1_5.errors" class="invalid-feedback">
+                                  <span *ngIf="submittededit && editform.hs1_5.errors.pattern">Nombre d'heures incorrectes!</span>
+                                </div>
+                                
+                            </div>
+                          </div>
+                        </div>      
+                      </div>
+          
+          
+                     
+          
+          
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group position-relative">
+                            <label for="validationTooltip03">Hs1.75 :</label>
+                            <input type="text" class="form-control" id="hs1_75" placeholder=""
+                            formControlName="hs1_75" [ngClass]="{'is-invalid': submittededit && editform.hs1_75.errors}" >
+                            <div *ngIf="submittededit && editform.hs1_75.errors" class="invalid-feedback">
+                              <span *ngIf="submittededit && editform.hs1_75.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                              
+                          </div>
+                        </div>
+                        <div class="col-md-6">
+                          <div class="form-group position-relative">
+                            <label for="validationTooltip04">Hs 2.00 :</label>
+                            <input type="text" class="form-control" id="hs2" placeholder=""
+                            formControlName="hs2" [ngClass]="{'is-invalid': submittededit && editform.hs2.errors}" >
+                            <div *ngIf="submittededit && editform.hs2.errors" class="invalid-feedback">
+                              <span *ngIf="submittededit && editform.hs2.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                             
+                          </div>
+                        </div>
+                      </div>
+          
+                      <div class="row">
+                        <div class="col-md-6">
+                          <div class="form-group position-relative">
+                            <label for="validationTooltip03">Hs Nuit :</label>
+                            <input type="text" class="form-control" id="hs_nuit" placeholder=""
+                            formControlName="hs_nuit" [ngClass]="{'is-invalid': submittededit && editform.hs_nuit.errors}" >
+                            <div *ngIf="submittededit && editform.hs_nuit.errors" class="invalid-feedback">
+                              <span *ngIf="submittededit && editform.hs_nuit.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                             
+                          </div>
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group position-relative">
+                            <label for="validationTooltip03">Hs 1.4 :</label>
+                            <input type="text" class="form-control" id="hs1_4" placeholder=""
+                            formControlName="hs1_4" [ngClass]="{'is-invalid': submittededit && editform.hs1_4.errors}" >
+                            <div *ngIf="submittededit && editform.hs1_4.errors" class="invalid-feedback">
+                              <span *ngIf="submittededit && editform.hs1_4.errors.pattern">Nombre d'heures incorrectes!</span>
+                            </div>
+                             
+                          </div>
+                        </div>
+                       
+                      </div>     
+                      <div class="text-right">
+                        <button type="submit" class="btn btn-success">Modifier</button>
+                        <button type="button" class="btn btn-danger ml-1"  (click)="modal('close click')">Annuler</button>
+                      </div>
+                    </form>
+                  
+                </div>
+                
+                  
+                </ng-template>

@@ -1,0 +1,143 @@
+
+ <div class="row">
+  <div class="col-xl-8">
+    <div class="row">
+      <div class="col-md-4">     
+        <app-stat title="Total Effectif" [value]="this.effectif" icon="fas fa-user-friends"></app-stat>
+      </div>
+      <div class="col-md-4">     
+        <app-stat title="Moyenne d'age" [value]="this.moyenne_age" icon="fas fa-child"></app-stat>
+      </div>
+      <div class="col-md-4">     
+        <app-stat title="Total Effectif Actif" [value]="this.effectif_actif" icon="fas fa-user-check"></app-stat>
+      </div>
+    </div>
+  
+    <!-- end row -->
+
+    <div class="card">
+      <div class="card-body">
+        <div class="float-right d-none d-md-inline-block">
+          <div class="btn-group mb-2">
+           
+            <button type="button" disabled class="btn btn-sm btn-light active"> {{this.year}}</button>
+          
+          </div>
+        </div>
+        <h3 class="card-title mb-4">Nombre de jours d'absences d'effectifs par mois:</h3>
+        <div>
+          <apx-chart dir="ltr" class="apex-charts" [series]="this.abseries" [chart]="revenueChart.chart"
+            [legend]="revenueChart.legend" [colors]="revenueChart.colors"  [labels]="revenueChart.labels"
+            [stroke]="revenueChart.stroke" [plotOptions]="revenueChart.plotOptions">
+          </apx-chart>
+        </div>
+      </div>
+
+      <div class="card-body border-top text-center">
+      
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="col-xl-4">
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title mb-4">Répartition de l'effectif par Genre :</h4>
+        <apx-chart class="apex-charts" dir="ltr" [series]="this.series" [chart]="this.chart"
+          [labels]="this.labels" [legend]="this.legend" [colors]="this.colors"
+          [responsive]="this.responsive">
+        </apx-chart>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body">
+       <!--
+        <div class="dropdown float-right" ngbDropdown>
+          <a href="javascript: void(0);" class="dropdown-toggle arrow-none card-drop" data-toggle="dropdown"
+            aria-expanded="false" ngbDropdownToggle>
+            <i class="mdi mdi-dots-vertical"></i>
+          </a>
+
+          <div class="dropdown-menu dropdown-menu-right" ngbDropdownMenu>
+   
+            <a href="javascript:void(0);" class="dropdown-item">Sales Report</a>
+     
+            <a href="javascript:void(0);" class="dropdown-item">Export Report</a>
+       
+            <a href="javascript:void(0);" class="dropdown-item">Profit</a>
+     
+            <a href="javascript:void(0);" class="dropdown-item">Action</a>
+          </div>
+        </div>
+       item-->
+        <h4 class="card-title mb-4" icon="fas fa-user-check" >Masse salariale</h4>
+        <div class="text-center">
+          <div class="row">
+            <div class="col-sm-6">
+              <div>
+                <div class="mb-3">
+                  <apx-chart dir="ltr" class="apex-charts" [series]="sparklineEarning.series"
+                    [chart]="sparklineEarning.chart" [colors]="sparklineEarning.colors"
+                    [labels]="sparklineEarning.labels" [dataLabels]="sparklineEarning.dataLabels"
+                    [plotOptions]="sparklineEarning.plotOptions">
+                  </apx-chart>
+                </div>
+
+                <p class="text-muted text-truncate mb-2">Coût des employés</p>
+                <h5 class="mb-0">{{this.coutemploye}}</h5>
+          
+              </div>
+            </div>
+
+            <div class="col-sm-6">
+              <div class="mt-5 mt-sm-0">
+                <div class="mb-3">
+                  <apx-chart dir="ltr" class="apex-charts" [series]="sparklineMonthly.series"
+                    [chart]="sparklineMonthly.chart" [colors]="sparklineMonthly.colors"
+                    [labels]="sparklineMonthly.labels" [dataLabels]="sparklineMonthly.dataLabels"
+                    [plotOptions]="sparklineMonthly.plotOptions">
+                  </apx-chart>
+                </div>
+
+                <p class="text-muted text-truncate mb-2">Total Impots et charges Sociales</p>
+                <h5 class="mb-0">{{this.impot_charges}}</h5>
+           
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title mb-4">Nombre d'effectif des employés par Département :</h3>
+        <apx-chart class="apex-charts" dir="ltr" [series]="this.deptseries" [chart]="this.deptchart"
+          [labels]="this.deptlabels" [legend]="this.deptlegend" [colors]="this.deptcolors"
+          [responsive]="this.deptresponsive">
+        </apx-chart>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="card">
+      <div class="card-body">
+        <h3 class="card-title mb-4">Nombre d'effectif des employés par collège :</h3>
+        <apx-chart class="apex-charts" dir="ltr" [series]="this.collseries" [chart]="this.collchart"
+          [labels]="this.colllabels" [legend]="this.collegend" [colors]="this.collcolors"
+          [responsive]="this.collresponsive">
+        </apx-chart>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+
+   
+
+    

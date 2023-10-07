@@ -1,0 +1,130 @@
+<!-- <app-loader></app-loader> -->
+<div class="container-fluid">
+    <app-pagetitle title="Planning :jours de repos" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+        <fieldset class="scheduler-border">
+          <legend class="scheduler-border">Informations</legend>
+         <div class="row">
+            
+          <div class="col-md-1">
+            <label>Shift :</label>
+            </div>
+              <div class="col-md-2">
+                <select class="custom-select" id="shift"(change)="change_shift()">
+                    <option *ngFor="let item of shift" [value]="item.code" >{{item.designation}}</option>
+                </select>
+              </div>
+               
+        
+        <div class="col-md-3">
+          <span class="d-block p-2 bg-warning text-white">Les jours fériés chômés et payés!</span>
+        </div>
+        <div class="col-md-3">
+            <span class="d-block p-2 bg-danger text-white">	Les jours fériés non payés!</span>
+        </div>
+        <div class="col-md-3">
+            <span class="d-block p-2 bg-success text-white"> Repos Hebdomadaire!</span>
+        </div>
+      
+      </div>
+            
+            </fieldset>
+            </div>
+            </div>
+            </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+           
+              <div class="app-calendar">
+              <!-- calendar -->
+              <full-calendar #calendar defaultView="dayGridMonth" [header]="{
+                left: 'prev,next today ',
+                center: 'title',
+                right: 'resourceTimelineYear,dayGridMonth,timeGridWeek,timeGridDay,listYear'
+              }" [plugins]="calendarPlugins" [eventResizableFromStart]="'true'" [eventLimit]="true" [editable]="true"
+                themeSystem='bootstrap' [locales]="locales" locale="fr" [weekends]="calendarWeekends" [bootstrapFontAwesome]="false"
+                deepChangeDetection="true" [events]="calendarEvents" (dateClick)="openModal(content, $event)"
+                (eventClick)="openEditModal(editcontent, $event)">
+              </full-calendar>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Event Modal -->
+  <ng-template #content let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Ajouter jour férié</h5>
+      <button type="button" class="close" aria-hidden="true" (click)="closeEventModal()">×</button>
+    </div>
+    <div class="modal-body p-3">
+      <form (ngSubmit)="saveEvent()" [formGroup]="formData">
+        <div class="row">
+          <div class="col-12">
+            <div class="form-group">
+              <label class="control-label">Nom du jour</label>
+              <input class="form-control" placeholder="saisie le nom du jour" type="text" name="title" formControlName="title"
+                [ngClass]="{'is-invalid': submitted && form.title.errors}">
+              <div *ngIf="submitted && form.title.errors" class="invalid-feedback">
+                <span *ngIf="form.title.errors.required">Ce champs et obligatoire!</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <div class="form-group"><label class="control-label">Type</label><select class="form-control"
+                name="category" formControlName="category" [ngClass]="{'is-invalid': submitted && form.category.errors }">
+                <option *ngFor="let option of category" value="{{ option.value }}"> {{ option.name }}
+                </option>
+              </select>
+              <div *ngIf="submitted && form.category.errors" class="invalid-feedback">
+                <div *ngIf="form.category.errors.required">Ce champs et obligatoire!</div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="text-right pt-4">
+          <button type="button" class="btn btn-light" (click)="closeEventModal()">Annuler</button>
+          <button type="submit" class="btn btn-success save-event ml-1">Enregistrer</button>
+        </div>
+      </form>
+    </div>
+  </ng-template>
+  
+  <!-- Edit event modal -->
+  <ng-template #editcontent let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">Modifier jour férié</h5>
+      <button type="button" class="close" aria-hidden="true" (click)="modal.dismiss('Cross click')">×</button>
+    </div>
+    <div class="modal-body p-3">
+      <form [formGroup]="formEditData" (ngSubmit)="editEventSave()">
+        <label>Modifier Nom du jour</label>
+        <div class="input-group m-b-15">
+          <input class="form-control" type="text" formControlName="title">
+        </div>
+        <label class="mt-2">Modifier catégorie</label>
+        <div class="input-group m-b-15">
+          <select class="form-control" name="className" formControlName="className">
+            <option *ngFor="let option of category" value="{{ option.value }}"> {{ option.name }}
+            </option>
+          </select>
+        </div>
+      </form>
+    </div>
+    <div class="text-right p-3">
+      <button type="button" class="btn btn-success ml-1" (click)="editEventSave()">Modifier</button>
+      <button type="button" class="btn btn-danger delete-event ml-1" (click)="confirm()">Supprimer</button>
+      <button type="button" class="btn btn-light" (click)="modal.dismiss('Close')">Annuler</button>
+    </div>
+  </ng-template>
+  

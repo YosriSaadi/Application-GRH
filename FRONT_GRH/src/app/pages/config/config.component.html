@@ -1,0 +1,53 @@
+<h2>Fiche societe</h2>
+
+<form class="needs-validation" novalidate  [formGroup]="formsociete" (ngSubmit)="onSubmit()">
+  <div class="form-row">
+    <div class="col-md-4 mb-3">
+      <label for="validationTooltip01">Nom</label>
+      <input type="text" class="form-control" id="validationTooltip01" placeholder="name"  required formControlName="nom" >
+      <div class="valid-tooltip">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="validationTooltip02">Adresse</label>
+      <input type="text" class="form-control" id="validationTooltip02" placeholder="Adresse" value="Otto" required formControlName="adresse">
+      <div class="valid-tooltip">
+        Looks good!
+      </div>
+    </div>
+    <div class="col-md-4 mb-3">
+      <label for="validationTooltipUsername">Ville</label>
+      <div class="input-group">
+        <input type="text" class="form-control" id="validationTooltipUsername" placeholder="Username" aria-describedby="validationTooltipUsernamePrepend" required>
+        <div class="invalid-tooltip">
+          Please choose a unique and valid username.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="col-md-6 mb-3">
+      <label for="validationTooltip03">Rue</label>
+      <input type="text" class="form-control" id="validationTooltip03" placeholder="Rue" required>
+      <div class="invalid-tooltip">
+        Please provide a valid city.
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label for="validationTooltip04">Telephone</label>
+      <input type="text" class="form-control" id="validationTooltip04" placeholder="Telephone" required>
+      <div class="invalid-tooltip">
+        Please provide a valid state.
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <label for="validationTooltip05">Zip</label>
+      <input type="text" class="form-control" id="validationTooltip05" placeholder="Zip" required>
+      <div class="invalid-tooltip">
+        Please provide a valid zip.
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-primary" left type="submit">Modifier</button>
+</form>

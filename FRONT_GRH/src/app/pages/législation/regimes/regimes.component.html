@@ -1,0 +1,221 @@
+<div class="container-fluid">
+    <app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+  
+  <div class="card">
+            
+      <div class="card-body">
+        <div>
+          <!--  -->
+          <a href="javascript:void(0);" class="btn btn-success mb-2" (click)="openModal(Ajouterform)">
+            <i class="mdi mdi-plus mr-2"></i>Ajouter Régime
+          </a>
+        </div>      <!-- Table -->
+        <div class="table-responsive">
+          <table id="basic-datatable"
+          class="table table-bordered mb-1">
+            <thead>
+              <tr>
+                <th >Code</th>
+              <th >Désignation</th>
+              <th >Nbr Heure/Semaine</th>
+              <th >Nbr Heure/Mois</th>
+              <th >Nbr Heure Max/Mois</th>
+              <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+  
+              <tr *ngFor="let table of tabledata">
+                <td>
+              {{table.code}}
+  
+                </td>
+                <td>
+                  {{table.designation}}
+              </td>
+                <td>
+                  {{table.nbr_heure_mois/4}}
+              </td>
+                <td>
+                  {{table.nbr_heure_mois}}
+              </td>
+             <td>            {{table.nbr_heure_mois_max}}
+          </td>
+                <td>
+                  <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Edit" (click)="openModif(Modifier,table)"><i
+                      class="mdi mdi-pencil font-size-18"></i></a>
+                  <a href="javascript:void(0);" class="text-danger" placement="top" ngbTooltip="Delete" (click)="deleteregime(table.code)"><i
+                      class="mdi mdi-trash-can font-size-18"></i></a>
+                </td>
+  
+  
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- End table -->
+      
+      </div>
+    </div>
+  
+    <ng-template #Ajouterform let-modal>
+
+      <div class="modal-header">
+        <h5 class="modal-title" id="composemodalTitle">Ajout:</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="needs-validation" [formGroup]="ajouterform" (ngSubmit)="Ajouter()">
+        <div class="modal-body">
+      <div class="card">
+      <div class="card-body">
+         
+              <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group"  [ngClass]="{'is-invalid': submitted && form.code.errors}">
+                    <label for="code">Code</label>
+                   <input type="text" class="form-control"  id="code" formControlName="code" placeholder="Exemple:  40"
+                   [ngClass]="{'is-invalid': submitted && form.code.errors}" >
+                    <div *ngIf="submitted && form.code.errors" class="invalid-feedback">
+                      <span *ngIf="form.code.errors.required">Cette valeur est obligatoire.</span>     
+                      <span *ngIf="form.code.errors.pattern">Cette valeur est invalide.</span>            
+                     </div>  
+                  </div>
+                </div>
+           
+           
+                <div class="col-md-6">
+                  <div class="form-group" [ngClass]="{'is-invalid': submitted && form.designation.errors}">
+                    <label for="code">Désignation</label>
+                      <input type="text" class="form-control" id="designation" formControlName="designation" placeholder="Exemple:  Régime 40"
+                      [ngClass]="{'is-invalid': submitted && form.designation.errors}">
+                    <div *ngIf="submitted && form.designation.errors" class="invalid-feedback">
+                      <span *ngIf="form.designation.errors.required">Cette valeur est obligatoire.</span>  
+                      <span *ngIf="form.designation.errors.pattern">Cette valeur est invalide.</span>              
+                     </div>  
+                  </div>
+                </div>
+            
+                <div class="col-md-6">
+                  <div class="form-group" [ngClass]="{'is-invalid': submitted && form.nbrhm.errors}">
+                    <label for="code">Nbr Heures/Mois</label>
+                      <input type="text" class="form-control" id="nbrhm" formControlName="nbrhm"  placeholder="Exemple:  180"
+                      [ngClass]="{'is-invalid': submitted && form.nbrhm.errors}" >
+                    <div *ngIf="submitted && form.nbrhm.errors" class="invalid-feedback">
+                      <span *ngIf="form.nbrhm.errors.required">Cette valeur est obligatoire.</span>   
+                      <span *ngIf="form.nbrhm.errors.pattern">Cette valeur est invalide.</span>             
+                     </div>  
+                  </div>
+                </div>   <div class="col-md-6">
+                  <div class="form-group" [ngClass]="{'is-invalid': submitted && form.nbrhmm.errors}">
+                    <label for="code">Nbr Heures Max/Mois</label>
+                      <input type="text" class="form-control" id="nbrhmm" formControlName="nbrhmm"  placeholder="Exemple:  190"
+                      [ngClass]="{'is-invalid': submitted && form.nbrhmm.errors}" >
+                    <div *ngIf="submitted && form.nbrhmm.errors" class="invalid-feedback">
+                      <span *ngIf="form.nbrhmm.errors.required">Cette valeur est obligatoire.</span>    
+                      <span *ngIf="form.nbrhmm.errors.pattern">Cette valeur est invalide.</span>              
+                     </div>  
+                  </div>
+                </div>
+              </div>
+              <br/>
+            </div>
+          </div>
+          </div>
+              <div class="modal-footer">
+                <div class="form-group mb-0">        
+                  <div class="text-md-right">
+                  <button type="submit" class="btn btn-success">Enregistrer</button>
+                  <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+                   </div>
+                  </div>
+              
+              </div>
+  
+  
+          </form>
+  
+    </ng-template>
+  
+  
+
+
+    <ng-template #Modifier let-modal>
+     
+      <div class="modal-header">
+        <h5 class="modal-title" id="composemodalTitle">Modification:</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form class="needs-validation" [formGroup]="Modifierform" (ngSubmit)="modifier()">
+        <div class="modal-body">
+      <div class="card">
+      <div class="card-body">
+         
+              <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="code">Code</label>
+                   <input type="text" class="form-control"  id="code" formControlName="code" placeholder="Exemple:  40" disabled>
+  
+                  </div>
+                </div>
+           
+           
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="code">Désignation</label>
+                      <input type="text" class="form-control" id="designation" formControlName="designation" placeholder="Exemple:  Régime 40"
+                      [ngClass]="{'is-invalid': submit && f.designation.errors}">
+                    <div *ngIf="submit && f.designation.errors" class="invalid-feedback">
+                      <span *ngIf="f.designation.errors.pattern">Cette valeur est invalide.</span>    
+                      <span *ngIf="f.designation.errors.required">Cette valeur est obligatoire.</span>     
+                            
+                     </div>  
+                  </div>
+                </div>
+            
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="code">Nbr Heures/Mois</label>
+                      <input type="text" class="form-control" id="nbrhm" formControlName="nbrhm"  placeholder="Exemple:  180"
+                      [ngClass]="{'is-invalid': submit && f.nbrhm.errors}">
+                    <div *ngIf="submit && f.nbrhm.errors" class="invalid-feedback">
+                      <span *ngIf="f.nbrhm.errors.required">Cette valeur est obligatoire.</span>   
+                      <span *ngIf="f.nbrhm.errors.pattern">Cette valeur est invalide.</span>               
+                     </div>  
+                  </div>
+                </div>  
+                 <div class="col-md-6">
+                  <div class="form-group" >
+                    <label for="code">Nbr Heures Max/Mois</label>
+                      <input type="text" class="form-control" id="nbrhmm" formControlName="nbrhmm"  placeholder="Exemple:  190"[ngClass]="{'is-invalid': submit && f.nbrhmm.errors}"
+                     >
+                    <div *ngIf="submit && f.nbrhmm.errors" class="invalid-feedback">
+                      <span *ngIf="f.nbrhmm.errors.required">Cette valeur est obligatoire.</span>    
+                      <span *ngIf="f.nbrhmm.errors.pattern">Cette valeur est invalide.</span>               
+                     </div>  
+                  </div>
+                </div>
+              </div>
+              <br/>
+            </div>
+          </div>
+          </div>
+              <div class="modal-footer">
+                <div class="form-group mb-0">        
+                  <div class="text-md-right">
+                  <button type="submit" class="btn btn-success">Modifier</button>
+                  <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+                   </div>
+                  </div>
+              
+              </div>
+  
+  
+          </form>
+  
+        </ng-template>
+  </div>

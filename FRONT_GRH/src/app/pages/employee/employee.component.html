@@ -1,0 +1,1404 @@
+
+    
+ 
+        <div class="container-fluid">
+          <app-pagetitle title="" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+          <div class="card border border-success">
+            <div class="card-header bg-transparent border-success">
+              <h5 class="my-0 text-success">Dossiers Des Personnels</h5>
+            </div>
+
+            <div class="card-body">
+            
+              <ul ngbNav #justifiednav="ngbNav" [activeId]="1" class="nav-pills nav-justified">
+                <li [ngbNavItem]="1">
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-none d-sm-block">Consultation</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="consultation"></ng-template>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                    <span class="d-none d-sm-block">Saisie</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="saisie"></ng-template>
+                  </ng-template>
+                </li>
+         
+           
+              </ul>
+              <div [ngbNavOutlet]="justifiednav"></div>
+            </div>
+          </div>
+     
+        </div>
+          
+
+         
+
+        <ng-template #consultation>
+      
+
+          <div class="row">
+            <div class="col-12">
+              <div class="card border border-success">
+          
+                <div class="card-body">
+        
+                  <div class="row mb-md-2">
+                    <div class="col-sm-12 col-md-6">
+                      <div class="dataTables_length" id="tickets-table_length"><label
+                          class="d-inline-flex align-items-center">Afficher
+                          <select name="tickets-table_length" aria-controls="tickets-table" name="pageSize"
+                            [(ngModel)]="service.pageSize"
+                            class="custom-select custom-select-sm form-control form-control-sm mx-2">
+                            <option [ngValue]="10">10</option>
+                            <option [ngValue]="25">25</option>
+                            <option [ngValue]="50">50</option>
+                            <option [ngValue]="100">100</option>
+                          </select>entrées</label></div>
+                    </div>
+                    <!-- Search -->
+                    <div class="col-sm-12 col-md-6">
+                      <div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+                          class="d-inline-flex align-items-center">Rechercher:
+                          <input type="text" name="searchTerm" class="form-control form-control-sm ml-2"
+                            aria-controls="tickets-table" [(ngModel)]="service.searchTerm"></label></div>
+                    </div>
+                    <!-- End search -->
+                  </div>
+                  <!-- Table -->
+                  <div class="table-responsive">
+                    <table id="basic-datatable"
+                      class="table table-centered dt-responsive nowrap datatables no-footer dtr-inline">
+                      <thead>
+                        <tr>
+                          <th sortable="matricule" (sort)="onSort($event)">Matricule</th>
+                        <th sortable="nom" (sort)="onSort($event)">Nom</th>
+                        <th sortable="prenom" (sort)="onSort($event)">Prénom</th>
+                        <th>Date De Naissance</th>
+                        <th>Actions</th>
+                        <!-- <th >Lieu Naissance</th>
+                        <th>Nationnalité</th>
+                        <th>N° Cin</th>
+                        <th>Lieu Cin</th>
+                        <th>Date Cin</th>
+                        <th>Adresse</th>
+                        <th>N° telephone</th>
+                        <th>Date Embauche</th>
+                        <th>Sexe</th>
+                        <th>Collége</th>
+                        <th>Date Embauche Grp</th>
+                        <th>Crédit Banque</th>
+                        <th>Crédit Société</th> -->
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let tabs of tables ">
+                        </tr>
+                        <tr *ngFor="let tabi of tablei ">
+                        </tr>   
+                        <tr *ngFor="let tabd of tabled ">
+                        </tr>
+                        <tr *ngFor="let table of tables$ | async">
+                          <td>
+                            <a class="text-dark font-weight-bold">
+                              <ngb-highlight [result]="table.matricule" [term]="service.searchTerm"></ngb-highlight>
+                            </a>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.nom" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.prenom" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.datenaiss" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <!-- <td>
+                            <div class="badge font-size-12" [ngClass]="{'badge-soft-danger': table.paymentstatus === 'Chargeback',
+                            'badge-soft-success':table.paymentstatus === 'Paid',
+                            'badge-soft-warning': table.paymentstatus === 'Unpaid'}">
+                              <ngb-highlight [result]="table.paymentstatus" [term]="service.searchTerm"></ngb-highlight>
+                            </div>
+                          </td> -->
+                       
+                          <td>
+                            <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Edit" (click)="openModifEmpo(table,tabs,tabi,tabd)"><i
+                                class="mdi mdi-pencil font-size-18"></i></a>
+                            <a href="javascript:void(0);" class="text-danger" placement="top" ngbTooltip="Delete" (click)="deleteEmp(table.matricule)"><i
+                                class="mdi mdi-trash-can font-size-18"></i></a>
+                          </td>
+           
+                          <!-- <td>
+                            <ngb-highlight [result]="table.lieu" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.nationnalite" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.NCin" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.lieuC" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.dateC" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.adresse" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.Ntel" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.dateEmb" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.sexe" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.college" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.dateEmbGrp" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.creditB" [term]="service.searchTerm"></ngb-highlight>
+                          </td>
+                          <td>
+                            <ngb-highlight [result]="table.creditS" [term]="service.searchTerm"></ngb-highlight>
+                          </td> -->
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <!-- End table -->
+                  <div class="row justify-content-md-between align-items-md-center mt-2">
+                    <div class="col-sm-12 col-md-5">
+                      <div class="dataTables_info mb-2" id="tickets-table_info" role="status" aria-live="polite">Afficher
+                        {{service.startIndex}} de
+                        {{service.endIndex}} à {{service.totalRecords}}
+                        entrées
+                      </div>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="col-sm-12 col-md-5">
+                      <div class="text-md-right float-md-right pagination-rounded">
+                        <ngb-pagination [collectionSize]="total$ | async" [(page)]="service.page" [pageSize]="service.pageSize">
+                        </ngb-pagination>
+                      </div>
+                    </div>
+                    <!-- End Pagination -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #saisie>
+   
+        <div class="col-lg-20">
+          <div class="card border border-success">
+            <div class="card-body">
+           
+              <ul ngbNav #customNav="ngbNav" [activeId]="1" class="nav-tabs nav-tabs-custom nav-justified">
+                <li [ngbNavItem]="1">
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                    <span class="d-none d-sm-block">Etat Civil</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="etat"></ng-template>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="2">
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                    <span class="d-none d-sm-block">Situation Familiale</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="Situation"></ng-template>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="3">
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                    <span class="d-none d-sm-block">Salaire</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="salaire"></ng-template>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="4">
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                    <span class="d-none d-sm-block">Qualification</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="Qualification"></ng-template>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="5">
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                    <span class="d-none d-sm-block">Imposition</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="Imposition"></ng-template>
+                  </ng-template>
+                </li>
+                <li [ngbNavItem]="6">
+                  <a ngbNavLink>
+                    <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                    <span class="d-none d-sm-block">Divers</span>
+                  </a>
+                  <ng-template ngbNavContent>
+                    <ng-template [ngTemplateOutlet]="Divers"></ng-template>
+                  </ng-template>
+                </li>
+              </ul>
+              <div [ngbNavOutlet]="customNav"></div>
+            </div>
+          </div>
+        </div>
+        </ng-template>
+
+
+
+
+
+        <!-- Tab Content -->
+<ng-template #etat>
+  <div class="card border border-success">
+    <div class="card-header bg-transparent border-success">
+      <h5 class="my-0 text-success">Etat Civil</h5>
+    </div>
+    <div class="card-body">
+      <div class="card">    
+        <div class="card-body">
+      
+  <div class="row">
+        <form class="needs-validation" (ngSubmit)="addetat()" [formGroup]="etatform">
+
+        <!-- {{etatform.value | json}}--> 
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group" [ngClass]="{'is-invalid': submit && form.matricule.errors}">
+                  <label for="validationCustom0">Matricule</label>
+                  <input type="text" class="form-control" id="validationCustom0" name="nom" formControlName="matricule"
+                    placeholder="Matricule" [ngClass]="{'is-invalid': submit && form.matricule.errors}">
+                  <div *ngIf="submit && form.matricule.errors" class="invalid-feedback">
+                    <span *ngIf="form.matricule.errors.required">Cette valeur est obligatoire.</span>
+                    <span *ngIf="form.matricule.errors.pattern">Cette valeur est invalide.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group" [ngClass]="{'is-invalid': submit && form.nom.errors}">
+                  <label for="validationCustom01">Nom</label>
+                  <input type="text" class="form-control" id="validationCustom01" name="nom" formControlName="nom"
+                    placeholder="First name" [ngClass]="{'is-invalid': submit && form.nom.errors}">
+                  <div *ngIf="submit && form.nom.errors" class="invalid-feedback">
+                    <span *ngIf="form.nom.errors.required">Cette valeur est obligatoire.</span>
+                    <span *ngIf="form.nom.errors.pattern">Cette valeur est invalide.</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group" [ngClass]="{'is-invalid': submit && form.prenom.errors}">
+                  <label for="validationCustom02">Prénom</label>
+                  <input type="text" class="form-control" id="validationCustom02" name="prenom" formControlName="prenom"
+                    placeholder="Last name" [ngClass]="{'is-invalid': submit && form.prenom.errors}">
+                  <div *ngIf="submit && form.prenom.errors" class="invalid-feedback">
+                    <span *ngIf="form.prenom.errors.required">Cette valeur est obligatoire.</span>
+                    <span *ngIf="form.prenom.errors.pattern">Cette valeur est invalide.</span>
+                  </div>
+                </div>
+              </div>
+    
+    
+    
+             
+      
+              <div class="col-md-3">
+                <div class="form-group" [ngClass]="{'is-invalid': submit && form.datenaiss.errors}">
+                  <label for="validationCustom03">Date De Naissance</label>
+                  <input type="date" class="form-control" id="validationCustom03"name="datenaiss" formControlName="datenaiss"
+                    placeholder="Date De Naissance" [ngClass]="{'is-invalid': submit && form.datenaiss.errors}">
+                  <div *ngIf="submit && form.datenaiss.errors" class="invalid-feedback">
+                    <span *ngIf="form.datenaiss.errors.required">Cette valeur est obligatoire</span>   
+                    <span *ngIf="form.datenaiss.errors.pattern">Cette valeur est invalide</span>   
+                  </div>
+                
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="validationCustom04">Lieu De Naissance</label>
+                  <input type="text" class="form-control" id="validationCustom04" name="lieu" formControlName="lieu"
+                    placeholder="Lieu De Naissance" [ngClass]="{'is-invalid': submit && form.lieu.errors}">
+                  <div *ngIf="submit && form.lieu.errors" class="invalid-feedback">
+                    <span *ngIf="form.lieu.errors.required">Cette valeur est obligatoire.</span> </div>
+                  
+                </div>
+              </div>
+              <div class="col-md-3">
+              <div class="form-group">
+                  <label for="validationCustom05">Nationnalité</label>
+              <ng-select [items]="selectValue"  id="validationCustom05" name="nationnalite" formControlName="nationnalite" 
+              [ngClass]="{'is-invalid': submit && form.nationnalite.errors}"></ng-select>
+              <div *ngIf="submit && form.nationnalite.errors" class="invalid-feedback">
+                <span *ngIf="form.nationnalite.errors.required">Cette valeur est obligatoire.</span>  
+              </div>
+            
+               </div>  
+              </div>
+           
+              <div class="col-md-3">
+                  <div class="form-group" [ngClass]="{'is-invalid': submit && form.NCin.errors}">
+                    <label for="validationCustom06">N CIN</label>
+                    <input type="text" class="form-control" id="validationCustom06" name="NCin" formControlName="NCin" mask="00000000"
+                      placeholder="Numéro CIN" [ngClass]="{'is-invalid': submit && form.NCin.errors}">
+                    <div *ngIf="submit && form.NCin.errors" class="invalid-feedback" >
+                      <span *ngIf="form.NCin.errors.required">Cette valeur est obligatoire.</span>
+                      <span *ngIf="form.NCin.errors.pattern">Cette valeur est invalide.</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                <div class="form-group" [ngClass]="{'is-invalid': submit && form.LieuC.errors}">
+                  <label for="validationCustom07">Lieu</label>
+                  <input type="text" class="form-control" id="validationCustom07" name="LieuC" formControlName="LieuC"
+                    placeholder="Lieu" [ngClass]="{'is-invalid': submit && form.LieuC.errors}">
+                  <div *ngIf="submit && form.LieuC.errors" class="invalid-feedback">
+                    <span *ngIf="form.LieuC.errors.required">Cette valeur est obligatoire.</span>
+                    <span *ngIf="form.LieuC.errors.pattern">Cette valeur est invalide.</span>
+                  </div>
+                </div>
+                </div>
+                
+                <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="validationCustom08">Date</label>
+                    <input type="date" class="form-control" id="validationCustom08" name="dateC" formControlName="dateC"
+                      placeholder="Date" [ngClass]="{'is-invalid': submit && form.dateC.errors}">
+                    <div *ngIf="submit && form.dateC.errors" class="invalid-feedback">
+                      <span *ngIf="form.dateC.errors.required">Cette valeur est obligatoire</span>
+                    </div>
+                  </div>
+                </div>
+    
+    
+                <div class="col-md-3">
+                  <div class="form-group" [ngClass]="{'is-invalid': submit && form.adresse.errors}">
+                    <label for="validationCustom09">Adresse</label>
+                    <input type="text" class="form-control" id="validationCustom09" name="adresse" formControlName="adresse"
+                      placeholder="Adresse" [ngClass]="{'is-invalid': submit && form.adresse.errors}">
+                    <div *ngIf="submit && form.adresse.errors" class="invalid-feedback">
+                      <span *ngIf="form.adresse.errors.required">Cette valeur est obligatoire.</span>
+                      <span *ngIf="form.adresse.errors.pattern">Cette valeur est invalide.</span>
+                    </div>
+                  </div>
+                  </div>
+    
+                  <div class="col-md-3">
+                      <div class="form-group" [ngClass]="{'is-invalid': submit && form.Ntel.errors}">
+                        <label for="validationCustom10">N telephone</label>
+                        <input type="text" class="form-control" id="validationCustom10" name="Ntel" formControlName="Ntel"
+                          placeholder="Numero de telephone" [ngClass]="{'is-invalid': submit && form.Ntel.errors}" mask="00-000-000">
+                        <!-- <span class="text-muted">e.g "xx-xxx-xxx"</span>--> 
+                        <div *ngIf="submit && form.Ntel.errors" class="invalid-feedback">
+                          <span *ngIf="form.Ntel.errors.required">Cette valeur est obligatoire.</span>
+                          <span *ngIf="form.Ntel.errors.pattern">Cette valeur est invalide.</span>
+                        </div>
+                      </div>
+                      </div>
+    
+                      <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="validationCustom11">Date d'embauche</label>
+                            <input type="date" class="form-control" id="validationCustom11" name="dateEmb" formControlName="dateEmb"
+                              placeholder="" [ngClass]="{'is-invalid': submit && form.dateEmb.errors}">
+                            <div *ngIf="submit && form.dateEmb.errors" class="invalid-feedback">
+                              <span *ngIf="form.dateEmb.errors.required">Cette valeur est obligatoire</span>
+                            </div>
+                          </div>
+                        </div>
+    
+    
+                        <div class="col-md-3">
+                          <div class="form-group">
+                              <label for="validationCustom11">Sexe</label>
+                              <select class="custom-select"  class="form-control" id="validationCustom12" name="sexe" formControlName="sexe" 
+                              [ngClass]="{'is-invalid': submit && form.sexe.errors}">
+                                  <option value="Homme">Homme</option>
+                                  <option value="Femme">Femme</option>
+                                </select>
+                                <div *ngIf="submit && form.sexe.errors" class="invalid-feedback">
+                                  <span *ngIf="form.sexe.errors.required">Cette valeur est obligatoire.</span>
+                                </div>
+                           </div>  
+                          </div> 
+                           <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="validationCustom14">Collége</label>
+                                  <ng-select [items]="college"  bindValue="code" bindLabel="designation" id="validationCustom01" name="college" formControlName="college" 
+                                  [ngClass]="{'is-invalid': submit && form.college.errors}"> </ng-select>
+                                <div *ngIf="submit && form.college.errors" class="invalid-feedback">
+                                  <span *ngIf="form.college.errors.required">Cette valeur est obligatoire.</span>
+                                </div>
+                              </div>
+                              </div>
+    
+                              <div class="col-md-3">
+                                  <div class="form-group">
+                                    <label for="validationCustom14">Date d'embauche groupe</label>
+                                    <input type="date" class="form-control" id="validationCustom14" name="dateEmbGrp" formControlName="dateEmbGrp"
+                                      placeholder="" [ngClass]="{'is-invalid': submit && form.dateEmbGrp.errors}">
+                                    <div *ngIf="submit && form.dateEmbGrp.errors" class="invalid-feedback">
+                                      <span *ngIf="form.dateEmbGrp.errors.required">Cette valeur est obligatoire</span>
+                                    </div>
+                                  </div>
+                                </div> 
+    
+                             
+                                
+                              
+                                <div class="col-md-3">
+                                  
+                                    <div class="form-group">
+                                        <label for="etat">État</label>
+                                    <ng-select [items]="etatt"  id="etat" formControlName="etat" 
+                                      [ngClass]="{'is-invalid': submit && form.nom.errors}"> </ng-select>
+                                      <div *ngIf="submit && form.etat.errors" class="invalid-feedback">
+                                        <span *ngIf="form.etat.errors.required">Cette valeur est obligatoire.</span>              
+                                       </div>  
+                                   
+                                     </div>  
+                                   
+                                      <div class="form-group">
+                                        <div class="custom-control custom-checkbox mb-3">
+                                          <input type="checkbox" class="custom-control-input" id="chef" formControlName="cheffamille">
+                                          <label class="custom-control-label" for="chef">Chef De Famille</label>
+                                        </div>
+                                    
+                                  </div></div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                      <div class="custom-control custom-checkbox mb-3">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck1"  value=1 name="creditb" formControlName="creditB" >
+                                        <label class="custom-control-label" for="customCheck1">Crédit Bancaire</label>
+                                      </div>
+                                  </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                      <div class="custom-control custom-checkbox mb-3">
+                                        <input type="checkbox" class="custom-control-input" id="customCheck2" value=1 name="credits" formControlName="creditS">
+                                        <label class="custom-control-label" for="customCheck2">Crédit Société</label>
+                                      </div>
+                                  </div>
+                                  </div> 
+                          </div>   
+                          <div class="row">
+
+                            <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="validationCustom09">Département</label>
+                                <ng-select [items]="dep"  bindValue="id" bindLabel="designation" id="validationCustom01" formControlName="departement" 
+                                [ngClass]="{'is-invalid': submit && form.departement.errors}"> </ng-select>
+                                <div *ngIf="submit && form.departement.errors" class="invalid-feedback">
+                                  <span *ngIf="form.departement.errors.required">Cette valeur est obligatoire.</span>
+                                </div>
+                              </div>
+                              </div>
+                              <div class="col-md-3">
+                                <div class="form-group">
+                                  <label for="validationCustom09">Service</label>
+                                  <ng-select [items]="ser"  bindValue="id" bindLabel="designation" id="validationCustom01" formControlName="service" 
+                                  [ngClass]="{'is-invalid': submit && form.service.errors}"> </ng-select>
+                                  <div *ngIf="submit && form.service.errors" class="invalid-feedback">
+                                    <span *ngIf="form.service.errors.required">Cette valeur est obligatoire.</span>
+                                  </div>
+                                </div>
+                                </div>
+                               <div class="col-md-3">
+                                <div class="form-group">
+                                  <label for="validationCustom09">Section</label>
+                                  <ng-select [items]="sec"  bindValue="id" bindLabel="designation" id="validationCustom01" formControlName="section" 
+                                  [ngClass]="{'is-invalid': submit && form.section.errors}"> </ng-select>
+                                  <div *ngIf="submit && form.section.errors" class="invalid-feedback">
+                                    <span *ngIf="form.section.errors.required">Cette valeur est obligatoire.</span>
+                                  </div>
+                                </div>
+                                </div>
+                                 <div class="col-md-3">
+                                   <div class="form-group">
+                                       <label for="validationCustom03">Date D'affectation</label>
+                                       <input type="date" class="form-control" id="validationCustom04" formControlName="dateaff"
+                                       placeholder="" [ngClass]="{'is-invalid': submit && form.dateaff.errors}">
+                                     <div *ngIf="submit && form.dateaff.errors" class="invalid-feedback">
+                                       <span *ngIf="form.dateaff.errors.required">Cette valeur est obligatoire.</span>              
+                                      </div>  
+                                   </div>
+                                 </div>
+                            
+                          </div>           
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+          </form>
+      </div></div></div>
+    </div>
+  </div>
+
+</ng-template>
+
+<ng-template #Situation>
+<!-- <div class="card"> -->
+  <div class="card border border-success">
+    <div class="card-header bg-transparent border-success">
+      <h5 class="my-0 text-success">Situation Familiale</h5>
+    </div>
+    <div class="card-body">
+
+  <div clas="card"><div class="card-body">
+<div class="row">
+
+    <div class="col-md-12">
+   <div class="card"><div class="card-body">
+    <form class="needs-validation"  (ngSubmit)="addenfant()" [formGroup]="enfantform">
+      <!-- {{enfantform.value | json}} -->
+    <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+            <label for="validationCustom02">Nom Enfant</label>
+            <input type="text" class="form-control" id="validationCustom02" formControlName="nom"
+            placeholder="" [ngClass]="{'is-invalid': submitt && f.nom.errors}">
+          <div *ngIf="submitt && f.nom.errors" class="invalid-feedback">
+            <span *ngIf="f.nom.errors.required">Cette valeur est obligatoire.</span>              
+           </div>  
+        </div>
+      </div>
+  
+  
+      <div class="col-md-3">
+        <div class="form-group">
+            <label for="validationCustom03">Date De Naissance</label>
+            <input type="date" class="form-control" id="validationCustom03" formControlName="date"
+            placeholder="" [ngClass]="{'is-invalid': submitt && f.date.errors}">
+          <div *ngIf="submitt && f.date.errors" class="invalid-feedback">
+            <span *ngIf="f.date.errors.required">Cette valeur est obligatoire.</span>              
+           </div>  
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="example-date-input"></label>
+       <label for="example-date-input"></label>
+       <label for="example-date-input"></label>
+      <label for="example-date-input"></label>
+      <div class="custom-control custom-checkbox">
+      <input type="checkbox" class="custom-control-input" id="encharge" formControlName="encharge">
+       <label class="custom-control-label" for="encharge"> En charge</label>
+  
+          </div>
+          </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="example-date-input"></label>
+           <label for="example-date-input"></label>
+           <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <div class="custom-control custom-checkbox">
+          <input type="checkbox" class="custom-control-input" id="infirme" formControlName="infirme">
+           <label class="custom-control-label" for="infirme"> Enfant infirme</label>
+      
+              </div>
+              </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <label for="example-date-input"></label>
+               <label for="example-date-input"></label>
+               <label for="example-date-input"></label>
+              <label for="example-date-input"></label>
+              <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="etudiant" formControlName="etudiant">
+               <label class="custom-control-label" for="etudiant"> Enfant Etudiant</label>
+          
+                  </div>
+                  </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label for="example-date-input"></label>
+                   <label for="example-date-input"></label>
+                   <label for="example-date-input"></label>
+                  <label for="example-date-input"></label>
+                  <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" id="bourse" formControlName="bourse">
+                   <label class="custom-control-label" for="bourse">Bourse</label>
+              
+                      </div>
+                      </div>
+                      </div>
+                      <div class="col-md-3">
+                        </div>
+                   
+                       
+        
+
+      <div class="col-md-3">
+        <div class="form-group">
+         <button class="btn btn-primary" class="btn btn-success w-lg" type="submit">Ajouter</button>
+       </div>
+      </div>  </div>
+  </form>
+   </div></div></div>
+</div>
+    
+</div></div>
+
+
+      <div class="table-responsive">
+        <table class="table table-bordered mb-0">
+            <thead class="thead-light">
+              <tr>
+                    <th>Nom</th>
+                    <th>Date Naissance</th>
+                    <th >En Charge</th>
+                    <th>Enfant Infirme</th>
+                    <th>Enfant Etudiant</th>
+                    <th>Bourse</th>
+                    <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of enfantdata">
+                <td>{{item.nom}}</td>
+                <td>{{item.date}}</td>
+                <td>{{item.encharge}}</td>
+                <td>{{item.infirme}}</td>
+                <td>{{item.etudiant
+                  
+                  }}</td>
+                <td>{{item.bourse}}</td>
+             
+    
+                <td>
+                  <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Edit" ><i
+                      class="mdi mdi-pencil font-size-18"></i></a>
+                  <a href="javascript:void(0);" class="text-danger" placement="top" ngbTooltip="Delete" (click)="supprimer_enfant(item.id)"><i
+                      class="mdi mdi-trash-can font-size-18"></i></a>
+                </td>
+ 
+              </tr>
+            </tbody>
+          </table>
+        </div>
+ 
+</div>
+</div>
+</ng-template>
+<ng-template #salaire>
+  <div class="card border border-success">
+    <div class="card-header bg-transparent border-success">
+      <h5 class="my-0 text-success">Salaire</h5>
+    </div>
+    <div class="card-body">
+      <form class="needs-validation"  [formGroup]="salaireform">
+
+<div class="card">
+  <div class="card-body">
+   
+    
+    <div class="card">
+      <div class="card-body">
+        <div class="col-md-4">
+          <h4 class="card-title">Mode De Paiement</h4>
+          <div class="form-group">
+          <ng-select [items]="mode"  id="mode" name="mode" formControlName="mode" 
+          [ngClass]="{'is-invalid': submit && forms.mode.errors}"></ng-select>
+          <div *ngIf="submit && forms.mode.errors" class="invalid-feedback">
+            <span *ngIf="forms.mode.errors.required">Cette valeur est obligatoire.</span>  
+          </div>
+        
+           </div>  
+          </div>
+        <div class="row">
+          <div class="col-6">
+          
+              <div class="custom-control custom-radio mb-3">
+            <input type="radio" id="5"  class="custom-control-input" value="CCB" formControlName="compte" checked>
+                <label class="custom-control-label" for="5">CCB</label>
+              </div>
+
+              </div>
+              <div class="col-6">
+              <div class="custom-control custom-radio mb-3">
+                <input type="radio" id="6"  class="custom-control-input" value="CCP" formControlName="compte">
+                <label class="custom-control-label" for="6"> CCP</label>
+         
+          </div>
+          </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="validationCustom14">N°Compte</label>
+            <input type="text" class="form-control" id="Ncompte" 
+             formControlName="Ncompte" [ngClass]="{'is-invalid': submit && forms.Ncompte.errors}">
+            <div *ngIf="submit && forms.Ncompte.errors" class="invalid-feedback">
+              <span *ngIf="forms.Ncompte.errors.required">Cette valeur est obligatoire.</span>
+              <span *ngIf="forms.Ncompte.errors.pattern">Cette valeur est invalide.</span>
+            </div> 
+          </div>
+          </div>   
+          
+           <div class="col-md-6">
+            <div class="form-group">
+              <label for="validationCustom14">N°RIB</label>
+              <input type="text" class="form-control" id="nrib" name="nrib" formControlName="Nrib"
+                placeholder="RIB" [ngClass]="{'is-invalid': submit && forms.Nrib.errors}">
+              <div *ngIf="submit && forms.Nrib.errors" class="invalid-feedback">
+                <span *ngIf="forms.Nrib.errors.required">Cette valeur est obligatoire.</span>
+                <span *ngIf="forms.Nrib.errors.pattern">Cette valeur est invalide.</span>
+              </div> 
+            </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom14">Banque</label>
+                <ng-select [items]="banq"  id="banque" placeholder="Banque" formControlName="Banque" [ngClass]="{'is-invalid': submit && forms.Banque.errors}"></ng-select>  
+                <div *ngIf="submit && forms.Banque.errors" class="invalid-feedback">
+                  <span *ngIf="forms.Banque.errors.required">Cette valeur est obligatoire.</span>
+                </div> 
+              </div>
+              </div>  
+               <div class="col-md-6">
+                <div class="form-group">
+                  <label for="validationCustom14">Agence</label>
+                  <input type="text" class="form-control" id="agence" formControlName="agence"
+                    placeholder="Agence" [ngClass]="{'is-invalid': submit && forms.agence.errors}">
+                  <div *ngIf="submit && forms.agence.errors" class="invalid-feedback">
+                    <span *ngIf="forms.agence.errors.required">Cette valeur est obligatoire.</span>
+                    <span *ngIf="forms.agence.errors.pattern">Cette valeur est invalide.</span>
+                  </div> 
+                </div>
+                </div>
+      </div>
+    </div>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <h4 class="card-title">Salaire</h4>
+        <div class="row">
+          <div class="col-6">
+              <div class="custom-control custom-radio mb-3">
+             <input type="radio" id="7"  class="custom-control-input" value="Mensual" formControlName="taux" >
+                <label class="custom-control-label" for="7">Mensual</label>
+              </div>
+              </div>
+          <div class="col-6">
+              <div class="custom-control custom-radio mb-3">
+                <input type="radio" id="8"  class="custom-control-input" value="Horaire" formControlName="taux">
+                <label class="custom-control-label" for="8">Horaire</label>
+            </div>
+          </div>
+      </div>
+        <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="statut">Durée Dans l'Echelon</label>
+            <input type="text" class="form-control" id="duree"  formControlName="dureeEch"
+              placeholder="Collége" [ngClass]="{'is-invalid': submit && forms.dureeEch.errors}">
+            <div *ngIf="submit && forms.dureeEch.errors" class="invalid-feedback">
+              <span *ngIf="forms.dureeEch.errors.required">Cette valeur est obligatoire.</span>
+            </div> 
+          </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="statut">Anciennité Effective</label>
+              <input type="text" class="form-control" id="anciennete_eff" formControlName="anciennete_eff"
+                [ngClass]="{'is-invalid': submit && forms.anciennete_eff.errors}">
+              <div *ngIf="submit && forms.anciennete_eff.errors" class="invalid-feedback">
+                <span *ngIf="forms.anciennete_eff.errors.required">Cette valeur est obligatoire.</span>
+              </div> 
+            </div>
+            </div>   <div class="col-md-6">
+              <div class="form-group">
+                <label for="statut">Salaire De Base</label>
+                <input type="text" class="form-control" id="sal_base"  formControlName="sal_base"
+                 [ngClass]="{'is-invalid': submit && forms.sal_base.errors}">
+                <div *ngIf="submit && forms.sal_base.errors" class="invalid-feedback">
+                  <span *ngIf="forms.sal_base.errors.required">Cette valeur est obligatoire.</span>
+                </div> 
+              </div>
+              </div>   <div class="col-md-6">
+                <div class="form-group">
+                  <label for="statut">Supplément</label>
+                  <input type="text" class="form-control" id="supp" name="supp"
+                  formControlName="supp"
+                    placeholder="supp" [ngClass]="{'is-invalid': submit && forms.supp.errors}">
+                  <div *ngIf="submit && forms.supp.errors" class="invalid-feedback">
+                    <span *ngIf="forms.supp.errors.required">Cette valeur est obligatoire.</span>
+                  </div> 
+                </div>
+                </div>   <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="statut">Taux Horaire Des Hr. Supp.</label>
+                    <input type="text" class="form-control" id="thorairehs" 
+                   formControlName="thorairehs" [ngClass]="{'is-invalid': submit && forms.thorairehs.errors}">
+                    <div *ngIf="submit && forms.thorairehs.errors" class="invalid-feedback">
+                      <span *ngIf="forms.thorairehs.errors.required">Cette valeur est obligatoire.</span>
+                    </div> 
+                  </div>
+                  </div>
+            
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="statut">Shift à Appliquer</label>
+                        <ng-select [items]="shift"  bindValue="code" bindLabel="designation" id="validationCustom01" formControlName="shift" 
+                        [ngClass]="{'is-invalid': submit && forms.shift.errors}"> </ng-select>
+                      <div *ngIf="submit && forms.shift.errors" class="invalid-feedback">
+                        <span *ngIf="forms.shift.errors.required">Cette valeur est obligatoire.</span>  
+                      </div>
+                    
+                       </div>  
+                      </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="text-right">
+<button class="btn btn-primary" type="submit" (click)="addsalaire()">Enregistrer</button>
+
+</div>
+      </form>
+
+    </div></div>
+
+</ng-template> 
+<ng-template #Qualification>
+  <div class="card border border-success">
+    <div class="card-header bg-transparent border-success">
+      <h5 class="my-0 text-success">Qualification</h5>
+    </div>
+    <div class="card-body">
+   
+   <form class="needs-validation" (ngSubmit)="addQual()" [formGroup]="Qualform">
+    <!-- {{Qualform.value | json}} -->
+   <div class="row">
+    <i class="mdi mdi-plus mr-2">Qualification</i>
+         <div class="table-responsive">
+           <!-- <div class=".table-striped"> -->
+           <table class="table table-centered">
+             <thead class="thead-light">
+               <tr>
+                     <th>Code</th>
+                     <th>Qualification</th>
+                     <th>Description</th>
+                     <th >actuelle</th>
+                     <th>Actions</th>
+               </tr>
+             </thead>
+             <tbody>
+               <tr *ngFor="let item of qualidata">
+                 <td>{{item.id}}</td>
+                 <td>{{item.qualification}}</td>
+                 <td>{{item.description}}</td>
+                 <td>{{item.actuelle}}</td>
+                 <td>
+                  <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Modifier" ><i
+                      class="mdi mdi-pencil font-size-18"></i></a>
+                  <a href="javascript:void(0);" class="text-danger" placement="top" ngbTooltip="Supprimer" (click)="supprimer_qualf(item.id)"><i
+                      class="mdi mdi-trash-can font-size-18"></i></a>
+                </td>
+               </tr>
+             </tbody>
+           </table>
+         </div>
+   </div>
+   <div class="row">
+     <div class="col-md-3">
+       <div class="form-group">
+        <ng-select [items]="qual" bindValue="code" bindLabel="designation"  id="validationCustom01" formControlName="qualification" 
+           [ngClass]="{'is-invalid': submitted && fq.qualification.errors}"></ng-select>
+         <div *ngIf="submitted && fq.qualification.errors" class="invalid-feedback">
+           <span *ngIf="fq.qualification.errors.required">Cette valeur est obligatoire.</span>              
+          </div>  
+       </div>
+     </div>
+
+
+     <div class="col-md-5">
+       <div class="form-group">
+           <input type="text" class="form-control" id="validationCustom03" formControlName="description"
+           placeholder="Description" [ngClass]="{'is-invalid': submitted && fq.description.errors}">
+         <div *ngIf="submitted && fq.description.errors" class="invalid-feedback">
+           <span *ngIf="fq.description.errors.required">Cette valeur est obligatoire.</span>  
+           <span *ngIf="fq.description.errors.pattern">Cette valeur est invalide.</span>                  
+          </div>  
+       </div>
+     </div>
+     <div class="col-md-3">
+      <div class="form-group">
+        <div class="custom-control custom-checkbox mb-3">
+          <input type="checkbox" class="custom-control-input" id="customCheck2"  name="actuelle" formControlName="actuelle">
+          <label class="custom-control-label" for="customCheck2">Actuelle</label>
+        </div>
+    </div>
+    </div> 
+     <div class="col-md-3">
+       <div class="form-group">
+        <button class="btn btn-primary" class="btn btn-success w-lg" type="submit">Ajouter</button>
+      </div>
+     </div>
+   </div>
+ </form>
+</div>
+</div>
+</ng-template>
+<ng-template #Imposition>
+
+  <div class="card border border-success">
+    <div class="card-header bg-transparent border-success">
+      <h5 class="my-0 text-success">Imposition</h5>
+    </div>
+    <div class="card-body">
+      <form class="needs-validation" (ngSubmit)="addimposition()" [formGroup]="impoform" >
+
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+        <div class="col-md-6">
+             <div class="form-group">
+                 <label for="validationCustom01">Matricule C.N.S.S</label>
+                 <input type="text" class="form-control" id="validationCustom01" formControlName="matCNSS"
+                 placeholder="saisissez le matricule C.N.S.S" [ngClass]="{'is-invalid': submit && formi.matCNSS.errors}">
+               <div *ngIf="submit && formi.matCNSS.errors" class="invalid-feedback">
+                 <span *ngIf="formi.matCNSS.errors.required">Cette valeur est obligatoire.</span>              
+                </div>  
+             </div>
+           </div>
+           <div class="col-md-4">
+            <div class="form-group">
+                <label for="validationCustom02">Date D'affiliation</label>
+                <input type="text" class="form-control" id="validationCustom02" formControlName="dateaff" mask="00/00/0000" [ngClass]="{'is-invalid': submit && formi.dateaff.errors}">
+              <div *ngIf="submit && formi.dateaff.errors" class="invalid-feedback">
+                <span *ngIf="formi.dateaff.errors.required">Cette valeur est obligatoire.</span>              
+               </div>  
+            </div>
+          </div></div>
+          </div></div>
+
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Cotisation Employé</h4>
+
+          <div class="row">
+              <div class="custom-control custom-radio custom-control-right">
+                <input type="radio" id="2"  class="custom-control-input" value="Normal" formControlName="cotisationE">
+                <label class="custom-control-label" for="2">Taux Normal</label>
+            </div>
+            <div class="custom-control custom-radio custom-control-right">
+              <input type="radio" id="4"  class="custom-control-input" value="Exonéré" formControlName="cotisationE">
+              <label class="custom-control-label" for="4">Taux Exonéré</label>
+          </div>
+        </div>
+      </div></div>
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Cotisation patronale</h4>
+
+        <div class="row">       
+          <div class="col-6">
+            <div class="custom-control custom-radio mb-3">
+          <input type="radio" id="5"  class="custom-control-input" value="Normal" formControlName="cotisationP" checked>
+              <label class="custom-control-label" for="5">Taux Normal</label>
+            </div>
+           
+          <div class="custom-control custom-radio custom-control-right">
+            <input type="radio" id="7"  class="custom-control-input" value="Exonéré" formControlName="cotisationP">
+            <label class="custom-control-label" for="7">Taux Exonéré</label>
+          </div>
+            </div>
+          </div></div></div>
+
+             <div class="card">
+              <div class="card-body">
+                <h4 class="card-title">Accident  De Travail</h4>
+                <div class="col-6">
+                  <div class="custom-control custom-radio mb-3">
+                <input type="radio" id="8"  class="custom-control-input" value="Oui" formControlName="accidenttra" checked>
+                    <label class="custom-control-label" for="8">Oui</label>
+                  </div>
+                  <div class="custom-control custom-radio custom-control-right">
+                    <input type="radio" id="9"  class="custom-control-input" value="Non" formControlName="accidenttra">
+                    <label class="custom-control-label" for="9">Non</label>
+                </div>
+             
+                  </div>
+        </div></div>
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Medecin De Travail</h4>
+            <div class="col-6">
+              <div class="custom-control custom-radio mb-3">
+            <input type="radio" id="14"  class="custom-control-input" value="Oui" formControlName="medecinetra" checked>
+                <label class="custom-control-label" for="14">Oui</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-right">
+                <input type="radio" id="15"  class="custom-control-input" value="Non" formControlName="medecinetra">
+                <label class="custom-control-label" for="15">Non</label>
+            </div>
+         
+              </div>
+    </div></div>
+          <div class="card">
+            <div class="card-body">
+              <h4 class="card-title">Régime d'imposition Fiscal</h4>
+              <!-- <div class="row"> -->
+                <Label>Régime d'imposition I.R.P.P</Label>
+
+                <div class="row">
+
+            <div class="col-6">
+              <div class="custom-control custom-radio mb-3">
+            <input type="radio" id="10"  class="custom-control-input" value="Normal" formControlName="regimeIirpp" checked>
+                <label class="custom-control-label" for="10">Normal</label>
+              </div>
+              <div class="custom-control custom-radio custom-control-right">
+                <input type="radio" id="11"  class="custom-control-input" value="Exonéré" formControlName="regimeIirpp">
+                <label class="custom-control-label" for="11">Exonéré</label>
+              </div>
+
+          </div>
+
+                </div>
+                <div class="row"></div>
+            <div class="col-md-5">
+              <div class="form-group">
+                  <label for="baremeirpp">Barémé IRPP</label>          
+              <select class="custom-select" formControlName="type"  id="validationCustom03" formControlName="baremeirpp">  
+                <option value="IRPP1" selected>IRPP1</option>
+
+              </select>
+               </div>  
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                    <label for="nbreMens">Nombre Mensualités</label>
+                    <input type="text" class="form-control" id="nbreMens" formControlName="nbreMens"
+                    placeholder="" [ngClass]="{'is-invalid': submit && formi.nbreMens.errors}">
+                  <div *ngIf="submit && formi.nbreMens.errors" class="invalid-feedback">
+                    <span *ngIf="formi.nbreMens.errors.required">Cette valeur est obligatoire.</span>              
+                   </div>      
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="form-group">
+                    <label for="assurancevie">Assurance Vie</label>
+                    <input type="text" class="form-control" id="assurancevie" formControlName="assurancevie"
+                    placeholder="" [ngClass]="{'is-invalid': submit && formi.assurancevie.errors}">
+                  <div *ngIf="submit && formi.assurancevie.errors" class="invalid-feedback">
+                    <span *ngIf="formi.assurancevie.errors.required">Cette valeur est obligatoire.</span>              
+                   </div>  
+                </div>
+              </div><div class="col-md-5">
+                <div class="form-group">
+                    <label for="interetann">Intérêt Annuel</label>
+                    <input type="text" class="form-control" id="interetann" formControlName="interetann"
+                    placeholder="" [ngClass]="{'is-invalid': submit && formi.interetann.errors}">
+                  <div *ngIf="submit && formi.interetann.errors" class="invalid-feedback">
+                    <span *ngIf="formi.interetann.errors.required">Cette valeur est obligatoire.</span>              
+                   </div>  
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="custom-control custom-checkbox mb-3">
+              <input type="checkbox" id="12"  class="custom-control-input"  formControlName="tfp" checked>
+                  <label class="custom-control-label" for="12">T.F.P.</label>
+                </div>
+                <div class="custom-control custom-checkbox custom-control-right">
+                  <input type="checkbox" id="13"  class="custom-control-input" formControlName="foprolos">
+                  <label class="custom-control-label" for="13">FORPOLOS</label>
+                </div>
+  
+            </div>
+            </div></div>
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+
+      </form></div></div>
+
+  
+
+</ng-template>  
+<ng-template #Divers>
+  <div class="col-md-60 col-xl-15">
+    <div class="card border border-success">
+      <div class="card-header bg-transparent border-success">
+        <h5 class="my-0 text-success">Divers</h5>
+      </div>
+      <div class="card-body">
+     <div class="table-responsive">
+       <!-- <div class=".table-striped"> -->
+       <table class="table table-centered">
+         <thead class="thead-light">
+           <tr>
+                 <th>Congé</th>
+                 <th>Solde/Mois</th>
+                 <th>Droit/Année</th>
+                 <th>Solde Intial</th>
+                 <th >Congé Pris</th>
+                 <th>Solde Actuel</th>
+                 <th>Actions</th>
+
+           </tr>
+         </thead>
+         <tbody>
+           <tr *ngFor="let item of droitdata">
+            <td>{{item.id}}</td>
+             <td>{{item.droitM}}</td>
+             <td>{{item.droitA}}</td>
+             <td>{{item.soldeinitial}}</td>
+             <td>{{item.congepris}}</td>
+             <td>{{item.congeactuel}}</td>
+               <a  class="mr-3 text-primary" ngbTooltip="Modifier" (click)="openModifd(modifierdroit,item)"><i
+                   class="mdi mdi-pencil font-size-18"></i></a>
+               <a  class="text-danger" ngbTooltip="Supprimer" (click)="deletedroit(item.id)"><i
+                   class="mdi mdi-trash-can font-size-18"></i></a>
+           </tr>
+         </tbody>
+       </table>
+     </div>
+    </div>
+</div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <form class="needs-validation" (ngSubmit)="addDroit()" [formGroup]="droitform">
+  
+      <div class="row">
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="nbrhj">Congés</label>
+          <input type="text" class="form-control" id="conge" formControlName="conge"
+           [ngClass]="{'is-invalid': sub && fr.conge.errors}">
+        <div *ngIf="sub && fr.conge.errors" class="invalid-feedback">
+          <span *ngIf="fr.conge.errors.required">Cette valeur est obligatoire.</span>              
+         </div>  
+      </div></div><div class="col-md-3">
+        <div class="form-group">
+          <label for="nbrhj">Droit/Mois</label>
+          <input type="text" class="form-control" id="droitM" formControlName="droitM"
+           [ngClass]="{'is-invalid': sub && fr.droitM.errors}">
+        <div *ngIf="sub && fr.droitM.errors" class="invalid-feedback">
+          <span *ngIf="fr.droitM.errors.required">Cette valeur est obligatoire.</span>              
+         </div>  
+      </div></div><div class="col-md-3">
+        <div class="form-group">
+          <label for="nbrhj">Droit/An</label>
+          <input type="text" class="form-control" id="droitA" formControlName="droitA"
+          [ngClass]="{'is-invalid': sub && fr.droitA.errors}">
+        <div *ngIf="sub && fr.droitA.errors" class="invalid-feedback">
+          <span *ngIf="fr.droitA.errors.required">Cette valeur est obligatoire.</span>              
+         </div>  
+      </div></div><div class="col-md-3">
+        <div class="form-group">
+          <label for="nbrhj">Solde Initial</label>
+          <input type="text" class="form-control" id="soldeinitial" formControlName="soldeinitial"
+           [ngClass]="{'is-invalid': sub && fr.soldeinitial.errors}">
+        <div *ngIf="sub && fr.soldeinitial.errors" class="invalid-feedback">
+          <span *ngIf="fr.soldeinitial.errors.required">Cette valeur est obligatoire.</span>              
+         </div>  
+      </div></div><div class="col-md-3">
+        <div class="form-group">
+          <label for="nbrhj">Congé Pris</label>
+          <input type="text" class="form-control" disabled>  
+      </div></div>
+      <div class="col-md-3">
+        <div class="form-group">
+         <button class="btn btn-primary" class="btn btn-success w-lg" type="submit">Ajouter</button>
+       </div>
+      </div>
+    </div>
+  </form>
+  </div>
+</div>
+
+
+
+    <div class="card">
+      <div class="card-body">
+        <form  class="needs-validation"  (ngSubmit)="adddivers()" [formGroup]="diversform">
+       
+        <div class="row">
+      <div class="col-md-4">
+        <div class="form-group">
+                      <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="customCheck1" formControlName="droitPR">
+            <label class="custom-control-label" for="customCheck1">Doit Au Prime De Rendement</label>
+          </div>
+      
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+                      <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="customCheck2" formControlName="assurancegrp">
+            <label class="custom-control-label" for="customCheck2">Assurance Groupe</label>
+          </div>
+      
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+          <label for="nbrhj">N° Adhesion</label>
+          <input type="text" class="form-control" id="Nadhesion" formControlName="Nadhesion"
+          placeholder="" [ngClass]="{'is-invalid': submit && formd.Nadhesion.errors}">
+        <div *ngIf="submit && formd.Nadhesion.errors" class="invalid-feedback">
+          <span *ngIf="formd.Nadhesion.errors.required">Cette valeur est obligatoire.</span>              
+         </div>  
+      </div></div>
+  
+      <div class="col-md-4">
+        <div class="form-group">
+                      <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="customCheck3" formControlName="autorisehs">
+            <label class="custom-control-label" for="customCheck3">Autorisé Aux Hr.Supp.</label>
+          </div>
+      
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="form-group">
+                      <div class="custom-control custom-checkbox mb-3">
+            <input type="checkbox" class="custom-control-input" id="customCheck4" formControlName="autoriseMjhs">
+            <label class="custom-control-label" for="customCheck4">Autorisé Aux M.A.J Hr.Supp.</label>
+          </div>
+      
+        </div>
+      </div>
+      <div class="col-md-4">
+    <div class="form-group">
+      <label for="nbrhj">Nbr Heures/Jour</label>
+      <input type="text" class="form-control" id="nbrhj" formControlName="nbrhj"
+      placeholder="" [ngClass]="{'is-invalid': submit && formd.nbrhj.errors}">
+    <div *ngIf="submit && formd.nbrhj.errors" class="invalid-feedback">
+      <span *ngIf="formd.nbrhj.errors.required">Cette valeur est obligatoire.</span>              
+     </div>  
+  </div></div>
+  <div class="col-md-4">
+  <div class="form-group">
+    <label for="basesoldeconge">Base SoldeCongé (Jr)</label>
+    <input type="text" class="form-control" id="basesoldeconge" formControlName="basesoldeconge"
+    placeholder="" [ngClass]="{'is-invalid': submit && formd.basesoldeconge.errors}">
+  <div *ngIf="submit && formd.basesoldeconge.errors" class="invalid-feedback">
+    <span *ngIf="formd.basesoldeconge.errors.required">Cette valeur est obligatoire.</span>              
+   </div> </div> 
+</div>
+</div>
+<button class="btn btn-primary" class="btn btn-success w-lg" type="submit">Enregistrer</button>
+
+</form>
+      </div>
+</div>
+</ng-template>  
+ 
+
+
+
+
+
+
+
+
+
+<ng-template #modifierdroit let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+      
+    <div class="card">
+      <div class="card-body">
+        <form class="needs-validation" (ngSubmit)="updatedroit()" [formGroup]="droitform">
+          {{droitform.value | json}}
+          <div class="row">
+          <div class="col-md-2">
+            <div class="form-group">
+              <label for="nbrhj">Congés</label>
+              <input type="text" class="form-control" id="conge" formControlName="conge"
+               [ngClass]="{'is-invalid': sub && fr.conge.errors}">
+            <div *ngIf="sub && fr.conge.errors" class="invalid-feedback">
+              <span *ngIf="fr.conge.errors.required">Cette valeur est obligatoire.</span>              
+             </div>  
+          </div></div><div class="col-md-2">
+            <div class="form-group">
+              <label for="nbrhj">Droit/Mois</label>
+              <input type="text" class="form-control" id="droitM" formControlName="droitM"
+               [ngClass]="{'is-invalid': sub && fr.droitM.errors}">
+            <div *ngIf="sub && fr.droitM.errors" class="invalid-feedback">
+              <span *ngIf="fr.droitM.errors.required">Cette valeur est obligatoire.</span>              
+             </div>  
+          </div></div><div class="col-md-2">
+            <div class="form-group">
+              <label for="nbrhj">Droit/An</label>
+              <input type="text" class="form-control" id="droitA" formControlName="droitA"
+              [ngClass]="{'is-invalid': sub && fr.droitA.errors}">
+            <div *ngIf="sub && fr.droitA.errors" class="invalid-feedback">
+              <span *ngIf="fr.droitA.errors.required">Cette valeur est obligatoire.</span>              
+             </div>  
+          </div></div><div class="col-md-2">
+            <div class="form-group">
+              <label for="nbrhj">Solde Initial</label>
+              <input type="text" class="form-control" id="soldeinitial" formControlName="soldeinitial"
+               [ngClass]="{'is-invalid': sub && fr.soldeinitial.errors}">
+            <div *ngIf="sub && fr.soldeinitial.errors" class="invalid-feedback">
+              <span *ngIf="fr.soldeinitial.errors.required">Cette valeur est obligatoire.</span>              
+             </div>  
+          </div></div><div class="col-md-2">
+            <div class="form-group">
+              <label for="nbrhj">Congé Pris</label>
+              <input type="text" class="form-control" disabled>  
+          </div></div>
+          <div class="col-md-3">
+            <div class="form-group">
+             <button class="btn btn-primary" class="btn btn-success w-lg" type="submit">Ajouter</button>
+           </div>
+          </div>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close('Close click')">Fermer</button>
+    <button type="submit" class="btn btn-primary">Enregistrer</button>
+  </div>
+
+</ng-template>
+
+
+
+
+
+
+

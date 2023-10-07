@@ -1,0 +1,320 @@
+<div class="container-fluid">
+    <app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+  
+  <div class="card">
+            
+      <div class="card-body">
+          <div>
+            <!--  -->
+            <a href="javascript:void(0);" class="btn btn-success mb-2" (click)="openModal(ajouter)">
+              <i class="mdi mdi-plus mr-2"></i>Ajouter Shift
+            </a>
+          </div>  
+        <!-- Table -->
+        <div class="table-responsive">
+          <table id="basic-datatable"
+          class="table table-bordered mb-1">
+            <thead>
+              <tr>
+                <th >Code Shift</th>
+              <th >Shift</th>
+              <th >Régime</th>
+              <th >Par Défault</th>
+              <th >Nbr Jours/Mois</th>
+              <th >Nbr Heures/Mois</th>
+              <th >Horaire</th>
+              <th >Nbr Pointage/Jours</th>
+              <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+  
+              <tr *ngFor="let table of tabledata; let i= index">
+                <td>
+              {{table.code}}
+  
+                </td>
+                <td>
+                  {{table.designation}}
+              </td>
+                <td>
+                  {{table.regime}}
+              </td>
+                <td>
+                  <div class="custom-control custom-checkbox">
+                    <input type="checkbox" class="custom-control-input" :id="shift{{i}}" [checked]="table.defaut"  [disabled]="true" />   
+                    <label class="custom-control-label" :for="shift{{i}}">&nbsp;</label>                       
+                  </div>
+           
+
+              </td>
+             <td>            {{table.nbr_jours_mois}}
+          </td> <td>            {{table.nbr_heures_mois}}
+          </td> <td>            {{table.horaire}}
+          </td> <td>            {{table.nbr_pointage_jours }}
+          </td>
+                <td>
+                  <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Edit" (click)="openModif(modifier,table)"><i
+                      class="mdi mdi-pencil font-size-18"></i></a>
+                  <a href="javascript:void(0);" class="text-danger" placement="top" ngbTooltip="Delete" (click)="deleteshift(table.code)"><i
+                      class="mdi mdi-trash-can font-size-18"></i></a>
+                </td>
+  
+  
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- End table -->
+      
+      </div>
+    </div>
+  
+    <ng-template #ajouter let-modal>
+      <div class="modal-header">
+        <h5 class="modal-title" id="composemodalTitle">Ajout:</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+  
+          <form class="needs-validation" [formGroup]="Ajouterform" (ngSubmit)="Ajouter()">
+            <div class="modal-body">
+            <div class="card">
+              <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group"  [ngClass]="{'is-invalid': submitted && form.code.errors}">
+                    <label for="code">Code :</label>
+                   <input type="text" class="form-control"   id="code" formControlName="code" placeholder="Exemple:  123"
+                      [ngClass]="{'is-invalid': submitted && form.code.errors}">
+                    <div *ngIf="submitted && form.code.errors" class="invalid-feedback">
+                      <span *ngIf="form.code.errors.required">Cette valeur est obligatoire.</span>     
+                      <span *ngIf="form.code.errors.pattern">Cette valeur est invalide.</span>             
+                     </div>  
+                  </div>
+                </div>
+           
+           
+                <div class="col-md-6">
+                  <div class="form-group" [ngClass]="{'is-invalid': submitted && form.shift.errors}">
+                    <label for="code">Désignation :</label>
+  
+                      <input type="text" class="form-control" id="shift" formControlName="shift"
+                      placeholder="Exemple: shift26" [ngClass]="{'is-invalid': submitted && form.shift.errors}">
+                    <div *ngIf="submitted && form.shift.errors" class="invalid-feedback">
+                      <span *ngIf="form.shift.errors.required">Cette valeur est obligatoire.</span>   
+                      <span *ngIf="form.shift.errors.pattern">Cette valeur est invalide.</span>               
+                     </div>  
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="code">Régime :</label> 
+                     <ng-select [items]="regimes" bindValue="code" bindLabel="designation" id="regime" name="regime" formControlName="regime" 
+                    [ngClass]="{'is-invalid': submitted && form.regime.errors}"></ng-select>
+                    <div *ngIf="submitted && form.regime.errors" class="invalid-feedback">
+                      <span *ngIf="form.regime.errors.required">Cette valeur est obligatoire.</span>              
+                     </div>  
+                  </div>
+                </div>    <div class="col-md-6">
+                  <div class="form-group" [ngClass]="{'is-invalid': submitted && form.nbrhm.errors}">
+                    <label for="code">Nbr Heures/Mois :</label>
+  
+                      <input type="text" class="form-control" id="nbrhm" formControlName="nbrhm"
+                      placeholder="Exemple:  208" [ngClass]="{'is-invalid': submitted && form.nbrhm.errors}">
+                    <div *ngIf="submitted && form.nbrhm.errors" class="invalid-feedback">
+                      <span *ngIf="form.nbrhm.errors.required">Cette valeur est obligatoire.</span>   
+                      <span *ngIf="form.nbrhm.errors.pattern">Cette valeur est invalide.</span>              
+                     </div>  
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="code">Nbr Jours/Mois :</label>
+  
+                      <input type="text" class="form-control" id="nbrjm" formControlName="nbrjm"
+                      placeholder="Exemple:  26" [ngClass]="{'is-invalid': submitted && form.nbrjm.errors}">
+                    <div *ngIf="submitted && form.nbrjm.errors" class="invalid-feedback">
+                      <span *ngIf="form.nbrjm.errors.required">Cette valeur est obligatoire.</span>
+                      <span *ngIf="form.nbrjm.errors.pattern">Cette valeur est invalide.</span>                 
+                     </div>  
+                  </div>
+                </div>
+                 <div class="col-md-6">
+                  <div class="form-group" [ngClass]="{'is-invalid': submitted && form.nbrpm.errors}">
+                    <label for="code">Nbr Pointage/Jours :</label>
+  
+                      <input type="text" class="form-control" id="nbrpm" formControlName="nbrpm"
+                      placeholder="Exemple:  8" [ngClass]="{'is-invalid': submitted && form.nbrpm.errors}">
+                    <div *ngIf="submitted && form.nbrpm.errors" class="invalid-feedback">
+                      <span *ngIf="form.nbrpm.errors.required">Cette valeur est obligatoire.</span>     
+                      <span *ngIf="form.nbrpm.errors.pattern">Cette valeur est invalide.</span>            
+                     </div>  
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="code">Séance à appliquer</label>
+                    <ng-select [items]="horaire"  id="horaire" name="horaire" formControlName="horaire" 
+                    [ngClass]="{'is-invalid': submitted && form.horaire.errors}"></ng-select>
+                    <div *ngIf="submitted && form.horaire.errors" class="invalid-feedback">
+                      <span *ngIf="form.horaire.errors.required">Cette valeur est obligatoire.</span>              
+                     </div>  
+                  </div>
+                </div> 
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="example-date-input"></label>
+              <label for="example-date-input"></label>
+               <label for="example-date-input"></label>
+              <label for="example-date-input"></label>
+              <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="invalidCheck" formControlName="defaut">
+              <label class="custom-control-label" for="invalidCheck"> Par défaut</label>
+            
+          </div>
+                    </div>
+                    </div>
+                </div>
+              
+              </div>
+            </div>
+          </div>
+              <div class="modal-footer">
+                <div class="form-group mb-0">        
+                  <div class="text-md-right">
+                  <button type="submit" class="btn btn-success">Enregistrer</button>
+                  <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+                   </div>
+                  </div>
+              
+              </div>
+          </form>
+   
+    </ng-template>
+  
+  
+    <ng-template #modifier  let-modal> 
+      <div class="modal-header">
+        <h5 class="modal-title" id="composemodalTitle">Modification:</h5>
+        <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+  
+      <form class="needs-validation" [formGroup]="Modifierform" (ngSubmit)="Modifier()">
+            <div class="modal-body">
+            <div class="card">
+              <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                  <div class="form-group"  [ngClass]="{'is-invalid': submit && form.code.errors}">
+                    <label for="code">Code :</label>
+                   <input type="text" class="form-control"  disabled id="code" formControlName="code" placeholder="Exemple:  123"
+                      [ngClass]="{'is-invalid': submit && f.code.errors}">
+                    <div *ngIf="submit && f.code.errors" class="invalid-feedback">
+                      <span *ngIf="f.code.errors.required">Cette valeur est obligatoire.</span>     
+                      <span *ngIf="f.code.errors.pattern">Cette valeur est invalide.</span>             
+                     </div>  
+                  </div>
+                </div>
+           
+           
+                <div class="col-md-6">
+                  <div class="form-group" [ngClass]="{'is-invalid': submit && form.shift.errors}">
+                    <label for="code">Désignation :</label>
+  
+                      <input type="text" class="form-control" id="shift" formControlName="shift"
+                      placeholder="Exemple: shift26" [ngClass]="{'is-invalid': submit && f.shift.errors}">
+                    <div *ngIf="submit && f.shift.errors" class="invalid-feedback">
+                      <span *ngIf="f.shift.errors.required">Cette valeur est obligatoire.</span>   
+                      <span *ngIf="f.shift.errors.pattern">Cette valeur est invalide.</span>               
+                     </div>  
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="code">Régime :</label> 
+                     <ng-select [items]="regimes" bindValue="code" bindLabel="designation" id="regime" name="regime" formControlName="regime" 
+                    [ngClass]="{'is-invalid': submit && f.regime.errors}"></ng-select>
+                    <div *ngIf="submit && f.regime.errors" class="invalid-feedback">
+                      <span *ngIf="f.regime.errors.required">Cette valeur est obligatoire.</span>              
+                     </div>  
+                  </div>
+                </div>    <div class="col-md-6">
+                  <div class="form-group" [ngClass]="{'is-invalid': submitted && form.nbrhm.errors}">
+                    <label for="code">Nbr Heures/Mois :</label>
+  
+                      <input type="text" class="form-control" id="nbrhm" formControlName="nbrhm"
+                      placeholder="Exemple:  208" [ngClass]="{'is-invalid': submit && f.nbrhm.errors}">
+                    <div *ngIf="submit && form.nbrhm.errors" class="invalid-feedback">
+                      <span *ngIf="f.nbrhm.errors.required">Cette valeur est obligatoire.</span>   
+                      <span *ngIf="f.nbrhm.errors.pattern">Cette valeur est invalide.</span>              
+                     </div>  
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="code">Nbr Jours/Mois :</label>
+  
+                      <input type="text" class="form-control" id="nbrjm" formControlName="nbrjm"
+                      placeholder="Exemple:  26" [ngClass]="{'is-invalid': submit && f.nbrjm.errors}">
+                    <div *ngIf="submit && f.nbrjm.errors" class="invalid-feedback">
+                      <span *ngIf="f.nbrjm.errors.required">Cette valeur est obligatoire.</span>
+                      <span *ngIf="f.nbrjm.errors.pattern">Cette valeur est invalide.</span>                 
+                     </div>  
+                  </div>
+                </div>
+                 <div class="col-md-6">
+                  <div class="form-group" [ngClass]="{'is-invalid': submit && f.nbrpm.errors}">
+                    <label for="code">Nbr Pointage/Jours :</label>
+  
+                      <input type="text" class="form-control" id="nbrpm" formControlName="nbrpm"
+                      placeholder="Exemple:  8" [ngClass]="{'is-invalid': submit && f.nbrpm.errors}">
+                    <div *ngIf="submit && f.nbrpm.errors" class="invalid-feedback">
+                      <span *ngIf="f.nbrpm.errors.required">Cette valeur est obligatoire.</span>     
+                      <span *ngIf="f.nbrpm.errors.pattern">Cette valeur est invalide.</span>            
+                     </div>  
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="code">Séance à appliquer</label>
+                    <ng-select [items]="horaire"  id="horaire" name="horaire" formControlName="horaire" 
+                    [ngClass]="{'is-invalid': submit && f.horaire.errors}"></ng-select>
+                    <div *ngIf="submit && f.horaire.errors" class="invalid-feedback">
+                      <span *ngIf="f.horaire.errors.required">Cette valeur est obligatoire.</span>              
+                     </div>  
+                  </div>
+                </div> 
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="example-date-input"></label>
+              <label for="example-date-input"></label>
+               <label for="example-date-input"></label>
+              <label for="example-date-input"></label>
+              <div class="custom-control custom-checkbox">
+              <input type="checkbox" class="custom-control-input" id="invalidCheck" formControlName="defaut">
+              <label class="custom-control-label" for="invalidCheck"> Par défaut</label>
+            
+          </div>
+                    </div>
+                    </div>
+                </div>
+              
+              </div>
+            </div>
+          </div>
+              <div class="modal-footer">
+                <div class="form-group mb-0">        
+                  <div class="text-md-right">
+                  <button type="submit" class="btn btn-success">Modifier</button>
+                  <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+                   </div>
+                  </div>
+              
+              </div>
+          </form>
+    </ng-template>
+  </div> 

@@ -1,0 +1,529 @@
+<div class="container-fluid">
+
+    <app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+  
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+            <div class="row mb-md-2">
+              <div class="col-sm-12 col-md-6">
+                <div class="dataTables_length" id="tickets-table_length"><label
+                    class="d-inline-flex align-items-center">Afficher
+                    <select name="tickets-table_length" aria-controls="tickets-table" name="pageSize"
+                      [(ngModel)]="service.pageSize"
+                      class="custom-select custom-select-sm form-control form-control-sm mx-2">
+                      <option [ngValue]="10">10</option>
+                      <option [ngValue]="25">25</option>
+                      <option [ngValue]="50">50</option>
+                      <option [ngValue]="100">100</option>
+                    </select> entrées</label>
+                  </div>
+                  <a href="javascript:void(0);" class="btn btn-success mb-2" (click)="openModal(contentadd)">
+                    <i class="mdi mdi-plus mr-2"></i> Ajouter Société
+                  </a>
+              </div>
+             
+  
+              <!-- Search -->
+              <div class="col-sm-12 col-md-6">
+                <div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+                    class="d-inline-flex align-items-center">Rechercher:
+                    <input type="text" name="searchTerm" class="form-control form-control-sm ml-2"
+                      aria-controls="tickets-table" [(ngModel)]="service.searchTerm"></label></div>
+              </div>
+              <!-- End search -->
+            </div>
+            <!-- Table -->
+            <div class="table-responsive">
+              <table id="basic-datatable"
+                class="table table-bordered dt-responsive nowrap datatables no-footer dtr-inline">
+                <thead>
+                  <tr>
+                    <th></th>
+                  <th sortable="id" (sort)="onSort($event)">Societe Id</th>
+                  <th sortable="nom" (sort)="onSort($event)">Nom</th>
+                  <th sortable="email" (sort)="onSort($event)">Email</th>
+                  <th sortable="Activite" (sort)="onSort($event)">Activite</th>
+                  <th sortable="matricule_cnss" (sort)="onSort($event)">Matricule CNSS</th>
+                  <th sortable="matricule_cnss" (sort)="onSort($event)">Matricule fiscal</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody *ngFor="let table of tables$ | async;let i=index">
+                  <tr>
+                    <td align="center">
+                      <a class="expand-row" (click)="changeValue(i)">
+                        +
+                      </a>
+                    </td>
+                    <td>
+                      <a class="text-dark font-weight-bold">
+                        <ngb-highlight [result]="table.id" [term]="service.searchTerm"></ngb-highlight>
+                      </a>
+                    </td>
+                    <td>
+                      <a class="text-dark font-weight-bold">
+                        <ngb-highlight [result]="table.nom" [term]="service.searchTerm"></ngb-highlight>
+                      </a>
+                    </td>
+                    <td>
+                      <a class="text-dark font-weight-bold">
+                        <ngb-highlight [result]="table.email" [term]="service.searchTerm"></ngb-highlight>
+                      </a>
+                    </td>
+                    <td>
+                      <a class="text-dark font-weight-bold">
+                        <ngb-highlight [result]="table.Activite" [term]="service.searchTerm"></ngb-highlight>
+                      </a>
+                    </td>
+                    
+                    <td>
+                      <ngb-highlight [result]="table.matricule_cnss" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.matricule_fiscal" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Edit" (click)="openedit(contentedit,this.table)"><i
+                          class="mdi mdi-pencil font-size-18"></i></a>
+                      <a href="javascript:void(0);" class="text-danger" placement="top" ngbTooltip="Delete" (click)="deletesociete(this.table.id)"><i
+                          class="mdi mdi-trash-can font-size-18"></i></a>
+                    </td>
+                  </tr>
+                  <tr *ngIf="hideme[i]" class="sub-table no-bg">
+                    <td align="center"> </td>
+                    <td colspan="15" class="p-0">
+                      <table class="table mb-0 table-striped">
+                        <thead>
+                          <tr>
+                  <th >Adresse</th>
+                  <th >Ville</th>
+                  <th >Rue</th>
+                  <th >Tel</th>
+                  <th sortable="date_ouverture" (sort)="onSort($event)">Date ouverture</th>
+                  <th >Fax</th>
+                  <th >Code postal</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>{{table.adresse}}</td>
+                            <td>{{table.ville}}</td>
+                            <td>{{table.rue}}</td>
+                            <td>{{table.tel}}</td>
+                            <td>{{table.date_ouverture}}</td>
+                            <td>{{table.fax}}</td>
+                            <td>{{table.code_postal}}</td>
+                          
+                          </tr>
+                        </tbody>
+                      </table>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- End table -->
+            <div class="row justify-content-md-between align-items-md-center mt-2">
+              <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info mb-2" id="tickets-table_info" role="status" aria-live="polite">Showing
+                  {{service.startIndex}} à
+                  {{service.endIndex}} de {{service.totalRecords}}
+                  entrées
+                </div>
+              </div>
+              <!-- Pagination -->
+              <div class="col-sm-12 col-md-5">
+                <div class="text-md-right float-md-right pagination-rounded">
+                  <ngb-pagination [collectionSize]="total$ | async" [(page)]="service.page" [pageSize]="service.pageSize">
+                  </ngb-pagination>
+                </div>
+              </div>
+              <!-- End Pagination -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  
+</div>
+
+
+ <!-- Contacts model  -->
+ <ng-template #contentadd role="document" let-modal="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Ajouter société</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body ">
+   
+        
+          
+          <form class="needs-validation"  [formGroup]="societevalidationform"  (ngSubmit)="saveData()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip01">Nom :*</label>
+                  <input type="text" class="form-control" formControlName="nom" id="nom"
+                    placeholder="Nom" [ngClass]="{'is-invalid': submitted && form.nom.errors}">
+                    <div *ngIf="submitted && form.nom.errors" class="invalid-tooltip">
+                      <span *ngIf="submitted && form.nom.errors.required" >Ce champs est obligatoire!</span>
+                      <span *ngIf="submitted && form.nom.errors.pattern">Nom incorrect!</span>
+                    </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip02">Activité :*</label>
+                  <input type="text" class="form-control" id="activite" formControlName="activite"
+                    placeholder="Activité"  [ngClass]="{'is-invalid': submitted && form.activite.errors}">
+                    <div *ngIf="submitted && form.activite.errors" class="invalid-tooltip">
+                      <span *ngIf="submitted && form.activite.errors.required">Ce champs est obligatoire!</span>
+                      <span *ngIf="submitted && form.activite.errors.pattern">Activité incorrect!</span>
+                    </div>
+                    
+                </div>
+              </div>
+
+              
+            </div>
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltipUsername">Email</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="email" formControlName="email"
+                      placeholder="email" [ngClass]="{'is-invalid': submitted && form.email.errors}">
+                      <div *ngIf="submitted && form.email.errors" class="invalid-feedback">
+                        <span *ngIf="form.email.errors.pattern">E-mail Invalide!!</span>
+                      </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltipUsername">Tel</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="tel" formControlName="tel" placeholder="tel" mask="00.00" [ngClass]="{'is-invalid': submitted && form.tel.errors}">
+                      <div *ngIf="submitted && form.tel.errors" class="invalid-feedback">
+                        <span *ngIf="form.tel.errors.pattern">Numéro invalide!!</span>
+                      </div>
+                  </div>
+                </div>
+              </div>           
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltipUsername">Adresse</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="adresse" formControlName="adresse"
+                      placeholder="Adresse" >
+      
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltipUsername">Code postal</label>
+                  <div class="input-group">                 
+                    <input type="text" class="form-control" id="code_postal" formControlName="code_postal"
+                      placeholder="Code postal" [ngClass]="{'is-invalid': submitted && form.code_postal.errors}">
+                      <div *ngIf="submitted && form.code_postal.errors" class="invalid-feedback">
+                        <span *ngIf="form.code_postal.errors.pattern">Code postal invalide!!</span>
+                      </div>
+                  </div>
+                </div>
+              </div>      
+            </div>
+
+
+           
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip03">Ville</label>
+                  <input type="text" class="form-control" id="ville" placeholder="ville"
+                    formControlName="ville" [ngClass]="{'is-invalid': submitted && form.ville.errors}">
+                    <div *ngIf="submitted && form.ville.errors" class="invalid-feedback">
+                      <span *ngIf="form.ville.errors.pattern">Ville est invalide!!</span>
+                    </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip04">Rue</label>
+                  <input type="text" class="form-control" id="rue" placeholder="rue"
+                    formControlName="rue" [ngClass]="{'is-invalid': submitted && form.rue.errors}">
+                    <div *ngIf="submitted && form.rue.errors" class="invalid-feedback">
+                      <span *ngIf="form.rue.errors.pattern">Rue est invalide!!</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip03">Matricule C.N.S.S</label>
+                  <input type="text" class="form-control" id="matricule_cnss" placeholder="matricule C.N.S.S"
+                    formControlName="matricule_cnss" [ngClass]="{'is-invalid': submitted && form.matricule_cnss.errors}">
+                    <div *ngIf="submitted && form.matricule_cnss.errors" class="invalid-feedback">
+                      <span *ngIf="form.matricule_cnss.errors.pattern">Matricule C.N.S.S est invalide!!</span>
+                      <span *ngIf="form.matricule_cnss.errors.required">Matricule C.N.S.S est obligatoire!!</span>
+                    </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="fax">Fax</label>
+                  <input type="text" class="form-control" id="fax" placeholder="fax"
+                    formControlName="fax" [ngClass]="{'is-invalid': submitted && form.fax.errors}">
+                    <div *ngIf="submitted && form.fax.errors" class="invalid-feedback">
+                      <span *ngIf="form.fax.errors.pattern">Fax est invalide!!</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+               
+                <div class="col-md-6">
+                  <label for="example-date-input">Date</label>
+                  <input class="form-control" type="date" value="07-04-2021" id="example-date-input"  formControlName="date_ouverture">
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="validationCustom05">Matricule fiscal</label>
+                      <input type="text" class="form-control" id="matricule_fiscal" formControlName="matricule_fiscal"
+                      placeholder="Ex:'0000000TAM000'" [ngClass]="{'is-invalid': submitted && form.matricule_fiscal.errors}" >
+      
+                    <div *ngIf="submitted && form.matricule_fiscal.errors" class="invalid-feedback">
+                      <span *ngIf="form.matricule_fiscal.errors.pattern">Matricule fiscal invalide!</span>
+                      <span *ngIf="form.matricule_fiscal.errors.required">Matricule fiscal invalide!</span>
+                    </div>
+                   </div>  
+                  </div>
+        
+
+
+            </div>
+
+            
+
+            <div class="text-right">
+              <button type="submit" class="btn btn-success">Enregistrer</button>
+              <button type="button" class="btn btn-danger ml-1" (click)="this.submitted = false" (click)="this.resetformadd()" (click)="modal('close click')">Annuler</button>
+            </div>
+            <!--<div class="md-form">
+              <input type="text" id="form1" class="form-control">
+              <label for="form1">Example label</label>
+            </div>-->
+          </form>
+        
+      </div>
+      
+
+
+
+  
+</ng-template>
+
+
+
+<ng-template #contentedit role="document" let-modal="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Modifier société</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body ">
+   
+        
+          
+          <form class="needs-validation"  [formGroup]="editsocietevalidationform"  (ngSubmit)="editData()">
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip01">Nom :*</label>
+                  <input type="text" class="form-control" formControlName="nom" id="nom"
+                    placeholder="Nom" [ngClass]="{'is-invalid': submitted && editform.nom.errors}">
+                    <div *ngIf="submitted && editform.nom.errors" class="invalid-tooltip">
+                      <span *ngIf="submitted && editform.nom.errors.required" >Ce champs est obligatoire!</span>
+                      <span *ngIf="submitted && editform.nom.errors.pattern">Nom incorrect!</span>
+                    </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip02">Activité :*</label>
+                  <input type="text" class="form-control" id="activite" formControlName="activite"
+                    placeholder="Activité"  [ngClass]="{'is-invalid': submitted && editform.activite.errors}">
+                    <div *ngIf="submitted && editform.activite.errors" class="invalid-tooltip">
+                      <span *ngIf="submitted && editform.activite.errors.required">Ce champs est obligatoire!</span>
+                      <span *ngIf="submitted && editform.activite.errors.pattern">Activité incorrect!</span>
+                    </div>
+                    
+                </div>
+              </div>
+
+              
+            </div>
+            <div class="row">
+
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltipUsername">Email :</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="email" formControlName="email"
+                      placeholder="email" [ngClass]="{'is-invalid': submitted && editform.email.errors}">
+                      <div *ngIf="submitted && editform.email.errors" class="invalid-feedback">
+                        <span *ngIf="editform.email.errors.pattern">E-mail Invalide!!</span>
+                      </div>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="col-md-6">
+                <label for="example-date-input">Date :*</label>
+                <input class="form-control" type="date" value="07-04-2021" id="example-date-input"  formControlName="date_ouverture">
+              </div>
+              
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltipUsername">Adresse :</label>
+                  <div class="input-group">
+                    <input type="text" class="form-control" id="adresse" formControlName="adresse"
+                      placeholder="Adresse" >
+                      
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltipUsername">Code postal :</label>
+                  <div class="input-group">                 
+                    <input type="text" class="form-control" id="code_postal" formControlName="code_postal"
+                      placeholder="Code postal" [ngClass]="{'is-invalid': submitted && editform.code_postal.errors}">
+                      <div *ngIf="submitted && editform.code_postal.errors" class="invalid-feedback">
+                        <span *ngIf="editform.code_postal.errors.pattern">Code postal invalide!!</span>
+                      </div>
+                  </div>
+                </div>
+              </div>      
+            </div>
+
+
+           
+
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip03">Ville :</label>
+                  <input type="text" class="form-control" id="ville" placeholder="ville"
+                    formControlName="ville" [ngClass]="{'is-invalid': submitted && editform.ville.errors}">
+                    <div *ngIf="submitted && editform.ville.errors" class="invalid-feedback">
+                      <span *ngIf="editform.ville.errors.pattern">Ville est invalide!!</span>
+                    </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip04">Rue :</label>
+                  <input type="text" class="form-control" id="rue" placeholder="rue"
+                    formControlName="rue" [ngClass]="{'is-invalid': submitted && editform.rue.errors}">
+                    <div *ngIf="submitted && editform.rue.errors" class="invalid-feedback">
+                      <span *ngIf="editform.rue.errors.pattern">Rue est invalide!!</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="validationTooltip03">Matricule C.N.S.S :</label>
+                  <input type="text" class="form-control" id="matricule_cnss" placeholder="matricule C.N.S.S"
+                    formControlName="matricule_cnss" [ngClass]="{'is-invalid': submitted && editform.matricule_cnss.errors}">
+                    <div *ngIf="submitted && editform.matricule_cnss.errors" class="invalid-feedback">
+                      <span *ngIf="editform.matricule_cnss.errors.pattern">Matricule C.N.S.S est invalide!!</span>
+                      <span *ngIf="editform.matricule_cnss.errors.required">Matricule C.N.S.S est obligatoire!!</span>
+                    </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group position-relative">
+                  <label for="fax">Fax</label>
+                  <input type="text" class="form-control" id="fax" placeholder="fax"
+                    formControlName="fax" [ngClass]="{'is-invalid': submitted && editform.fax.errors}">
+                    <div *ngIf="submitted && editform.fax.errors" class="invalid-feedback">
+                      <span *ngIf="editform.fax.errors.pattern">Fax est invalide!!</span>
+                    </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="row">
+               
+
+                <div class="col-md-6">
+                  <div class="form-group position-relative">
+                    <label for="validationTooltipUsername">Tel :</label>
+                    <div class="input-group">
+                      <input type="text" class="form-control" id="tel" formControlName="tel" placeholder="tel" mask="00.00" [ngClass]="{'is-invalid': submitted && editform.tel.errors}"  >
+                        <div *ngIf="submitted && editform.tel.errors" class="invalid-feedback">
+                          <span *ngIf="editform.tel.errors.pattern">Numéro invalide!!</span>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="validationCustom05">Matricule fiscal :</label>
+                      <input type="text" class="form-control" id="matricule_fiscal" formControlName="matricule_fiscal"
+                      placeholder="Ex:'0000000TAM000'" [ngClass]="{'is-invalid': submitted && editform.matricule_fiscal.errors}" >
+      
+                    <div *ngIf="submitted && editform.matricule_fiscal.errors" class="invalid-feedback">
+                      <span *ngIf="editform.matricule_fiscal.errors.pattern">Matricule fiscal invalide!</span>
+                      <span *ngIf="editform.matricule_fiscal.errors.required">Matricule fiscal obligatoire!</span>
+                    </div>
+                   </div>  
+                 </div>
+        
+
+
+            </div>
+          
+
+            <div class="text-right">
+              <button type="submit" class="btn btn-success">Modifier</button>
+              <button type="button" class="btn btn-danger ml-1" (click)="this.submitted = false" (click)="modal('close click')">Annuler</button>
+            </div>
+          </form>
+        
+      </div>
+      
+
+
+
+  
+</ng-template>

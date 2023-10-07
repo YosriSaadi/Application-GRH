@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="GRHModel1StoreContainer" CdmEntityContainer="GRHEntities4">
+    <EntitySetMapping Name="GRH_Pret">
+      <EntityTypeMapping TypeName="GRHModel1.GRH_Pret">
+        <MappingFragment StoreEntitySet="GRH_Pret">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="montant" ColumnName="montant" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="date_1echeance" ColumnName="date_1echeance" />
+          <ScalarProperty Name="libelle" ColumnName="libelle" />
+          <ScalarProperty Name="type" ColumnName="type" />
+          <ScalarProperty Name="montant_solde" ColumnName="montant_solde" />
+          <ScalarProperty Name="matricule_employe" ColumnName="matricule_employe" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

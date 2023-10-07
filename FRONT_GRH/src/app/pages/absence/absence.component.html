@@ -1,0 +1,421 @@
+<app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+<div class="col-lg-20">
+  <div class="card">
+    <div class="card-body">
+      <ul ngbNav #customNav="ngbNav" [(activeId)]="this.active" class="nav-tabs nav-tabs-custom nav-justified">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+            <span class="d-none d-sm-block">Saisie absence</span>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-template [ngTemplateOutlet]="saisie"></ng-template>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>
+            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+            <span class="d-none d-sm-block">Consultation des absences</span>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-template [ngTemplateOutlet]="consultation"></ng-template>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="3" [hidden]="this.modifhide">
+          <a ngbNavLink>
+            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+            <span class="d-none d-sm-block">Modification absence</span>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-template [ngTemplateOutlet]="modification"></ng-template>
+          </ng-template>
+        </li>
+   
+       
+      </ul>
+      <div [ngbNavOutlet]="customNav"></div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #saisie>
+    <br/>
+  <div class="card">
+    <div class="card-body">
+<form class="needs-validation" [formGroup]="validationform" (ngSubmit)="saveData()" >
+ 
+    <div class="row">
+      
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom0">Nom & Prénom de l'employé:*</label>
+          <select class="custom-select" id="nom" formControlName="nom" (change)="search_employe()"  [ngClass]="{'is-invalid': submitted && form.nom.errors}">  
+            <option *ngFor="let item of this.liste_employes let i= index" [value]="item.matricule"  >{{item.nom}} {{item.prenom}}</option>
+          </select>
+          <div *ngIf="submitted && form.nom.errors" class="invalid-feedback">
+            <span *ngIf="form.nom.errors.required">Cette valeur est obligatoire.</span>  
+          </div>
+        
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Matricule:</label>
+          <input type="text" class="form-control" id="matricule_employe" placeholder=""  formControlName="matricule_employe" disabled >
+          
+      </div>
+      </div>
+     
+
+      <div class="col-md-3">
+        <div class="form-group">
+                <label>Motif d'absence:*</label>
+              <select class="custom-select" formControlName="motif" [ngClass]="{'is-invalid': submitted && form.motif.errors}" formControlName="motif">  
+                <option *ngFor="let motif of Motifs" [value]="motif.designation" selected>{{motif.designation}}</option>
+                
+               
+              </select>
+              <div *ngIf="submitted && form.motif.errors" class="invalid-feedback">
+                <span *ngIf="submitted && form.motif.errors.required" >Ce champs est obligatoire!</span>
+              </div>
+        </div>
+      </div>
+     
+    
+     
+  
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="invalidCheck" formControlName="abattable">
+            <label class="custom-control-label" for="invalidCheck"> Abattable</label>
+            
+          </div>
+        </div>
+      </div>
+   
+    
+
+      <div class="col-md-3">
+        <div class="form-group">
+
+          <label for="example-date-input">Date début:*</label>
+          <input class="form-control" type="date" value="07-04-2021" id="date" formControlName="date_debut" [ngClass]="{'is-invalid': submitted && form.date_debut.errors}" (change)="calcule_date_fin()" (change)="calcule_nombre_jours()">
+          <div *ngIf="submitted && form.date_debut.errors" class="invalid-feedback">
+            <span *ngIf="submitted && form.date_debut.errors.required" >Ce champs est obligatoire!</span>
+          
+          </div>
+         </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="form-group">
+
+          <label for="example-date-input">Date fin:*</label>
+          <input class="form-control" type="date" value="" id="date" formControlName="date_fin" [ngClass]="{'is-invalid': submitted && form.date_fin.errors}" (change)="calcule_nombre_jours()">
+          <div *ngIf="submitted && form.date_fin.errors" class="invalid-feedback">
+            <span *ngIf="submitted && form.date_fin.errors.required" >Ce champs est obligatoire!</span>
+          
+          </div>
+         </div>
+      </div>
+    
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Nombre de jours :</label>
+          <input type="text" class="form-control" id="nbr_jrs" 
+            placeholder=""  formControlName="nbr_jrs" disabled>   
+       </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Mois :</label>
+          <input type="text" class="form-control" id="mois" 
+            placeholder=""  formControlName="mois" disabled>
+            
+       </div>
+      </div>
+      
+
+
+                      
+                      
+    </div>  
+    <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Ajouter</button>
+    <button type="button" class="btn btn-warning ml-1"  >Annuler</button>
+     </div>
+    
+       </div>
+  </form>
+  </div>
+    </div>
+
+
+
+    </ng-template>
+
+    <ng-template #consultation>
+      <br/>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card bg-transparent border-success">
+          <div class="card-body bg-transparent border-success">
+  
+            <div class="row mb-md-2">
+              <div class="container justify-content-center">
+                <div class="row">
+                  
+                </div>
+            </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="dataTables_length" id="tickets-table_length"><label
+                    class="d-inline-flex align-items-center">Afficher
+                    <select name="tickets-table_length" aria-controls="tickets-table" name="pageSize"
+                      [(ngModel)]="service.pageSize"
+                      class="custom-select custom-select-sm form-control form-control-sm mx-2">
+                      <option [ngValue]="10">10</option>
+                      <option [ngValue]="25">25</option>
+                      <option [ngValue]="50">50</option>
+                      <option [ngValue]="100">100</option>
+                    </select> entrées</label></div>
+              </div>
+              <!-- Search -->
+              <div class="col-sm-12 col-md-6">
+                <div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+                    class="d-inline-flex align-items-center">Rechercher:
+                    <input type="text" name="searchTerm" placeholder="rechercher..." class="form-control form-control-sm ml-2"
+                      aria-controls="tickets-table" [(ngModel)]="service.searchTerm"></label></div>
+              </div>
+              <!-- End search -->
+            </div>
+            <!-- Table -->
+            <div class="table-responsive">
+              <table id="basic-datatable"
+              class="table table-bordered dt-responsive nowrap datatables no-footer dtr-inline">
+                <thead class="thead-light">
+                  <tr>
+                    <th sortable="matricule_employe" (sort)="onSort($event)">Matricule </th>
+                    <th sortable="nom" (sort)="onSort($event)">Nom & prénom </th>
+                    <th sortable="motif" (sort)="onSort($event)">Motif</th>
+                    <th sortable="mois" (sort)="onSort($event)">Mois</th>
+                    <th sortable="date_debut" (sort)="onSort($event)">Date début</th>
+                    <th sortable="date_fin" (sort)="onSort($event)">Date fin</th>
+                    <th sortable="nbr_jours" (sort)="onSort($event)">Nombre de jours</th>
+                    <th sortable="abattable" (sort)="onSort($event)">Abattable</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+  
+                  <tr *ngFor="let table of tables$ | async">
+                    <td>
+                      <a class="text-dark font-weight-bold">
+                        <ngb-highlight [result]="table.matricule_employe" [term]="service.searchTerm"></ngb-highlight>
+                      </a>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.nom" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.motif" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.mois" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.date_debut" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.date_fin" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.nbr_jours" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.abattable" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+
+                    <td>
+                      <div ngbDropdown placement="bottom-left">
+                        
+                        <!--  <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Ajouter avance pour cet employé"  ><i
+                            class="mdi mdi-bookmark-plus-outline font-size-18" ></i></a>-->
+                          <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Modifier" (click)="openedit(table)" ><i
+                            class="mdi mdi-pencil font-size-18"></i></a>
+                          <a href="javascript:void(0);" class="text-danger" placement="top" (click)="deleteabsence(table.id,table)" ngbTooltip="Supprimer" ><i
+                              class="mdi mdi-trash-can font-size-18"></i></a>
+                        
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- End table -->
+            <div class="row justify-content-md-between align-items-md-center mt-2">
+              <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info mb-2" id="tickets-table_info" role="status" aria-live="polite">Afficher
+                  {{service.startIndex}} à
+                  {{service.endIndex}} sur {{service.totalRecords}}
+                  entrées
+                </div>
+              </div>
+              <!-- Pagination -->
+              <div class="col-sm-12 col-md-5">
+                <div class="text-md-right float-md-right pagination-rounded">
+                  <ngb-pagination [collectionSize]="total$ | async" [(page)]="service.page" [pageSize]="service.pageSize">
+                  </ngb-pagination>
+                </div>
+              </div>
+              <!-- End Pagination -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+
+
+
+
+
+
+
+
+        </ng-template>
+
+<ng-template #modification>
+    <br/>
+  <div class="card">
+    <div class="card-body">
+<form class="needs-validation" [formGroup]="validationeditform" (ngSubmit)="saveupdate()" >
+ 
+    <div class="row">
+      
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Matricule de l'employé:*</label>
+          <input type="text" class="form-control" id="matricule_employe" disabled
+            placeholder="" formControlName="matricule_employe"  >
+          
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Nom et prenom de l'employé :</label>
+          <input type="text" class="form-control" id="nom" placeholder=""  formControlName="nom" disabled >
+          
+      </div>
+      </div>
+     
+
+      <div class="col-md-3">
+        <div class="form-group">
+                <label>Motif d'absence:*</label>
+              <select class="custom-select" formControlName="motif" [ngClass]="{'is-invalid': submitted && form.motif.errors}" formControlName="motif">  
+                <option *ngFor="let motif of Motifs" [value]="motif.designation" selected>{{motif.designation}}</option>
+                
+               
+              </select>
+              <div *ngIf="submitted && form.motif.errors" class="invalid-feedback">
+                <span *ngIf="submitted && form.motif.errors.required" >Ce champs est obligatoire!</span>
+              </div>
+        </div>
+      </div>
+     
+    
+     
+  
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <label for="example-date-input"></label>
+          <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="invalidCheck" formControlName="abattable">
+            <label class="custom-control-label" for="invalidCheck"> Abattable</label>
+            
+          </div>
+        </div>
+      </div>
+   
+    
+
+      <div class="col-md-3">
+        <div class="form-group">
+
+          <label for="example-date-input">Date début:*</label>
+          <input class="form-control" type="date" value="07-04-2021" id="date" formControlName="date_debut" [ngClass]="{'is-invalid': submitted && form.date_debut.errors}" (change)="calcule_date_fin()">
+          <div *ngIf="submitted && form.date_debut.errors" class="invalid-feedback">
+            <span *ngIf="submitted && form.date_debut.errors.required" >Ce champs est obligatoire!</span>
+          
+          </div>
+         </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="form-group">
+
+          <label for="example-date-input">Date fin:*</label>
+          <input class="form-control" type="date" value="" id="date" formControlName="date_fin" [ngClass]="{'is-invalid': submitted && form.date_fin.errors}" (change)="calcule_nombre_jours()">
+          <div *ngIf="submitted && form.date_fin.errors" class="invalid-feedback">
+            <span *ngIf="submitted && form.date_fin.errors.required" >Ce champs est obligatoire!</span>
+          
+          </div>
+         </div>
+      </div>
+    
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Nombre de jours :</label>
+          <input type="text" class="form-control" id="nbr_jrs" [ngClass]="{'is-invalid': submitted && form.nbr_jrs.errors}"
+            placeholder=""  formControlName="nbr_jrs" disabled>   
+       </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Mois :</label>
+          <input type="text" class="form-control" id="mois" 
+            placeholder=""  formControlName="mois" disabled>
+            
+       </div>
+      </div>
+      
+
+
+                      
+                      
+    </div>  
+    <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1"  (click)="Annuler()">Annuler</button>
+     </div>
+    
+       </div>
+  </form>
+  </div>
+    </div>
+
+
+
+    </ng-template>
+
+
+
+  
+
+

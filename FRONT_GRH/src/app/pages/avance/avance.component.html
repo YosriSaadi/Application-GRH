@@ -1,0 +1,401 @@
+<app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+
+<div class="col-lg-20">
+  <div class="card">
+    <div class="card-body">
+      <ul ngbNav #customNav="ngbNav" [(activeId)]="this.active" class="nav-tabs nav-tabs-custom nav-justified">
+        <li [ngbNavItem]="1">
+          <a ngbNavLink>
+            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+            <span class="d-none d-sm-block">Saisie d'avances</span>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-template [ngTemplateOutlet]="saisie"></ng-template>
+          </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+          <a ngbNavLink>
+            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+            <span class="d-none d-sm-block">Consultation des avances</span>
+          </a>
+          <ng-template ngbNavContent>
+            <ng-template [ngTemplateOutlet]="consultation"></ng-template>
+          </ng-template>
+        </li>
+   
+       
+      </ul>
+      <div [ngbNavOutlet]="customNav"></div>
+    </div>
+  </div>
+</div>
+
+<ng-template #saisie>
+  <br/>
+  <div class="card">
+    <div class="card-body">
+<form class="needs-validation" [formGroup]="validationform" (ngSubmit)="saveData()">
+ 
+    <div class="row">
+      
+      <div class="col-md-3">
+        <label for="validationCustom0">Nom & Prénom de l'employé :*</label>
+                  <select class="custom-select" id="nom" formControlName="nom" (change)="search_employe()"  [ngClass]="{'is-invalid': submitted && form.nom.errors}">  
+                    <option *ngFor="let item of this.liste_employes let i= index" [value]="item.matricule"  >{{item.nom}} {{item.prenom}}</option>
+                  </select>
+                  <div *ngIf="submitted && form.nom.errors" class="invalid-feedback">
+                    <span *ngIf="form.nom.errors.required">Cette valeur est obligatoire.</span>  
+                  </div>
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Matricule :</label>
+          <input type="text" class="form-control" id="matricule_employe" placeholder=""  formControlName="matricule_employe" disabled>
+        
+      </div>
+      </div>
+      <div class="col-md-2">
+       
+        <div class="form-group">
+          <label for="validationCustom01">Salaire de base :</label>
+          <div class="input-group-prepend">
+          <input type="text" class="form-control" id="salaire_base" 
+            placeholder="" disabled formControlName="salaire_base" >
+            <span class="input-group-text">DT</span></div>     
+      </div>
+      </div>
+      <div class="col-md-2">
+        <div class="form-group">
+
+          <label for="example-date-input">Date :*</label>
+          <input class="form-control" type="date" value="07-04-2021" id="date" formControlName="date" [ngClass]="{'is-invalid': submitted && form.date.errors}">
+          <div *ngIf="submitted && form.date.errors" class="invalid-feedback">
+            <span *ngIf="submitted && form.date.errors.required" >Ce champs est obligatoire!</span>
+          
+          </div>
+         </div>
+      </div>
+
+      <div class="col-md-2">
+        <div class="form-group">
+          
+                <label>Mois d'imputation:*</label>
+    
+              <select class="custom-select" formControlName="mois_imputation" [ngClass]="{'is-invalid': submitted && form.mois_imputation.errors}">  
+                <option *ngFor="let item of mois; let i= index" [value]="item.ordre" selected >{{item.designation}}</option>
+              </select>
+              <div *ngIf="submitted && form.mois_imputation.errors" class="invalid-feedback">
+                <span *ngIf="submitted && form.mois_imputation.errors.required" >Ce champs est obligatoire!</span>
+              </div>
+        </div>
+      </div>
+     
+    
+     
+  
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Montant :*</label>
+          <div class="input-group-prepend" [ngClass]="{'is-invalid': submitted && form.montant.errors}">
+          <input type="text" class="form-control" id="montant" 
+          placeholder="Saisissez le montant"  formControlName="montant" [ngClass]="{'is-invalid': submitted && form.montant.errors}">
+            <span class="input-group-text">DT</span>
+          </div>    
+            <div *ngIf="form.montant.errors" class="invalid-feedback">
+              <span *ngIf="form.montant.errors.required" >Ce champs est obligatoire!</span>
+              <span *ngIf="form.montant.errors.pattern">Montant incorrect!</span>
+            </div> 
+          </div>
+    
+      </div>
+      <div class="col-md-3">
+        <div class="form-group">
+          <label for="validationCustom01">Type Avance :*</label>
+          <select class="custom-select" formControlName="type" [ngClass]="{'is-invalid': submitted && form.type.errors}">  
+            <option value="Avance mi-mois" selected>Avance mi-mois</option>
+            <option value="Retenue sur le net">Retenue sur le net</option>
+            <option value="Avance médicamen">Avance médicament </option>
+          </select>
+          <div *ngIf="submitted && form.type.errors" class="invalid-feedback">
+            <span *ngIf="submitted && form.type.errors.required" >Ce champs est obligatoire!</span>
+          </div>
+  
+       </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="validationCustom01">Observation: </label>
+          <input type="text" class="form-control" id="observation" 
+            placeholder="Saisissez l'observation" formControlName="observation" >
+      </div>
+      </div>
+     
+      
+
+
+                      
+                      
+    </div>  
+    <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Ajouter</button>
+    <button type="button" class="btn btn-warning ml-1"  (click)="resetformadd()">Annuler</button>
+     </div>
+    
+       </div>
+  </form>
+  </div>
+    </div>
+</ng-template>
+<ng-template #consultation>
+  <br/>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card bg-transparent border-success">
+          <div class="card-body bg-transparent border-success">
+  
+            <div class="row mb-md-2">
+              <div class="container justify-content-center">
+                <div class="row">
+                  
+                </div>
+            </div>
+              <div class="col-sm-12 col-md-6">
+                <div class="dataTables_length" id="tickets-table_length"><label
+                    class="d-inline-flex align-items-center">Afficher
+                    <select name="tickets-table_length" aria-controls="tickets-table" name="pageSize"
+                      [(ngModel)]="service.pageSize"
+                      class="custom-select custom-select-sm form-control form-control-sm mx-2">
+                      <option [ngValue]="10">10</option>
+                      <option [ngValue]="25">25</option>
+                      <option [ngValue]="50">50</option>
+                      <option [ngValue]="100">100</option>
+                    </select> entrées</label></div>
+              </div>
+              <!-- Search -->
+              <div class="col-sm-12 col-md-6">
+                <div id="tickets-table_filter" class="dataTables_filter text-md-right"><label
+                    class="d-inline-flex align-items-center">Rechercher:
+                    <input type="text" name="searchTerm" placeholder="rechercher..." class="form-control form-control-sm ml-2"
+                      aria-controls="tickets-table" [(ngModel)]="service.searchTerm"></label></div>
+              </div>
+              <!-- End search -->
+            </div>
+            <!-- Table -->
+            <div class="table-responsive">
+              <table id="basic-datatable"
+              class="table table-bordered dt-responsive nowrap datatables no-footer dtr-inline">
+                <thead class="thead-light">
+                  <tr>
+                    <th sortable="matricule_employe" (sort)="onSort($event)">Matricule </th>
+                    <th sortable="nom" (sort)="onSort($event)">Nom & prénom </th>
+                    <th sortable="salaire_base" (sort)="onSort($event)">salaire de base</th>
+                    <th sortable="date" (sort)="onSort($event)">Date</th>
+                    <th sortable="mois_imputation" (sort)="onSort($event)">Mois d'imputation</th>
+                    <th sortable="montant" (sort)="onSort($event)">Montant</th>
+                    <th sortable="etat_solde" (sort)="onSort($event)">Soldée</th>
+                    <th sortable="type" (sort)="onSort($event)">Type</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+  
+                  <tr *ngFor="let table of tables$ | async">
+                    <td>
+                      <a class="text-dark font-weight-bold">
+                        <ngb-highlight [result]="table.matricule_employe" [term]="service.searchTerm"></ngb-highlight>
+                      </a>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.nom" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.salaire_base+' DT'"  [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.date" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.mois_imputation" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.montant+' DT'" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <div class="badge font-size-12" [ngClass]="{'badge-soft-danger': table.etat_solde === 'non',
+                      'badge-soft-success':table.etat_solde === 'oui'}">
+                        <ngb-highlight [result]="table.etat_solde" [term]="service.searchTerm"></ngb-highlight>
+                      </div>
+                    </td>
+                    <td>
+                      <ngb-highlight [result]="table.type" [term]="service.searchTerm"></ngb-highlight>
+                    </td>
+                    <td>
+                      <div ngbDropdown placement="bottom-left">
+                        
+                         <!-- <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Ajouter avance pour cet employé"(click)="opensave(table)"  ><i
+                            class="mdi mdi-bookmark-plus-outline font-size-18" ></i></a>-->
+                          <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Modifier" (click)="openedit(contentedit,table)" ><i
+                            class="mdi mdi-pencil font-size-18"></i></a>
+                          <a href="javascript:void(0);" class="text-danger" placement="top" (click)="deleteavance(table.id,table.mois_imputation)" ngbTooltip="Supprimer" ><i
+                              class="mdi mdi-trash-can font-size-18"></i></a>
+                        
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- End table -->
+            <div class="row justify-content-md-between align-items-md-center mt-2">
+              <div class="col-sm-12 col-md-5">
+                <div class="dataTables_info mb-2" id="tickets-table_info" role="status" aria-live="polite">Afficher
+                  {{service.startIndex}} à
+                  {{service.endIndex}} sur {{service.totalRecords}}
+                  entrées
+                </div>
+              </div>
+              <!-- Pagination -->
+              <div class="col-sm-12 col-md-5">
+                <div class="text-md-right float-md-right pagination-rounded">
+                  <ngb-pagination [collectionSize]="total$ | async" [(page)]="service.page" [pageSize]="service.pageSize">
+                  </ngb-pagination>
+                </div>
+              </div>
+              <!-- End Pagination -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+
+
+
+</ng-template>
+
+<ng-template #contentedit role="document" let-modal="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Modifier avance pour cet employé :</h5>
+    <button type="button" class="close" aria-label="Close" (click)="modal('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body ">
+ 
+    <form class="needs-validation" [formGroup]="validationeditform" (ngSubmit)="editavance()" >
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group position-relative">
+            <label for="validationTooltip01">Matricule :</label>
+            <input type="text" class="form-control" id="matricule_employe"
+              placeholder="" disabled formControlName="matricule_employe">
+             
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <div class="form-group position-relative">
+            <label for="validationTooltip02">Nom & Prénom  :</label>
+            <input type="text" class="form-control" id="nom" 
+              placeholder="" disabled formControlName="nom">
+             
+              
+          </div>
+        </div>
+
+        
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+                  
+        <div class="form-group">
+          <label for="validationCustom01">Salaire de base :</label>
+          <input type="text" class="form-control" id="salaire_base" 
+            placeholder="" disabled formControlName="salaire_base" >
+      </div>
+          
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label for="example-date-input">Date :*</label>
+          <input class="form-control" type="date" value="07-04-2021" id="date" formControlName="date" >
+         
+
+        </div>
+
+
+     
+        
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <label for="validationCustom01">Montant :*</label>
+          <input type="text" class="form-control" id="montant" 
+            placeholder=""  formControlName="montant">
+           
+        </div>
+
+        <div class="col-md-6">
+          <label for="validationCustom01">Type Avance :</label>
+          <select class="custom-select" id="type" formControlName="type">  
+            <option value="Avance médicament" >Avance médicament</option>
+            <option value="Avance mi-mois" selected>Avance myi-mois</option>
+            <option value="Retenue sur le net">Retenue sur le net</option>
+          </select>
+        </div>      
+      </div>
+
+
+     
+
+
+      <div class="row">
+        <div class="col-md-6">
+          <label>Mois :*</label>
+              
+          <select class="custom-select" id="mois_imputation" formControlName="mois_imputation">  
+            <option *ngFor="let item of mois; let i= index" [value]="item.ordre" selected >{{item.designation}}</option>
+          </select>
+        </div>
+
+        
+        <div class="col-md-6">
+          <div class="form-group">
+          <label for="validationCustom01">Soldé :</label>
+          <input type="text" class="form-control" id="etat_solde" disabled
+          placeholder=""  formControlName="etat_solde">
+        
+          </div>
+        </div>
+      </div>
+
+     
+      
+   
+    
+
+      <div class="text-right">
+        <button type="submit" class="btn btn-success">Modifier</button>
+        <button type="button" class="btn btn-danger ml-1"  (click)="modal('close click')">Annuler</button>
+      </div>
+    </form>
+  
+</div>
+
+</ng-template>
+
+
+
+
+
+
+
+

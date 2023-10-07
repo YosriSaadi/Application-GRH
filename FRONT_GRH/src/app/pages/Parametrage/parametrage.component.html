@@ -1,0 +1,1631 @@
+ 
+        <div class="container-fluid">
+            <app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+            <div class="row">
+              <div class="col-lg-12">
+                <div class="card">
+                  <div class="card-body">
+                    <div>
+                      <h4 class="card-title">Paramétrages</h4>
+                      <ul ngbNav #customNav="ngbNav" [activeId]="1" class="nav-tabs nav-tabs-custom nav-justified">
+                        <li [ngbNavItem]="1">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                            <span class="d-none d-sm-block">Organigramme</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="org"></ng-template>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="2">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                            <span class="d-none d-sm-block">Général</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template  [ngTemplateOutlet]="gen"></ng-template>
+                          </ng-template>
+                        </li>
+                        <li [ngbNavItem]="3">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                            <span class="d-none d-sm-block">Employé</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="emp"></ng-template>
+                          </ng-template>
+                        </li>
+                     <!--   <li [ngbNavItem]="4">
+                          <a ngbNavLink>
+                            <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                            <span class="d-none d-sm-block">Candidat</span>
+                          </a>
+                          <ng-template ngbNavContent>
+                            <ng-template [ngTemplateOutlet]="can"></ng-template>
+                          </ng-template>
+                        </li>-->
+                      </ul>
+                      <div [ngbNavOutlet]="customNav"></div>
+                    </div>
+                  </div>
+                  </div>
+              </div>
+            </div>
+   
+    
+               <ng-template #org>
+                <div class="card">
+                  <div class="card-body">
+               <!--<h4 class="card-title">Paramétrage</h4>
+                    <p class="card-title-desc">Organigramme</p>-->
+                    <div class="row">
+                      <div class="col-md-3">
+                        <ul ngbNav #verticalNav="ngbNav"  (click)="change_submmit()"  [activeId]="1" class="nav-pills flex-column">
+                         
+                          <li [ngbNavItem]="1">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                              <span class="d-none d-sm-block">Département</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                               
+            <div class="row">  
+              <fieldset>
+                <legend>Saisie</legend>
+              <form class="needs-validation"  (ngSubmit)="Ajouter()" [formGroup]="deparform">
+                <!--{{deparform.value | json}}-->
+                <div class="row">
+                <div class="col-md-3">
+                <div class="form-group">
+                <label for="validationCustom02">Code</label>
+                <input type="text" class="form-control" id="validationCustom02" formControlName="id"
+                placeholder="Exemple:  3" [ngClass]="{'is-invalid': submit && form.id.errors}">
+                <div *ngIf="submit && form.id.errors" class="invalid-feedback">
+                <span *ngIf="form.id.errors.required">Cette valeur est obligatoire.</span>      
+                <span *ngIf="form.id.errors.pattern">Cette valeur est invalide.</span>          
+                </div>  
+                </div>
+                </div>
+                  <div class="col-md-6">
+                <div class="form-group">
+                <label for="validationCustom03">Désignation</label>
+                <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                placeholder="Exemple: Informatique" [ngClass]="{'is-invalid': submit && form.designation.errors}">
+                <div *ngIf="submit && form.designation.errors" class="invalid-feedback">
+                <span *ngIf="form.designation.errors.required">Cette valeur est obligatoire.</span>  
+                <span *ngIf="form.designation.errors.pattern">Cette valeur est invalide.</span>                 
+                </div>  
+                </div>
+              </div>
+          
+              <div class="form-group mb-0">  
+                <label  or="validationCustom03"> </label>      
+                <label  or="validationCustom03"> </label>   
+                <label  or="validationCustom03"> </label>    
+              
+                <div class="text-md-right">
+              <div class="text-md-center">
+                <button type="submit" class="btn btn-success">Ajouter</button>
+              </div>
+            </div>
+          </div>
+              <!-- <button type="submit" class="btn btn-outline-primary">Ajouter</button> -->
+              </div>
+             
+                </form>     
+              </fieldset>  
+              <div class="table-responsive">
+                <!-- <div class=".table-striped"> -->
+                <table   class="table table-bordered mb-1">
+                  <thead class="thead-light">
+                    <tr>
+                          <th>Code</th>
+                          <th>Désignation</th>
+                          <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of depdata">
+                      <td>{{item.id}}</td>
+                      <td>{{item.designation}}</td>
+                      <td>
+                        <a href="javascript:void(0);" class="mr-3 text-primary" ngbTooltip="Modifier" (click)="openModif(modifierdepar,item)"><i
+                            class="mdi mdi-pencil font-size-20"></i></a>
+                        <a href="javascript:void(0);" class="text-danger" ngbTooltip="Supprimer" (click)="deletedepar(item.id)"><i
+                            class="mdi mdi-trash-can font-size-20"></i></a>
+                          </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            
+                            </ng-template>
+                          </li>
+                          <li [ngbNavItem]="2">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                              <span class="d-none d-sm-block">Service</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                              <div class="row">
+                                <form class="needs-validation"  (ngSubmit)="Ajouters()" [formGroup]="servform">
+                                 <!--   {{deparform.value | json}}-->
+                                 <div class="card">
+                                  <div class="card-body">
+                                    <h4 class="card-title">Saisie</h4>
+                                  <div class="row">
+                                  <div class="col-md-3">
+                                  <div class="form-group">
+                                  <label for="validationCustom02">Code</label>
+                                  <input type="text" class="form-control" id="validationCustom02" formControlName="id"
+                                  placeholder="Exemple:  S1" [ngClass]="{'is-invalid': submit && forms.id.errors}">
+                                  <div *ngIf="submit && forms.id.errors" class="invalid-feedback">
+                                  <span *ngIf="forms.id.errors.required">Cette valeur est obligatoire.</span>      
+                                  <span *ngIf="forms.id.errors.pattern">Cette valeur est invalide.</span>             
+                                  </div>  
+                                  </div>
+                                  </div>
+                                
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="validationCustom05">Département</label>
+                                    <ng-select [items]="dep"  bindValue="id" bindLabel="designation" id="validationCustom05" name="departement" 
+                                    formControlName="departement" 
+                                    [ngClass]="{'is-invalid': submit && forms.departement.errors}"></ng-select>
+                                    <div *ngIf="submit && forms.departement.errors" class="invalid-feedback">
+                                      <span *ngIf="forms.departement.errors.required">Cette valeur est obligatoire.</span>  
+                                    </div>
+                                  
+                                     </div>  
+                                    </div>
+                                
+                                    <div class="col-md-6">
+                                  <div class="form-group">
+                                  <label for="validationCustom03">Désignation</label>
+                                  <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                                  placeholder="Exemple: MAINTENANCE" [ngClass]="{'is-invalid': submit && forms.designation.errors}">
+                                  <div *ngIf="submit && forms.designation.errors" class="invalid-feedback">
+                                  <span *ngIf="forms.designation.errors.required">Cette valeur est obligatoire.</span>    
+                                  <span *ngIf="forms.designation.errors.pattern">Cette valeur est invalide.</span>             
+                                  </div>  
+                                  </div>
+                                  </div>
+                                  <div class="col-md-9">
+                                    </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group mb-0">  
+                                      <label  or="validationCustom03"> </label>      
+                                      <label  or="validationCustom03"> </label>   
+                                      <label  or="validationCustom03"> </label>    
+                                    
+                                      <div class="text-md-right">
+                                    <div class="text-md-center">
+                                      <button type="submit" class="btn btn-success">Ajouter</button>
+                                    </div>
+                                    </div>
+                             
+                                  </div>
+                                  </div>
+                             
+                                  </div>
+                                  </div>
+                                  </div>
+                                  </form>
+                      
+                                <div class="table-responsive">
+                                  <!-- <div class=".table-striped"> -->
+                                  <table class="table table-bordered mb-1">
+                                    <thead class="thead-light">
+                                      <tr>
+                                            <th>Code</th>
+                                            <th>Département</th>
+                                            <th>Désignation</th>
+                                            <th>Actions</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let item of serdata">
+                                        <td>{{item.id}}</td>
+                                        <td>{{item.departement}}</td>
+                                        <td>{{item.designation}}</td>
+                                   
+                              
+                              
+                              <td>
+                                          <a href="javascript:void(0);" class="mr-3 text-primary" ngbTooltip="Modifier" (click)="openModifs(modifierservice,item)"><i
+                                              class="mdi mdi-pencil font-size-18"></i></a>
+                                          <a  href="javascript:void(0);" class="text-danger" ngbTooltip="Supprimer" (click)="deleteserv(item.id)"><i
+                                              class="mdi mdi-trash-can font-size-18"></i></a>
+                                            </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                             
+                            </ng-template>
+                          </li>
+                          <li [ngbNavItem]="3">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                              <span class="d-none d-sm-block">Section</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                              <div class="row">
+                                <form class="needs-validation"  (ngSubmit)="Ajoutersc()" [formGroup]="sectform">
+                                   <!-- {{deparform.value | json}}-->
+
+                                   <div class="card">
+                                    <div class="card-body">
+                                      <h4 class="card-title">Saisie</h4>
+                                  <div class="row">
+                                  <div class="col-md-3">
+                                  <div class="form-group">
+                                  <label for="validationCustom02">Code</label>
+                                  <input type="text" class="form-control" bindValue="designation" bindLabel="designation" id="validationCustom02" formControlName="id"
+                                  placeholder="Exemple:  SS1" [ngClass]="{'is-invalid': submit && formsc.id.errors}">
+                                  <div *ngIf="submit && formsc.id.errors" class="invalid-feedback">
+                                  <span *ngIf="formsc.id.errors.required">Cette valeur est obligatoire.</span>        
+                                  <span *ngIf="formsc.id.errors.pattern">Cette valeur est invalide.</span>          
+                                  </div>  
+                                  </div>
+                                  </div>
+                                
+                                  <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="validationCustom05">Service</label>
+                                    <ng-select [items]="ser" bindValue="id" bindLabel="designation" id="validationCustom05" name="serv" [ngClass]="{'is-invalid': submit && formsc.service.errors}"
+                                    formControlName="service" 
+                                    [ngClass]="{'is-invalid': submit && formsc.service.errors}"></ng-select>
+                                    <div *ngIf="submit && formsc.service.errors" class="invalid-feedback">
+                                      <span *ngIf="formsc.service.errors.required">Cette valeur est obligatoire.</span>  
+                                    </div>
+                                  
+                                     </div>  
+                                    </div>
+                                
+                                    <div class="col-md-6">
+                                  <div class="form-group">
+                                  <label for="validationCustom03">Désignation</label>
+                                  <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                                  placeholder="Exemple: STE SERVICE" [ngClass]="{'is-invalid': submit && formsc.designation.errors}">
+                                  <div *ngIf="submit && formsc.designation.errors" class="invalid-feedback">
+                                  <span *ngIf="formsc.designation.errors.required">Cette valeur est obligatoire.</span>  
+                                  <span *ngIf="formsc.designation.errors.pattern">Cette valeur est invalide.</span>                
+                                  </div>  
+                                  </div>
+                                  </div>
+                                  <div class="col-md-9">
+                                    </div>
+                                    <div class="col-md-3">
+                                    <div class="form-group mb-0">  
+                                      <label  or="validationCustom03"> </label>      
+                                      <label  or="validationCustom03"> </label>   
+                                      <label  or="validationCustom03"> </label>    
+                                    
+                                      <div class="text-md-right">
+                                    <div class="text-md-center">
+                                      <button type="submit" class="btn btn-success">Ajouter</button>
+                                    </div>
+                                    </div>
+                             
+                                  </div>
+                                  </div>
+                                  </div>
+                                  </div>
+                                  </div>
+                                  </form>
+                      
+                                <div class="table-responsive">
+                                  <!-- <div class=".table-striped"> -->
+                                  <table class="table table-bordered mb-1">
+                                    <thead class="thead-light">
+                                      <tr>
+                                            <th>Code</th>
+                                            <th>Service</th>
+                                            <th>Désignation</th>
+                                            <th>Actions</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let item of secdata">
+                                        <td>{{item.id}}</td>
+                                        <td>{{item.service}}</td>
+                                        <td>{{item.designation}}</td>
+                                   
+                              
+                              
+                                        <td>
+                                          <a href="javascript:void(0);" class="mr-3 text-primary" ngbTooltip="Modifier"  (click)="openModifsc(modifiersection,item)"><i
+                                              class="mdi mdi-pencil font-size-18"></i></a>
+                                          <a href="javascript:void(0);" class="text-danger" ngbTooltip="Supprimer" (click)="deletesect(item.id)"><i
+                                              class="mdi mdi-trash-can font-size-18"></i></a>
+                                              </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            
+                            </ng-template>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-md-9">
+                        <div [ngbNavOutlet]="verticalNav"></div>
+                      </div>
+                    </div>
+                </div>
+                </div>
+               </ng-template>
+               <ng-template #gen>
+
+
+                <div class="card">
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-3">
+                        <ul ngbNav #verticalNav="ngbNav" [activeId]="1" class="nav-pills flex-column">
+                         
+                          <li [ngbNavItem]="1">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                              <span class="d-none d-sm-block">Primes et Indemnités</span>
+                            </a>
+                            <ng-template ngbNavContent>
+              
+                              <div class="row">  
+                                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Saisie</h4>
+
+
+
+              
+              <form class="needs-validation"  (ngSubmit)="Ajouterp()" [formGroup]="primeform">
+             
+                <div class="row">
+                <div class="col-md-3">
+                <div class="form-group">
+                <label for="validationCustom02">Code</label>
+                <input type="text" class="form-control" id="validationCustom02" formControlName="code"
+                placeholder="Exemple:  3" [ngClass]="{'is-invalid': submit && formp.code.errors}">
+                <div *ngIf="submit && formp.code.errors" class="invalid-feedback">
+                <span *ngIf="formp.code.errors.required">Cette valeur est obligatoire.</span> 
+                <span *ngIf="formp.code.errors.pattern">Cette valeur est invalide.</span>                 
+                </div>  
+                </div>
+                </div>
+                  <div class="col-md-6">
+                <div class="form-group">
+                <label for="validationCustom03">Désignation</label>
+                <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                placeholder="Exemple: PRIME COMPLEMENTAIRE" [ngClass]="{'is-invalid': submit && formp.designation.errors}">
+                <div *ngIf="submit && formp.designation.errors" class="invalid-feedback">
+                <span *ngIf="formp.designation.errors.required">Cette valeur est obligatoire.</span>    
+                <span *ngIf="formp.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+                </div>
+              </div> 
+              <div class="col-md-3">
+                </div>
+           
+              <div class="col-md-4">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input" id="proportionnelle"  name="proportionnelle" formControlName="proportionnelle" >
+                    <label class="custom-control-label" for="proportionnelle">Proportionnelle</label>
+                  </div>
+              </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-group">
+                  <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input" id="toutourien"  name="toutourien" formControlName="toutourien" >
+                    <label class="custom-control-label" for="toutourien">Tout Ou Rien</label>
+                  </div>
+              </div>
+              </div>
+            
+              <div class="text-md-center">
+                <button type="submit" class="btn btn-success">Ajouter</button>
+              </div>
+              <!-- <button type="submit" class="btn btn-outline-primary">Ajouter</button> -->
+              </div>
+             
+                </form>   
+              </div></div>  
+            </div>
+            
+              <div class="row">
+              <div class="table-responsive">
+                <!-- <div class=".table-striped"> -->
+                <table class="table table-bordered mb-1">
+                  <thead class="thead-light">
+                    <tr>
+                          <th>Code</th>
+                          <th>Désignation</th>
+                          <th>Proprotionnelle</th>
+                          <th>Tout ou Rien</th>
+                          <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of primedata">
+                      <td>{{item.code}}</td>
+                      <td>{{item.designation}}</td>
+                      <td>{{item.proportionnelle}}</td>
+                      <td>{{item.toutourien}}</td>
+                      <td>
+                        <a class="mr-3 text-primary" href="javascript:void(0);" ngbTooltip="Modifier" (click)="openModifp(modifierprime,item)"><i
+                            class="mdi mdi-pencil font-size-18"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" ngbTooltip="Supprimer" (click)="deleteprime(item.code)"><i
+                            class="mdi mdi-trash-can font-size-18"></i></a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div></div>
+          
+      
+                            </ng-template>
+                          </li>
+                       
+                          <li [ngbNavItem]="2">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                              <span class="d-none d-sm-block">Renetus</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                              <div class="row">  
+                                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Saisie</h4>
+
+
+
+              
+              <form class="needs-validation"  (ngSubmit)="Ajouterr()" [formGroup]="retenuform">
+             
+                <div class="row">
+                <div class="col-md-3">
+                <div class="form-group">
+                <label for="validationCustom02">Code</label>
+                <input type="text" class="form-control" id="validationCustom02" formControlName="code"
+                placeholder="" [ngClass]="{'is-invalid': submit && formr.code.errors}">
+                <div *ngIf="submit && formr.code.errors" class="invalid-feedback">
+                <span *ngIf="formr.code.errors.required">Cette valeur est obligatoire.</span> 
+                <span *ngIf="formr.code.errors.pattern">Cette valeur est invalide.</span>                 
+                </div>  
+                </div>
+                </div>
+                  <div class="col-md-6">
+                <div class="form-group">
+                <label for="validationCustom03">Désignation</label>
+                <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                placeholder="" [ngClass]="{'is-invalid': submit && formr.designation.errors}">
+                <div *ngIf="submit && formr.designation.errors" class="invalid-feedback">
+                <span *ngIf="formr.designation.errors.required">Cette valeur est obligatoire.</span>    
+                <span *ngIf="formr.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+                </div>
+              </div> 
+              <div class="col-md-8">
+                </div>
+           
+             
+            
+              <div class="text-md-center">
+                <button type="submit" class="btn btn-success">Ajouter</button>
+              </div>
+              <!-- <button type="submit" class="btn btn-outline-primary">Ajouter</button> -->
+              </div>
+             
+                </form>   
+              </div></div>  
+            </div>
+            
+              <div class="row">
+              <div class="table-responsive">
+                <!-- <div class=".table-striped"> -->
+                <table class="table table-bordered mb-1">
+                  <thead class="thead-light">
+                    <tr>
+                          <th>Code</th>
+                          <th>Désignation</th>
+                          <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of retdata">
+                      <td>{{item.code}}</td>
+                      <td>{{item.designation}}</td>
+                      <td>
+                        <a class="mr-3 text-primary" href="javascript:void(0);" ngbTooltip="Modifier" (click)="openModifr(modifiertyperetenue,item)"><i
+                            class="mdi mdi-pencil font-size-18"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" ngbTooltip="Supprimer" (click)="deleteret(item.code)"><i
+                            class="mdi mdi-trash-can font-size-18"></i></a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div></div>
+          
+                            
+                            </ng-template>
+                          </li>
+                          <li [ngbNavItem]="3">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                              <span class="d-none d-sm-block">Congés</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                              <div class="row">
+                                <form class="needs-validation"   [formGroup]="congesform">
+                             
+                                  <div class="row">
+                                    <div class="col-md-3">
+                                    <div class="form-group">
+                                    <label for="validationCustom02">Code</label>
+                                    <input type="text" class="form-control" id="validationCustom02" formControlName="code"
+                                    placeholder="Exemple:  3" [ngClass]="{'is-invalid': submit && formc.code.errors}">
+                                    <div *ngIf="submit && formc.code.errors" class="invalid-feedback">
+                                    <span *ngIf="formc.code.errors.required">Cette valeur est obligatoire.</span> 
+                                    <span *ngIf="formc.code.errors.pattern">Cette valeur est invalide.</span>                 
+                                    </div>  
+                                    </div>
+                                    </div>
+                                      <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label for="validationCustom03">Désignation</label>
+                                    <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                                    placeholder="Exemple: CONGE ANNUEL" [ngClass]="{'is-invalid': submit && formc.designation.errors}">
+                                    <div *ngIf="submit && formc.designation.errors" class="invalid-feedback">
+                                    <span *ngIf="formc.designation.errors.required">Cette valeur est obligatoire.</span>    
+                                    <span *ngIf="formc.designation.errors.pattern">Cette valeur est invalide.</span>                
+                                    </div>  
+                                    </div>
+                                  </div> 
+                                  <div class="col-md-3">
+                                    </div>
+                               
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <div class="custom-control custom-checkbox mb-3">
+                                        <input type="checkbox" class="custom-control-input" id="conge_an"  name="conge_an" formControlName="conge_an" >
+                                        <label class="custom-control-label" for="proportconge_anonnelle">Congé An</label>
+                                      </div>
+                                  </div>
+                                  </div>
+                                  <div class="col-md-4">
+                                    <div class="form-group">
+                                      <div class="custom-control custom-checkbox mb-3">
+                                        <input type="checkbox" class="custom-control-input" id="paye"  name="paye" formControlName="paye" >
+                                        <label class="custom-control-label" for="paye">Payé</label>
+                                      </div>
+                                  </div>
+                                  </div>
+                                
+                                  <div class="text-md-center">
+                                    <button type="submit" class="btn btn-success"(click)="Ajouterc()">Ajouter</button>
+                                  </div>
+                                  <!-- <button type="submit" class="btn btn-outline-primary">Ajouter</button> -->
+                                  </div>
+                                  </form>
+                      
+                                <div class="table-responsive">
+                                  <!-- <div class=".table-striped"> -->
+                                  <table class="table table-centered">
+                                    <thead class="thead-light">
+                                      <tr>
+                                            <th>Code</th>
+                                            <th>Désignation</th>
+                                            <th>Congé</th>
+                                            <th>An</th>
+                                            <th>Actions</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let item of congesdata; let i= index">
+                                        <td>{{item.code}}</td>
+                                        <td>{{item.designation}}</td>
+                                        <td>  <div class="custom-control custom-checkbox">
+                                          <input type="checkbox" class="custom-control-input" :id="conge_an{{i}}" [checked]="item.conge_an"  [disabled]="true" />   
+                                          <label class="custom-control-label" :for="conge_an{{i}}">&nbsp;</label>                       
+                                        </div></td>
+                                        <td>  <div class="custom-control custom-checkbox">
+                                          <input type="checkbox" class="custom-control-input" :id="paye{{i}}" [checked]="item.paye"  [disabled]="true" />   
+                                          <label class="custom-control-label" :for="paye{{i}}">&nbsp;</label>                       
+                                        </div></td>
+                                        <td> <a class="mr-3 text-primary" href="javascript:void(0);" ngbTooltip="Modifier"   (click)="openModifconge(modifierconge,item)"><i
+                                              class="mdi mdi-pencil font-size-20"></i></a>
+                                          <a class="text-danger" href="javascript:void(0);" ngbTooltip="Supprimer" (click)="deletedonges(item.code)"><i
+                                              class="mdi mdi-trash-can font-size-20"></i></a></td> 
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            
+                            </ng-template>
+                          </li>
+                          <li [ngbNavItem]="4">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                              <span class="d-none d-sm-block">Motifs d'Absences</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                              <div class="row">  
+                                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Saisie</h4>
+
+
+
+              
+              <form class="needs-validation"  (ngSubmit)="Ajoutermo()" [formGroup]="motifform">
+             
+                <div class="row">
+                <div class="col-md-3">
+                <div class="form-group">
+                <label for="validationCustom02">Code</label>
+                <input type="text" class="form-control" id="validationCustom02" formControlName="code"
+                placeholder="" [ngClass]="{'is-invalid': submit && formmo.code.errors}">
+                <div *ngIf="submit && formmo.code.errors" class="invalid-feedback">
+                <span *ngIf="formmo.code.errors.required">Cette valeur est obligatoire.</span> 
+                <span *ngIf="formmo.code.errors.pattern">Cette valeur est invalide.</span>                 
+                </div>  
+                </div>
+                </div>
+                  <div class="col-md-6">
+                <div class="form-group">
+                <label for="validationCustom03">Désignation</label>
+                <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                placeholder="" [ngClass]="{'is-invalid': submit && formmo.designation.errors}">
+                <div *ngIf="submit && formmo.designation.errors" class="invalid-feedback">
+                <span *ngIf="formmo.designation.errors.required">Cette valeur est obligatoire.</span>    
+                <span *ngIf="formmo.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+                </div>
+              </div> 
+              <div class="col-md-8">
+                </div>
+           
+             
+            
+              <div class="text-md-center">
+                <button type="submit" class="btn btn-success">Ajouter</button>
+              </div>
+              <!-- <button type="submit" class="btn btn-outline-primary">Ajouter</button> -->
+              </div>
+             
+                </form>   
+              </div></div>  
+            </div>
+            
+              <div class="row">
+              <div class="table-responsive">
+                <!-- <div class=".table-striped"> -->
+                <table class="table table-bordered mb-1">
+                  <thead class="thead-light">
+                    <tr>
+                          <th>Code</th>
+                          <th>Désignation</th>
+                          <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of motifdata">
+                      <td>{{item.code}}</td>
+                      <td>{{item.designation}}</td>
+                      <td>
+                        <a class="mr-3 text-primary" href="javascript:void(0);" ngbTooltip="Modifier" (click)="openModifmotif(modifiermotif,item)"><i
+                            class="mdi mdi-pencil font-size-18"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" ngbTooltip="Supprimer" (click)="deletemotif(item.code)"><i
+                            class="mdi mdi-trash-can font-size-18"></i></a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div></div>
+                            
+                            </ng-template>
+                          </li>
+                          <li [ngbNavItem]="5">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                              <span class="d-none d-sm-block">Libellés des Prêts</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                              <div class="row">  
+                                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Saisie</h4>
+
+
+
+              
+              <form class="needs-validation"  (ngSubmit)="Ajouterlp()" [formGroup]="libelleform">
+             
+                <div class="row">
+                <div class="col-md-3">
+                <div class="form-group">
+                <label for="validationCustom02">Code</label>
+                <input type="text" class="form-control" id="validationCustom02" formControlName="code"
+                placeholder="Exemple:  1" [ngClass]="{'is-invalid': submit && formlp.code.errors}">
+                <div *ngIf="submit && formlp.code.errors" class="invalid-feedback">
+                <span *ngIf="formlp.code.errors.required">Cette valeur est obligatoire.</span> 
+                <span *ngIf="formlp.code.errors.pattern">Cette valeur est invalide.</span>                 
+                </div>  
+                </div>
+                </div>
+                  <div class="col-md-6">
+                <div class="form-group">
+                <label for="validationCustom03">Désignation</label>
+                <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                placeholder="Exemple: PRET CNSS" [ngClass]="{'is-invalid': submit && formlp.designation.errors}">
+                <div *ngIf="submit && formlp.designation.errors" class="invalid-feedback">
+                <span *ngIf="formlp.designation.errors.required">Cette valeur est obligatoire.</span>    
+                <span *ngIf="formlp.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+                </div>
+              </div> 
+              <div class="col-md-10">
+                </div>
+           
+             
+            
+              <div class="text-md-center">
+                <button type="submit" class="btn btn-success">Ajouter</button>
+              </div>
+              <!-- <button type="submit" class="btn btn-outline-primary">Ajouter</button> -->
+              </div>
+             
+                </form>   
+              </div></div>  
+            </div>
+            
+              <div class="row">
+              <div class="table-responsive">
+                <!-- <div class=".table-striped"> -->
+                <table class="table table-bordered mb-1">
+                  <thead class="thead-light">
+                    <tr>
+                          <th>Code</th>
+                          <th>Désignation</th>
+                          <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let item of pretdata">
+                      <td>{{item.code}}</td>
+                      <td>{{item.designation}}</td>
+                      <td>
+                        <a class="mr-3 text-primary" href="javascript:void(0);" ngbTooltip="Modifier" (click)="openModiflp(modifierlibellepret,item)"><i
+                            class="mdi mdi-pencil font-size-20"></i></a>
+                        <a class="text-danger" href="javascript:void(0);" ngbTooltip="Supprimer" (click)="deletelibelle(item.code)"><i
+                            class="mdi mdi-trash-can font-size-20"></i></a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div></div>
+          
+                            
+                            </ng-template>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="col-md-9">
+                        <div [ngbNavOutlet]="verticalNav"></div>
+                      </div>
+                    </div>
+                </div>
+                </div>
+              </ng-template>
+              <ng-template #emp>
+                <div class="card">
+                  <div class="card-body">
+                    <!--<h4 class="card-title">Paramétrage</h4>
+                    <p class="card-title-desc">Employé</p>-->
+                    <div class="row">
+                      <div class="col-md-3">
+                        <ul ngbNav #verticalNav="ngbNav" (click)="change_submmit()" [activeId]="1" class="nav-pills flex-column">
+                         
+                      
+                          <li [ngbNavItem]="1">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                              <span class="d-none d-sm-block">Qualification</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                              <div class="row">
+                                <form class="needs-validation"  (ngSubmit)="Ajouter_qual()"  [formGroup]="qualform">
+                       
+                                  <div class="row">
+                                  <div class="col-md-3">
+                                  <div class="form-group">
+                                  <label for="validationCustom02">Code</label>
+                                  <input type="text" class="form-control" id="validationCustom02" formControlName="code"
+                                  placeholder="Exemple:  3"
+                                  [ngClass]="{'is-invalid': submit && form_qual.code.errors}">
+                                  <div *ngIf="submit && form_qual.code.errors" class="invalid-feedback">
+                                  <span *ngIf="form_qual.code.errors.required">Cette valeur est obligatoire.</span>   
+                                  <span *ngIf="form_qual.code.errors.pattern">Cette valeur est invalide.</span>                
+                                  </div>  
+                                  </div>
+                                  </div>
+                                
+                                  <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                          <label for="validationCustom03">Désignation</label>
+                                          <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                                          placeholder="Exemple: Chef Service" [ngClass]="{'is-invalid': submit && form_qual.designation.errors}">
+                                          <div *ngIf="submit && form_qual.designation.errors" class="invalid-feedback">
+                                          <span *ngIf="form_qual.designation.errors.required">Cette valeur est obligatoire.</span>  
+                                          <span *ngIf="form_qual.designation.errors.pattern">Cette valeur est invalide.</span>  
+                                        
+                                          </div>  
+                                          </div>
+                                     </div>  
+                                    </div>
+                                
+                           
+                                    <div class="col-md-3">
+                                      <div class="form-group mb-0">  
+                                        <label  or="validationCustom03"> </label>      
+                                        <label  or="validationCustom03"> </label>   
+                                        <label  or="validationCustom03"> </label>    
+                                      
+                                        <div class="text-md-right">
+                                      <div class="text-md-center">
+                                        <button type="submit" class="btn btn-success">Ajouter</button>
+                                      </div>
+                                    </div>
+                                    </div>
+                                    </div>
+                                  </div>
+                                  </form>
+                      
+                                <div class="table-responsive">
+                                  <!-- <div class=".table-striped"> -->
+                                  <table class="table table-bordered mb-1">
+                                    <thead class="thead-light">
+                                      <tr>
+                                            <th>Code</th>
+                                            <th>Désignation</th>
+                                 
+                                            <th>Actions</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let item of qual">
+                                        <td>{{item.code}}</td>
+                                        <td>{{item.designation}}</td>
+                                   
+                                   
+                              
+                              
+                              <td>
+                                          <a href="javascript:void(0);" class="mr-3 text-primary" ngbTooltip="Modifier"(click)="openModifq(modifierqualification,item)"><i
+                                              class="mdi mdi-pencil font-size-18"></i></a>
+                                          <a href="javascript:void(0);" class="text-danger"(click)="deletequal(item.code)" ngbTooltip="Supprimer"><i
+                                              class="mdi mdi-trash-can font-size-18"></i></a>
+                                            </td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                             
+                            </ng-template>
+                          </li>
+                          <li [ngbNavItem]="2">
+                            <a ngbNavLink class="mb-2">
+                              <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                              <span class="d-none d-sm-block">Collége</span>
+                            </a>
+                            <ng-template ngbNavContent>
+                              <div class="row">
+                                <form class="needs-validation" (ngSubmit)="Ajoutertc()"  [formGroup]="typecollform">
+                                <!-- {{typecollform.value | json}}-->
+                                  <div class="row">
+                                  <div class="col-md-3">
+                                  <div class="form-group">
+                                  <label for="validationCustom02">Code</label>
+                                  <input type="text" class="form-control" id="validationCustom02" formControlName="code"
+                                  placeholder="Exemple:  1" [ngClass]="{'is-invalid': submit && formtc.code.errors}">
+                                  <div *ngIf="submit && formtc.code.errors" class="invalid-feedback">
+                                  <span *ngIf="formtc.code.errors.required">Cette valeur est obligatoire.</span>    
+                                  <span *ngIf="formtc.code.errors.pattern">Cette valeur est invalide.</span>              
+                                  </div>  
+                                  </div>
+                                  </div>
+                                
+                                 
+                                
+                                    <div class="col-md-6">
+                                  <div class="form-group">
+                                  <label for="validationCustom03">Désignation</label>
+                                  <input type="text" class="form-control" id="validationCustom03" formControlName="designation"
+                                  placeholder="Exemple:  CADRE" [ngClass]="{'is-invalid': submit && formtc.designation.errors}">
+                                  <div *ngIf="submit && formtc.designation.errors" class="invalid-feedback">
+                                  <span *ngIf="formtc.designation.errors.required">Cette valeur est obligatoire.</span>    
+                                  <span *ngIf="formtc.designation.errors.pattern">Cette valeur est invalide.</span>            
+                                  </div>  
+                                  </div>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <div class="form-group mb-0">  
+                                      <label  or="validationCustom03"> </label>      
+                                      <label  or="validationCustom03"> </label>   
+                                      <label  or="validationCustom03"> </label>    
+                                    
+                                      <div class="text-md-right">
+                                    <div class="text-md-center">
+                                      <button type="submit" class="btn btn-success">Ajouter</button>
+                                    </div>
+                                  </div>
+                                  </div>
+                                  </div>
+                                </div>
+                                  </form>
+                      
+                                <div class="table-responsive">
+                                  <!-- <div class=".table-striped"> -->
+                                  <table class="table table-bordered mb-1">
+                                    <thead class="thead-light">
+                                      <tr>
+                                            <th>Code</th>
+                                            <th>Désignation</th>
+                                            <th>Actions</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let item of colldata">
+                                        <td>{{item.code}}</td>
+                                        <td>{{item.designation}}</td>
+                                       <td> <a href="javascript:void(0);" class="mr-3 text-primary" ngbTooltip="Modifier" (click)="openModifcollege(modifiercollege,item)"><i
+                                              class="mdi mdi-pencil font-size-18"></i></a>
+                                          <a href="javascript:void(0);" class="text-danger" ngbTooltip="Supprimer" (click)="deletecoll(item.code)"><i
+                                              class="mdi mdi-trash-can font-size-18"></i></a></td>  
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                            
+                            </ng-template>
+                          </li>
+
+                        </ul>
+                      </div>
+                      <div class="col-md-9">
+                        <div [ngbNavOutlet]="verticalNav"></div>
+                      </div>
+                    </div>
+                </div>
+                </div>
+              </ng-template>
+              <ng-template #can>
+                 
+              </ng-template>
+
+
+
+              
+<ng-template #modifierdepar let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="deparmodform" (ngSubmit)="modifier_dept()">
+    <!--{{Modifierform.value | json}}-->
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :*</label>
+                <input type="text" class="form-control" id="validationCustom0" name="id" formControlName="id" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && form_dept_modif.designation.errors}">
+                  <div *ngIf="submitt && form_dept_modif.designation.errors" class="invalid-feedback">
+                    <span *ngIf="form_dept_modif.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="form_dept_modif.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+ 
+</ng-template>
+
+
+
+<ng-template #modifierservice let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="servmodform" (ngSubmit)="modifiers()">
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :*</label>
+                <input type="text" class="form-control" id="validationCustom0" name="id" formControlName="id" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && formms.designation.errors}">
+                  <div *ngIf="submitt && formms.designation.errors" class="invalid-feedback">
+                    <span *ngIf="formms.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="formms.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="typec">Département :*</label>
+                  <select class="custom-select"    id="departement" name="departement" formControlName="departement" >  
+                    <option *ngFor="let dept of dep" [value]="dept.id" selected>{{dept.designation}}</option>                 
+                  </select>
+           
+            
+               </div>  
+              </div>
+        
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+</ng-template>
+
+<ng-template #modifierqualification let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="qualformm" (ngSubmit)="modifiertqual()">
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :*</label>
+                <input type="text" class="form-control" id="validationCustom0" name="code" formControlName="code" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && formmtq.designation.errors}">
+                  <div *ngIf="submitt && formmtq.designation.errors" class="invalid-feedback">
+                    <span *ngIf="formmtq.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="formmtq.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+         
+        
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+</ng-template>
+
+
+<ng-template #modifiertyperetenue let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="retenumodform" (ngSubmit)="modifierr()">
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :*</label>
+                <input type="text" class="form-control" id="validationCustom0" name="code" formControlName="code" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && formmr.designation.errors}">
+                  <div *ngIf="submitt && formmr.designation.errors" class="invalid-feedback">
+                    <span *ngIf="formmr.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="formmr.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+         
+        
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+</ng-template>
+
+
+
+
+
+<ng-template #modifiermotif let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="motifmodform" (ngSubmit)="modifiermo()">
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :*</label>
+                <input type="text" class="form-control" id="validationCustom0" name="code" formControlName="code" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && formmmo.designation.errors}">
+                  <div *ngIf="submitt && formmmo.designation.errors" class="invalid-feedback">
+                    <span *ngIf="formmmo.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="formmmo.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+         
+        
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+</ng-template>
+
+
+
+
+
+
+<ng-template #modifiercollege let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="typecollmodform" (ngSubmit)="modifier_college()">
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :*</label>
+                <input type="text" class="form-control" id="validationCustom0" name="code" formControlName="code" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && formmtc.designation.errors}">
+                  <div *ngIf="submitt && formmtc.designation.errors" class="invalid-feedback">
+                    <span *ngIf="formmtc.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="formmtc.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+         
+        
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+</ng-template>
+
+
+
+
+
+
+<ng-template #modifiersection let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="sectmodform" (ngSubmit)="modifiersc()">
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :*</label>
+                <input type="text" class="form-control" id="validationCustom0" name="id" formControlName="id" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && formmsc.designation.errors}">
+                  <div *ngIf="submitt && formmsc.designation.errors" class="invalid-feedback">
+                    <span *ngIf="formmsc.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="formmsc.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                  <label for="typec">Service :*</label>
+                  <select class="custom-select"    id="departement" name="service" formControlName="service" >  
+                    <option *ngFor="let service of ser" [value]="service.id" selected>{{service.designation}}</option>                 
+                  </select>
+           
+            
+               </div>  
+              </div>
+        
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+</ng-template>
+
+
+
+<ng-template #modifierprime let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="primemodform" (ngSubmit)="modifierp()">
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :</label>
+                <input type="text" class="form-control" id="validationCustom0" name="code" formControlName="code" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:*</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && formmp.designation.errors}">
+                  <div *ngIf="submitt && formmp.designation.errors" class="invalid-feedback">
+                    <span *ngIf="formmp.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="formmp.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+          
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-checkbox mb-3">
+                  <input type="checkbox" class="custom-control-input" id="mproportionnelle"  name="mproportionnelle" formControlName="proportionnelle" >
+                  <label class="custom-control-label" for="mproportionnelle">Proportionnelle</label>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-checkbox mb-3">
+                  <input type="checkbox" class="custom-control-input" id="mtoutourien"  name="mtoutourien" formControlName="toutourien" >
+                  <label class="custom-control-label" for="mtoutourien">Tout Ou Rien</label>
+                </div>
+            </div>
+            </div>
+          
+        
+        
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+</ng-template>
+
+
+
+
+
+<ng-template #modifierconge let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="congesformm">
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :</label>
+                <input type="text" class="form-control" id="validationCustom0" name="code" formControlName="code" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:*</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && formcmodif.designation.errors}">
+                  <div *ngIf="submitt && formcmodif.designation.errors" class="invalid-feedback">
+                    <span *ngIf="formcmodif.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="formcmodif.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+          
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-checkbox mb-3">
+                  <input type="checkbox" class="custom-control-input" id="conge_ann"  name="conge_ann" formControlName="conge_an" >
+                  <label class="custom-control-label" for="conge_ann">Congé an</label>
+                </div>
+            </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="custom-control custom-checkbox mb-3">
+                  <input type="checkbox" class="custom-control-input" id="payee"  name="payee" formControlName="paye" >
+                  <label class="custom-control-label" for="payee">Payé</label>
+                </div>
+            </div>
+            </div>
+          
+        
+        
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success"(click)="modifier_type_conge()">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+</ng-template>
+
+
+<ng-template #modifierlibellepret let-modal>
+  <div class="modal-header">
+    <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+    <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <form class="needs-validation" [formGroup]="libellemodform" (ngSubmit)="modifierlp()">
+    <!--{{Modifierform.value | json}}-->
+  <div class="modal-body">
+  
+    <div class="card">
+            <div class="card-body">
+             <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom0">code :*</label>
+                <input type="text" class="form-control" id="validationCustom0" name="code" formControlName="code" disabled
+                  placeholder="" >
+              
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="form-group">
+                <label for="validationCustom01">Designation:</label>
+                <input type="text" class="form-control" id="validationCustom01" name="designation" formControlName="designation" [ngClass]="{'is-invalid': submitt && formmlp.designation.errors}">
+                  <div *ngIf="submitt && formmlp.designation.errors" class="invalid-feedback">
+                    <span *ngIf="formmlp.designation.errors.required">Cette valeur est obligatoire.</span>  
+                    <span *ngIf="formmlp.designation.errors.pattern">Cette valeur est invalide.</span>                
+                </div>  
+               
+              </div>
+            </div>
+        
+
+          </div>
+          </div></div>
+     
+
+
+        </div>
+        <div class="modal-footer">
+          <div class="form-group mb-0">            
+    <div class="text-md-right">
+    <button type="submit" class="btn btn-success">Modifier</button>
+    <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+     </div>
+       </div>
+        </div>
+      </form>
+ 
+</ng-template>

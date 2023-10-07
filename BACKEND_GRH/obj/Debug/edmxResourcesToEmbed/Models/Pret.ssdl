@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GRHModel1.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="GRH_Pret">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="bigint" Nullable="false" />
+    <Property Name="montant" Type="bigint" />
+    <Property Name="date" Type="date" />
+    <Property Name="date_1echeance" Type="date" />
+    <Property Name="libelle" Type="varchar" MaxLength="50" />
+    <Property Name="type" Type="varchar" MaxLength="50" />
+    <Property Name="montant_solde" Type="bigint" />
+    <Property Name="matricule_employe" Type="bigint" />
+  </EntityType>
+  <EntityContainer Name="GRHModel1StoreContainer">
+    <EntitySet Name="GRH_Pret" EntityType="Self.GRH_Pret" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GRHModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="GRH_heures_supp">
+    <Key>
+      <PropertyRef Name="id_hs" />
+    </Key>
+    <Property Name="id_hs" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="date" Type="DateTime" Precision="0" />
+    <Property Name="mois" Type="Int32" />
+    <Property Name="hs1_25" Type="Double" />
+    <Property Name="hs1_5" Type="Double" />
+    <Property Name="hs1_75" Type="Double" />
+    <Property Name="hs1_40" Type="Double" />
+    <Property Name="hs2" Type="Double" />
+    <Property Name="hs_nuit" Type="Double" />
+    <Property Name="employe_id" Type="Int64" />
+  </EntityType>
+  <EntityContainer Name="GRHEntities3" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="GRH_heures_supp" EntityType="Self.GRH_heures_supp" />
+    <FunctionImport Name="Hs_selectAll" ReturnType="Collection(GRHModel.Hs_selectAll_Result)" />
+  </EntityContainer>
+  <ComplexType Name="Hs_selectAll_Result">
+    <Property Type="Int64" Name="id_hs" Nullable="false" />
+    <Property Type="DateTime" Name="date" Nullable="true" />
+    <Property Type="Int32" Name="mois" Nullable="true" />
+    <Property Type="Double" Name="hs1_25" Nullable="true" />
+    <Property Type="Double" Name="hs1_5" Nullable="true" />
+    <Property Type="Double" Name="hs1_75" Nullable="true" />
+    <Property Type="Double" Name="hs1_40" Nullable="true" />
+    <Property Type="Double" Name="hs2" Nullable="true" />
+    <Property Type="Double" Name="hs_nuit" Nullable="true" />
+    <Property Type="Int64" Name="employe_id" Nullable="true" />
+  </ComplexType>
+</Schema>

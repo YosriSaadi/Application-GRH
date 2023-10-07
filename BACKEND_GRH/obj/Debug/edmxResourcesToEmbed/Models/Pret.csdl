@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GRHModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="GRH_Pret">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int64" Nullable="false" />
+    <Property Name="montant" Type="Int64" />
+    <Property Name="date" Type="DateTime" Precision="0" />
+    <Property Name="date_1echeance" Type="DateTime" Precision="0" />
+    <Property Name="libelle" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="type" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="montant_solde" Type="Int64" />
+    <Property Name="matricule_employe" Type="Int64" />
+  </EntityType>
+  <EntityContainer Name="GRHEntities4" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="GRH_Pret" EntityType="Self.GRH_Pret" />
+  </EntityContainer>
+</Schema>

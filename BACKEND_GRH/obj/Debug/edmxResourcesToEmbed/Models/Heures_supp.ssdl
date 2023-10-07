@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="GRHModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="GRH_heures_supp">
+    <Key>
+      <PropertyRef Name="id_hs" />
+    </Key>
+    <Property Name="id_hs" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="date" Type="date" />
+    <Property Name="mois" Type="int" />
+    <Property Name="hs1_25" Type="float" />
+    <Property Name="hs1_5" Type="float" />
+    <Property Name="hs1_75" Type="float" />
+    <Property Name="hs1_40" Type="float" />
+    <Property Name="hs2" Type="float" />
+    <Property Name="hs_nuit" Type="float" />
+    <Property Name="employe_id" Type="bigint" />
+  </EntityType>
+  <Function Name="Hs_selectAll" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <EntityContainer Name="GRHModelStoreContainer">
+    <EntitySet Name="GRH_heures_supp" EntityType="Self.GRH_heures_supp" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

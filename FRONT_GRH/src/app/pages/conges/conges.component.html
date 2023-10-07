@@ -1,0 +1,359 @@
+<div class="container-fluid">
+  <app-pagetitle title="GRH" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+
+<div class="card">
+          
+    <div class="card-body">
+      <div>
+        <!--  -->
+        <a href="javascript:void(0);" class="btn btn-success mb-2" (click)="openModal(ajouter)">
+          <i class="mdi mdi-plus mr-2"></i>Ajouter Congé 
+        </a>
+      </div>      <!-- Table -->
+      <div class="table-responsive">
+        <table id="basic-datatable"
+        class="table table-bordered mb-1">
+          <thead class="thead-light">
+            <tr>
+              <th >Matricule</th>
+            <th >Nom et Prénom</th>
+            <th >Congé</th>
+            <th >Fictif</th>
+            <th>Mois</th>
+            <th >Début</th>
+            <th >Fin</th>
+            <th>Actions</th>
+
+            </tr>  
+
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let table of tabledata; let i= index">
+              <td>
+            {{table.matricule}}
+
+              </td>
+              <td>
+                {{table.nom}}
+            </td>
+              <td>
+                {{table.designation}}
+            </td>
+              <td>
+              
+                <div class="custom-control custom-checkbox">
+                  <input type="checkbox" class="custom-control-input" :id="fictif{{i}}" [checked]="table.fictif"  [disabled]="true" />   
+                  <label class="custom-control-label" :for="fictif{{i}}">&nbsp;</label>                       
+                </div>
+            </td>
+            <td>
+              {{table.mois}}
+          </td>
+           <td>            {{table.dated}}
+        </td>   <td>            {{table.datef}}
+        </td>              
+        
+              <td>
+                <a href="javascript:void(0);" class="mr-3 text-primary" placement="top" ngbTooltip="Edit" (click)="openModif(Modifier,table)"><i
+                    class="mdi mdi-pencil font-size-18"></i></a>
+                <a href="javascript:void(0);" class="text-danger" placement="top" ngbTooltip="Delete" (click)="deleteconges(table.id,table)"><i
+                    class="mdi mdi-trash-can font-size-18"></i></a>
+              </td>
+
+
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- End table -->
+    
+    </div>
+  </div>
+
+  <ng-template #ajouter let-modal>
+
+    <div class="modal-header">
+      <h5 class="modal-title" id="composemodalTitle">Ajout</h5>
+      <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <form class="needs-validation" [formGroup]="ajouterform" (ngSubmit)="Ajouter()">
+    <div class="modal-body">
+    
+      <div class="card">
+              <div class="card-body">
+               <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="validationCustom0">Nom & Prénom :*</label>
+                  <select class="custom-select" id="nom" formControlName="nom" (change)="search_employe()"  [ngClass]="{'is-invalid': submit && form.nom.errors}">  
+                    <option *ngFor="let item of this.liste_employes let i= index" [value]="item.matricule"  >{{item.nom}} {{item.prenom}}</option>
+                  </select>
+                  <div *ngIf="submit && form.nom.errors" class="invalid-feedback">
+                    <span *ngIf="form.nom.errors.required">Cette valeur est obligatoire.</span>  
+                  </div>
+                
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-group">
+                  <label for="validationCustom01"> Matricule :</label>
+                  <input type="text" class="form-control" id="validationCustom01" name="matricule" formControlName="matricule" disabled
+                    placeholder="" >
+                 
+                </div>
+              </div>
+              
+              <div class="col-md-6">
+                <div class="form-group">
+                    <label for="mois">Mois :*</label>
+                <ng-select [items]="mois" bindLabel="value" bindValue="id"  id="mois" name="mois" formControlName="mois" 
+                [ngClass]="{'is-invalid': submit && form.mois.errors}"></ng-select>
+                <div *ngIf="submit && form.mois.errors" class="invalid-feedback">
+                  <span *ngIf="form.mois.errors.required">Cette valeur est obligatoire.</span>  
+                </div>
+              
+                 </div>  
+                </div>
+
+
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label for="validationCustom01">Nombre de jours :</label>
+                      <input type="text" class="form-control" id="nbr_jrs" [ngClass]="{'is-invalid': submit && form.nbr_jrs.errors}"
+                        placeholder=""  formControlName="nbr_jrs" disabled>   
+                        <div *ngIf="submit && form.nbr_jrs.errors" class="invalid-feedback">
+                          <span *ngIf="form.nbr_jrs.errors.required">Cette valeur est obligatoire.</span>
+                        </div>
+                   </div>
+
+                  </div>  
+                </div>
+
+
+            </div>
+            </div></div>
+            <div class="card">
+              <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <div class="form-group">
+                      <label for="typec">Type Congé :*</label>
+
+                      <select class="custom-select"  [ngClass]="{'is-invalid': submit && form.typec.errors}"  id="typec" name="typec" formControlName="typec" >  
+                        <option *ngFor="let motif of typec" [value]="motif.code" selected>{{motif.designation}}</option>                 
+                      </select>
+                  <div *ngIf="submit && form.typec.errors" class="invalid-feedback">
+                    <span *ngIf="form.typec.errors.required">Cette valeur est obligatoire.</span>  
+                  </div>
+                
+                   </div>  
+                  </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="example-date-input"></label>
+                    <label for="example-date-input"></label>
+                    <label for="example-date-input"></label>
+                    <label for="example-date-input"></label>
+                    <label for="example-date-input"></label>
+                    <label for="example-date-input"></label>
+                    <div class="custom-control custom-checkbox mb-3">                   
+                      <input type="checkbox" class="custom-control-input" id="paye"  name="paye" formControlName="paye" (click)="fictif($event)">
+                      <label class="custom-control-label" for="paye">Congé Payé(Fictif)</label>
+                    </div>
+                </div>
+                </div> 
+              
+                  <div class="col-md-6"[hidden]="this.fictif_hide">
+                    <div class="form-group">
+                      <label for="validationCustom01">Date Début</label>
+                      <input type="date" class="form-control" id="dated" name="dated" formControlName="dated"  (change)="calcule_date_fin()" (change)="calcule_nombre_jours()"
+                        placeholder="" >
+                    
+                    </div>
+                  </div>
+                  <div class="col-md-6" [hidden]="this.fictif_hide">
+                    <div class="form-group">
+                      <label for="validationCustom01">Date Fin</label>
+                      <input type="date" class="form-control" id="datef" name="datef" formControlName="datef" (change)="calcule_nombre_jours()"
+                        placeholder="" >
+                     
+                    </div>
+                  </div>
+               
+                </div>
+              </div></div>
+
+
+          </div>
+          <div class="modal-footer">
+            <div class="form-group mb-0">            
+              <div class="text-md-right">
+              <button type="submit" class="btn btn-success">Enregistrer</button>
+              <button type="button" class="btn btn-warning ml-1" (click)="annuler()"  >Fermer</button>
+               </div>
+                 </div>
+          </div>
+        </form>
+  </ng-template>
+
+
+
+
+
+
+
+
+
+
+
+      <ng-template #Modifier let-modal>
+        <div class="modal-header">
+          <h5 class="modal-title" id="composemodalTitle">Modification :</h5>
+          <button type="button" class="close" (click)="modal.dismiss('Cross click')" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <form class="needs-validation" [formGroup]="Modifierform" (ngSubmit)="modifier()">
+          <!--{{Modifierform.value | json}}-->
+        <div class="modal-body">
+        
+          <div class="card">
+                  <div class="card-body">
+                   <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="validationCustom0">Matricule :*</label>
+                      <input type="text" class="form-control" id="validationCustom0" name="nom" formControlName="matricule"(input)="search_employe()" disabled
+                        placeholder="" [ngClass]="{'is-invalid': submit && form.matricule.errors}">
+                      <div *ngIf="submit && form.matricule.errors" class="invalid-feedback">
+                        <span *ngIf="form.matricule.errors.required">Cette valeur est obligatoire.</span>
+                      </div>
+                    </div>
+                  </div>
+    
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label for="validationCustom01">Nom & Prénom :</label>
+                      <input type="text" class="form-control" id="validationCustom01" name="nom" formControlName="nom" disabled
+                        placeholder="" >
+                     
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="mois">Mois :*</label>
+                    <ng-select [items]="mois" bindLabel="value" bindValue="id"  id="mois" name="mois" formControlName="mois" 
+                    [ngClass]="{'is-invalid': submit && formm.mois.errors}"></ng-select>
+                    <div *ngIf="submit && formm.mois.errors" class="invalid-feedback">
+                      <span *ngIf="formm.mois.errors.required">Cette valeur est obligatoire.</span>  
+                    </div>
+                  
+                     </div>  
+                    </div>
+                  
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <div class="form-group">
+                      <label for="validationCustom01">Nombre de jours :</label>
+                      <input type="text" class="form-control" id="nbr_jrs" [ngClass]="{'is-invalid': submit && formm.nbr_jrs.errors}"
+                        placeholder=""  formControlName="nbr_jrs" disabled>   
+                        <div *ngIf="submit && formm.nbr_jrs.errors" class="invalid-feedback">
+                          <span *ngIf="formm.nbr_jrs.errors.required">Cette valeur est obligatoire.</span>
+                        </div>
+                   </div>
+
+                  </div>  
+                </div>
+    
+    
+                </div>
+                </div></div>
+                <div class="card">
+                  <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="form-group">
+                          <label for="typec">Type Congé :*</label>
+    
+                          <select class="custom-select"  [ngClass]="{'is-invalid': submit && formm.typec.errors}"  id="typec" name="typec" formControlName="typec" >  
+                            <option *ngFor="let motif of typec" [value]="motif.code" selected>{{motif.designation}}</option>                 
+                          </select>
+                      <div *ngIf="submit && formm.typec.errors" class="invalid-feedback">
+                        <span *ngIf="formm.typec.errors.required">Cette valeur est obligatoire.</span>  
+                      </div>
+                    
+                       </div>  
+                      </div>
+                    <div class="col-md-6">
+                      <div class="form-group">
+                        <label for="example-date-input"></label>
+                        <label for="example-date-input"></label>
+                        <label for="example-date-input"></label>
+                        <label for="example-date-input"></label>
+                        <label for="example-date-input"></label>
+                        <label for="example-date-input"></label>
+                        <div class="custom-control custom-checkbox mb-3">                   
+                          <input type="checkbox" class="custom-control-input" id="paye"  name="paye" formControlName="paye">
+                          <label class="custom-control-label" for="paye">Congé Payé(Fictif)</label>
+                        </div>
+                    </div>
+                    </div> 
+                  
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="validationCustom01">Date Début</label>
+                          <input type="date" class="form-control" id="dated" name="dated" formControlName="dated" (change)=" edit_calcule_nombre_jours()" (change)="edit_calcule_date_fin()"
+                            placeholder="" [ngClass]="{'is-invalid': submit && formm.dated.errors}">
+                          <div *ngIf="submit && formm.dated.errors" class="invalid-feedback">
+                            <span *ngIf="formm.dated.errors.required">Cette valeur est obligatoire.</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="validationCustom01">Date Fin</label>
+                          <input type="date" class="form-control" id="datef" name="datef" formControlName="datef" (change)=" edit_calcule_nombre_jours()"
+                            placeholder="" [ngClass]="{'is-invalid': submit && formm.datef.errors}">
+                          <div *ngIf="submit && formm.datef.errors" class="invalid-feedback">
+                            <span *ngIf="formm.datef.errors.required">Cette valeur est obligatoire.</span>
+                          </div>
+                        </div>
+                      </div>
+                   
+                    </div>
+                  </div></div>
+    
+    
+              </div>
+              <div class="modal-footer">
+
+                <div class="form-group mb-0">            
+          <div class="text-md-right">
+          <button type="submit" class="btn btn-success">Modifier</button>
+          <button type="button" class="btn btn-warning ml-1" (click)="modal.close('Close click')" >Fermer</button>
+           </div>
+             </div>
+              </div>
+            </form>
+      </ng-template>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</div>

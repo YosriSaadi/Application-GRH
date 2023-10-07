@@ -1,0 +1,349 @@
+
+    <!-- start page title -->
+    <app-pagetitle title="Form Validation" [breadcrumbItems]="breadCrumbItems"></app-pagetitle>
+    <!-- end page title -->
+  
+   
+        <div class="card">
+          <div class="card-body">
+            <h4 class="card-title">Bootstrap Validation - Normal</h4>
+            <p class="card-title-desc">Provide valuable, actionable feedback to your users with HTML5 form
+              validation–available in all our supported browsers.</p>
+     
+
+
+
+
+
+
+
+            <div class="col-lg-20">
+                <div class="card">
+                  <div class="card-body">
+                    <h4 class="card-title">Custom Tabs</h4>
+                    <p class="card-title-desc">Example of custom tabs</p>
+                    <ul ngbNav #customNav="ngbNav" [activeId]="1" class="nav-tabs nav-tabs-custom nav-justified">
+                      <li [ngbNavItem]="1">
+                        <a ngbNavLink>
+                          <span class="d-block d-sm-none"><i class="fas fa-home"></i></span>
+                          <span class="d-none d-sm-block">Etat Civil</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                          <ng-template [ngTemplateOutlet]="TabContent"></ng-template>
+                        </ng-template>
+                      </li>
+                      <li [ngbNavItem]="2">
+                        <a ngbNavLink>
+                          <span class="d-block d-sm-none"><i class="far fa-user"></i></span>
+                          <span class="d-none d-sm-block">Situation Familiale</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                          <ng-template [ngTemplateOutlet]="TabContent1"></ng-template>
+                        </ng-template>
+                      </li>
+                      <li [ngbNavItem]="3">
+                        <a ngbNavLink>
+                          <span class="d-block d-sm-none"><i class="far fa-envelope"></i></span>
+                          <span class="d-none d-sm-block">Salaire</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                          <ng-template [ngTemplateOutlet]="TabContent"></ng-template>
+                        </ng-template>
+                      </li>
+                      <li [ngbNavItem]="4">
+                        <a ngbNavLink>
+                          <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                          <span class="d-none d-sm-block">Qualification</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                          <ng-template [ngTemplateOutlet]="TabContent1"></ng-template>
+                        </ng-template>
+                      </li>
+                      <li [ngbNavItem]="5">
+                        <a ngbNavLink>
+                          <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                          <span class="d-none d-sm-block">Imposition</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                          <ng-template [ngTemplateOutlet]="TabContent1"></ng-template>
+                        </ng-template>
+                      </li>
+                      <li [ngbNavItem]="6">
+                        <a ngbNavLink>
+                          <span class="d-block d-sm-none"><i class="fas fa-cog"></i></span>
+                          <span class="d-none d-sm-block">Divers</span>
+                        </a>
+                        <ng-template ngbNavContent>
+                          <ng-template [ngTemplateOutlet]="TabContent1"></ng-template>
+                        </ng-template>
+                      </li>
+                    </ul>
+                    <div [ngbNavOutlet]="customNav"></div>
+                  </div>
+                </div>
+              </div>
+
+
+              <!-- Tab Content -->
+  <ng-template #TabContent>
+      
+    <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Bootstrap Validation - Normal</h4>
+          <p class="card-title-desc">Provide valuable, actionable feedback to your users with HTML5 form
+            validation–available in all our supported browsers.</p>
+   
+
+    <form class="needs-validation" (ngSubmit)="validSubmit()" [formGroup]="validationform">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="validationCustom01">Prénom</label>
+              <input type="text" class="form-control" id="validationCustom01" formControlName="firstName"
+                placeholder="First name" [ngClass]="{'is-invalid': submit && form.firstName.errors}">
+              <div *ngIf="submit && form.firstName.errors" class="invalid-feedback">
+                <span *ngIf="form.firstName.errors.required">Cette valeur est obligatoire.</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="validationCustom02">Nom</label>
+              <input type="text" class="form-control" id="validationCustom02" formControlName="lastName"
+                placeholder="Last name" [ngClass]="{'is-invalid': submit && form.lastName.errors}">
+              <div *ngIf="submit && form.lastName.errors" class="invalid-feedback">
+                <span *ngIf="form.lastName.errors.required">Cette valeur est obligatoire.</span>
+              </div>
+            </div>
+          </div>
+
+
+
+          
+  
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="validationCustom03">Date De Naissance</label>
+              <input type="date" class="form-control" id="validationCustom03" formControlName="datedenaiss"
+                placeholder="Date De Naissance" [ngClass]="{'is-invalid': submit && form.datedenaiss.errors}">
+              <div *ngIf="submit && form.datedenaiss.errors" class="invalid-feedback">
+                <span *ngIf="form.datedenaiss.errors.required">Cette valeur est obligatoire</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="form-group">
+              <label for="validationCustom04">Lieu De Naissance</label>
+              <input type="text" class="form-control" id="validationCustom04" formControlName="lieudenaiss"
+                placeholder="Lieu De Naissance" [ngClass]="{'is-invalid': submit && form.lieudenaiss.errors}">
+              <div *ngIf="submit && form.lieudenaiss.errors" class="invalid-feedback">
+                <span *ngIf="form.lieudenaiss.errors.required">Cette valeur est obligatoire.</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+          <div class="form-group">
+              <label for="validationCustom05">Nationnalité</label>
+          <ng-select [items]="selectValue"  id="validationCustom05" formControlName="nationnalite" ></ng-select>
+           </div>  
+          </div>
+       
+          <div class="col-md-3">
+              <div class="form-group">
+                <label for="validationCustom06">N CIN</label>
+                <input type="text" class="form-control" id="validationCustom06" formControlName="ncin"
+                  placeholder="Numéro CIN" [ngClass]="{'is-invalid': submit && form.ncin.errors}" mask="00000000">
+                <div *ngIf="submit && form.ncin.errors" class="invalid-feedback" >
+                  <span class="text-muted">e.g "xxxxxxxx"</span>
+                  <span *ngIf="form.ncin.errors.required">Cette valeur est obligatoire.</span>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-3">
+            <div class="form-group">
+              <label for="validationCustom07">Lieu</label>
+              <input type="text" class="form-control" id="validationCustom07" formControlName="Lieu"
+                placeholder="Lieu" [ngClass]="{'is-invalid': submit && form.Lieu.errors}">
+              <div *ngIf="submit && form.Lieu.errors" class="invalid-feedback">
+                <span *ngIf="form.Lieu.errors.required">Cette valeur est obligatoire.</span>
+              </div>
+            </div>
+            </div>
+            
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="validationCustom08">Date</label>
+                <input type="date" class="form-control" id="validationCustom08" formControlName="Date"
+                  placeholder="Date" [ngClass]="{'is-invalid': submit && form.Date.errors}">
+                <div *ngIf="submit && form.Date.errors" class="invalid-feedback">
+                  <span *ngIf="form.Date.errors.required">Cette valeur est obligatoire</span>
+                </div>
+              </div>
+            </div>
+
+
+            <div class="col-md-3">
+              <div class="form-group">
+                <label for="validationCustom09">Adresse</label>
+                <input type="text" class="form-control" id="validationCustom09" formControlName="adresse"
+                  placeholder="Adresse" [ngClass]="{'is-invalid': submit && form.adresse.errors}">
+                <div *ngIf="submit && form.adresse.errors" class="invalid-feedback">
+                  <span *ngIf="form.adresse.errors.required">Cette valeur est obligatoire.</span>
+                </div>
+              </div>
+              </div>
+
+              <div class="col-md-3">
+                  <div class="form-group">
+                    <label for="validationCustom10">N telephone</label>
+                    <input type="text" class="form-control" id="validationCustom10" formControlName="ntele"
+                      placeholder="Numero de telephone" [ngClass]="{'is-invalid': submit && form.ntele.errors}" mask="00-000-000">
+                      <span class="text-muted">e.g "xx-xxx-xxx"</span>
+                    <div *ngIf="submit && form.ntele.errors" class="invalid-feedback">
+                      <span *ngIf="form.ntele.errors.required">Cette valeur est obligatoire.</span>
+                    </div>
+                  </div>
+                  </div>
+
+                  <div class="col-md-3">
+                      <div class="form-group">
+                        <label for="validationCustom11">Date d'embauche</label>
+                        <input type="date" class="form-control" id="validationCustom11" formControlName="DateEm"
+                          placeholder="" [ngClass]="{'is-invalid': submit && form.DateEm.errors}">
+                        <div *ngIf="submit && form.DateEm.errors" class="invalid-feedback">
+                          <span *ngIf="form.DateEm.errors.required">Cette valeur est obligatoire</span>
+                        </div>
+                      </div>
+                    </div>
+
+
+                    <div class="col-md-3">
+                      <div class="form-group">
+                          <label for="validationCustom11">Sexe</label>
+                          <select class="custom-select"  class="form-control" id="validationCustom12" formControlName="sexe" [ngClass]="{'is-invalid': submit && form.sexe.errors}">
+                              <div *ngIf="submit && form.sexe.errors" class="invalid-feedback">
+                                <span *ngIf="form.sexe.errors.required">Cette valeur est obligatoire.</span>
+                              </div>
+                              <option value="1">Homme</option>
+                              <option value="2">Femme</option>
+                              
+                            </select>
+                       </div>  
+                      </div>
+
+                      <div class="col-md-3">
+                          <div class="form-group">
+                            <label for="validationCustom14">Collége</label>
+                            <input type="text" class="form-control" id="validationCustom13" formControlName="college"
+                              placeholder="Collége" [ngClass]="{'is-invalid': submit && form.college.errors}">
+                            <div *ngIf="submit && form.college.errors" class="invalid-feedback">
+                              <span *ngIf="form.college.errors.required">Cette valeur est obligatoire.</span>
+                            </div>
+                          </div>
+                          </div>
+
+                          <div class="col-md-3">
+                              <div class="form-group">
+                                <label for="validationCustom14">Date d'embauche groupe</label>
+                                <input type="date" class="form-control" id="validationCustom14" formControlName="DateEmg"
+                                  placeholder="" [ngClass]="{'is-invalid': submit && form.DateEmg.errors}">
+                                <div *ngIf="submit && form.DateEmg.errors" class="invalid-feedback">
+                                  <span *ngIf="form.DateEmg.errors.required">Cette valeur est obligatoire</span>
+                                </div>
+                              </div>
+                            </div>
+
+                            <div class="col-md-3">
+                              <div class="form-group">
+                              <input type="checkbox" class="form-control-input" id="customCheck1" formControlName="creditb" >
+                              <label  class="form-control-label"for="customCheck1">  Crédit Bancaire</label>
+                            </div>
+                         
+
+                            </div>
+                            <div class="col-md-3">
+                              <div class="form-group">
+                              <input type="checkbox" class="form-control-input" id="customCheck2" formControlName="Dates" >
+                              <label class="form-control-label" for="customCheck2">  Crédit Sociéte</label>
+                            </div>
+                            </div>
+                          
+                          
+                      </div>              
+        <button class="btn btn-primary" type="submit">Submit form</button>
+      </form>
+      </div>
+        </div>
+  </ng-template>
+
+  <!-- Tab Content -->
+  <ng-template #TabContent1>
+    <p class="p-3 mb-0">
+      Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+      single-origin coffee squid. Exercitation +1 labore velit, blog
+      sartorial PBR leggings next level wes anderson artisan four loko
+      farm-to-table craft beer twee. Qui photo booth letterpress,
+      commodo enim craft beer mlkshk aliquip jean shorts ullamco ad
+      vinyl cillum PBR. Homo nostrud organic, assumenda labore
+      aesthetic magna delectus.
+    </p>
+  </ng-template>
+  <ng-template #TabContent2>
+    <p class="p-3 mb-0">
+      Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+      single-origin coffee squid. Exercitation +1 labore velit, blog
+      sartorial PBR leggings next level wes anderson artisan four loko
+      farm-to-table craft beer twee. Qui photo booth letterpress,
+      commodo enim craft beer mlkshk aliquip jean shorts ullamco ad
+      vinyl cillum PBR. Homo nostrud organic, assumenda labore
+      aesthetic magna delectus.
+    </p>
+  </ng-template> 
+   <ng-template #TabContent3>
+    <p class="p-3 mb-0">
+      Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+      single-origin coffee squid. Exercitation +1 labore velit, blog
+      sartorial PBR leggings next level wes anderson artisan four loko
+      farm-to-table craft beer twee. Qui photo booth letterpress,
+      commodo enim craft beer mlkshk aliquip jean shorts ullamco ad
+      vinyl cillum PBR. Homo nostrud organic, assumenda labore
+      aesthetic magna delectus.
+    </p>
+  </ng-template>
+    <ng-template #TabContent4>
+    <p class="p-3 mb-0">
+      Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+      single-origin coffee squid. Exercitation +1 labore velit, blog
+      sartorial PBR leggings next level wes anderson artisan four loko
+      farm-to-table craft beer twee. Qui photo booth letterpress,
+      commodo enim craft beer mlkshk aliquip jean shorts ullamco ad
+      vinyl cillum PBR. Homo nostrud organic, assumenda labore
+      aesthetic magna delectus.
+    </p>
+  </ng-template>  
+  <ng-template #TabContent5>
+    <p class="p-3 mb-0">
+      Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+      single-origin coffee squid. Exercitation +1 labore velit, blog
+      sartorial PBR leggings next level wes anderson artisan four loko
+      farm-to-table craft beer twee. Qui photo booth letterpress,
+      commodo enim craft beer mlkshk aliquip jean shorts ullamco ad
+      vinyl cillum PBR. Homo nostrud organic, assumenda labore
+      aesthetic magna delectus.
+    </p>
+  </ng-template>  
+  <ng-template #TabContent6>
+    <p class="p-3 mb-0">
+      Food truck fixie locavore, accusamus mcsweeney's marfa nulla
+      single-origin coffee squid. Exercitation +1 labore velit, blog
+      sartorial PBR leggings next level wes anderson artisan four loko
+      farm-to-table craft beer twee. Qui photo booth letterpress,
+      commodo enim craft beer mlkshk aliquip jean shorts ullamco ad
+      vinyl cillum PBR. Homo nostrud organic, assumenda labore
+      aesthetic magna delectus.
+    </p>
+  </ng-template>
+
+          
+        
+     
